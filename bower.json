@@ -1,0 +1,9 @@
+{
+  "name": "cudl-viewer-ui",
+  "private": true,
+  "description": "This only exists to record bower dependencies",
+  "dependencies": {
+    "project-light": "git@bitbucket.org:CUDL/project-light-mirror.git#97e044655ce88c8ae7f04612adbe60baae57dd0a",
+    "ckeditor": "~4.5.3"
+  }
+}
