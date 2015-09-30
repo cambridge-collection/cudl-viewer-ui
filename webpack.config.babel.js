@@ -1,9 +1,16 @@
 import path from 'path';
 
+import parseArgs from 'minimist';
 import AssetsPlugin from 'assets-webpack-plugin';
 
+let args = parseArgs(process.argv);
 
-const OUT_DIR = path.resolve(__dirname, './built');
+
+// Use ./built as the output path unless it's overridden on the command line
+const OUT_DIR = path.resolve(__dirname, args['output-path'] ? 
+                                        args['output-path'] : './built');
+
+const JAVA_NAMESPACE = 'ulcambridge.foundations.viewer.viewer-ui';
 
 export default {
     context: __dirname,
@@ -48,6 +55,11 @@ export default {
     },
     postcss: [require('autoprefixer')],
     plugins: [
-        new AssetsPlugin({path: OUT_DIR})
+        new AssetsPlugin({
+            // Write a JSON file with chunk filenames under our java namespace.
+            // The main viewer can read this file to determine hashed filenames
+            path: path.resolve(OUT_DIR, 'resources', 
+                               JAVA_NAMESPACE.replace(/\./g, '/'))
+        })
     ]
 };

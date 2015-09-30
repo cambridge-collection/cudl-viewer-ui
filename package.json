@@ -8,11 +8,13 @@
     "hint": "^2"
   },
   "devDependencies": {
-    "assets-webpack-plugin": "^2.2.3",
+    "assets-webpack-plugin": "^2",
     "autoprefixer": "^6",
     "babel-loader": "^5",
+    "bower": "^1",
     "css-loader": "^0",
     "file-loader": "^0",
+    "minimist": "^1",
     "postcss-loader": "^0",
     "style-loader": "^0",
     "webpack": "^1"
