@@ -13,6 +13,7 @@
     "babel-loader": "^5",
     "bower": "^1",
     "css-loader": "^0",
+    "extract-text-webpack-plugin": "^0",
     "file-loader": "^0",
     "minimist": "^1",
     "postcss-loader": "^0",

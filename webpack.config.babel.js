@@ -1,7 +1,10 @@
 import path from 'path';
 
 import parseArgs from 'minimist';
+import webpack from 'webpack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import AssetsPlugin from 'assets-webpack-plugin';
+
 
 let args = parseArgs(process.argv);
 
@@ -15,19 +18,15 @@ const JAVA_NAMESPACE = 'ulcambridge.foundations.viewer.viewer-ui';
 export default {
     context: __dirname,
     entry: {
-        // Used in transcription text iframe in document page
-        'transcription.css': './src/css/style-transcription.css',
-        // Sole style for document page
-        'document.css': './src/css/style-document.css',
-        // Main CUDL style for non-document pages
-        'style.css': './src/css/style.css',
-        // Addition styles (on top of style.css) for advanced search page
-        'advancedsearch.css': './src/css/advancedsearch.css'
+        'page-standard': './src/js/pages/standard.js',
+        'page-document': './src/js/pages/document.js',
+        'page-advancedsearch': './src/js/pages/advancedsearch.js',
+        'page-transcription': './src/js/pages/transcription.js',
     },
     devtool: 'source-map',
     output: {
         path: OUT_DIR,
-        filename: 'chunk-[chunkhash]-[name]'
+        filename: 'js/[name]-[chunkhash].js'
     },
     resolve: {
         root: [
@@ -44,17 +43,29 @@ export default {
             {
                 test: /\.css$/,
                 include: path.resolve(__dirname, './src/css'),
-                loaders: ['style-loader', 'css-loader?sourceMap', 'postcss-loader?sourceMap']
+                loader: ExtractTextPlugin.extract(
+                    'style-loader', 'css-loader?sourceMap!postcss-loader?sourceMap')
             },
             // Hash referenced external files
             {
                 test: /\.(png|jpg|gif|woff2?|eot|ttf|svg)(\?.*)?$/,
-                loader: 'file-loader?name=[name]-[hash].[ext]'
+                loader: 'file-loader?name=assets/[name]-[hash].[ext]'
             },
         ]
     },
     postcss: [require('autoprefixer')],
     plugins: [
+        // Currently only the standard and advancedsearch pages share content.
+        // In the future we may wish to have a global common chunk and a nested
+        // one for the standard and advancedsearch pages.
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'common',
+            filename: 'js/[name]-[chunkhash].js',
+            chunks: [ 'page-standard', 'page-advancedsearch']
+        }),
+        new ExtractTextPlugin('css/[name]-[chunkhash].css', {
+            allChunks: true
+        }),
         new AssetsPlugin({
             // Write a JSON file with chunk filenames under our java namespace.
             // The main viewer can read this file to determine hashed filenames
