@@ -1,0 +1,7 @@
+{
+    "common": [],
+    "page-advancedsearch": ["common"],
+    "page-document": [],
+    "page-standard": ["common"],
+    "page-transcription": []
+}
