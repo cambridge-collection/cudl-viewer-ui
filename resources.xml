@@ -6,7 +6,10 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>target/webpack</directory>
+            <directory>${project.build.directory}/webpack</directory>
+            <excludes>
+                <exclude>resources/**/*</exclude>
+            </excludes>
             <outputDirectory></outputDirectory>
         </fileSet>
     </fileSets>
