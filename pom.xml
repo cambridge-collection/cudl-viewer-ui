@@ -79,7 +79,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>make shared resources</id>
+                        <id>Create servlet 3.0 resource jar</id>
                         <goals>
                             <goal>single</goal>
                         </goals>

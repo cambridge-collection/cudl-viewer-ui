@@ -50,7 +50,8 @@ to be used, which automatically adds vendor prefixes to CSS property names.
 
 The CUDL Viewer server depends on this project as a Maven artifact. The
 artifacts created by `$ mvn package` include a jar with JSON metadata on the
-build, as well as a separate .zip file containing the webpack compiler output.
+build, as well as a separate .jar file containing the webpack compiler output
+under `META-INF/resources`.
 
 There are two types of metadata files: chunk dependencies and chunk paths.
 `deps.json` defines which chunks need to be loaded before each chunk. This is
