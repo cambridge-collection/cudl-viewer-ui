@@ -62,7 +62,14 @@ export default function getConfig(options) {
                     test: /\.css$/,
                     include: path.resolve(__dirname, './src/css'),
                     loader: ExtractTextPlugin.extract(
-                        'style-loader', 'css-loader?sourceMap!postcss-loader?sourceMap')
+                        'style-loader',
+                        'css-loader?sourceMap!postcss-loader?sourceMap', {
+                            // Not 100% sure if I'm correct, but I'm
+                            // interpreting this as the path to the main
+                            // publicPath from the css's output path.
+                            // The css is in ./css/, so ../ is the output root.
+                            publicPath: '../'
+                        })
                 },
                 // Hash referenced external files
                 {
