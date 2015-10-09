@@ -5,7 +5,9 @@
     "bootstrap": "^3",
     "bootstrap-social": "^4",
     "font-awesome": "^4",
-    "hint": "^2"
+    "hint": "^2",
+    "jquery": "^1",
+    "spin.js": "^2"
   },
   "devDependencies": {
     "assets-webpack-plugin": "^2",
@@ -13,8 +15,11 @@
     "babel-loader": "^5",
     "bower": "^1",
     "css-loader": "^0",
+    "exports-loader": "^0",
     "extract-text-webpack-plugin": "^0",
     "file-loader": "^0",
+    "imports-loader": "^0",
+    "jquery-migrate": "^1",
     "lodash": "^3",
     "minimist": "^1",
     "postcss-loader": "^0",

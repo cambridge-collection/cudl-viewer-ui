@@ -5,5 +5,6 @@
 
 // Use the normal CUDL style
 import '../../css/style.css';
+import '../base.js';
 
 console.log('This is the standard page');

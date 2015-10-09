@@ -10,10 +10,21 @@ let args = parseArgs(process.argv);
 
 
 // Use ./built as the output path unless it's overridden on the command line
-const OUT_DIR = path.resolve(__dirname, args['output-path'] ? 
+const OUT_DIR = path.resolve(__dirname, args['output-path'] ?
                                         args['output-path'] : './built');
 
 const JAVA_NAMESPACE = 'ulcambridge.foundations.viewer.viewer-ui';
+
+const MODERNIZR_PATH = path.resolve(
+    __dirname,
+    './bower_components/project-light/javascripts/libs/modernizr.js');
+
+const IOS_ZOOM_FIX = path.resolve(
+    __dirname,
+    './bower_components/project-light/javascripts/libs/ios-orientationchange-fix.js');
+
+const FANCY_BOX_PATH = path.resolve(__dirname,
+                                    './bower_components/fancybox/source');
 
 export default function getConfig(options) {
     options = options || {};
@@ -26,12 +37,12 @@ export default function getConfig(options) {
     // Write a JSON file with chunk filenames under our java namespace.
     // The main viewer can read this file to determine hashed filenames
     let defaultAssetJsonPath = path.resolve(
-        assetJsonBasePath, 'resources', 
+        assetJsonBasePath, 'resources',
         JAVA_NAMESPACE.replace(/\./g, '/'));
 
     let assetJsonPath = options.assetJsonPath || defaultAssetJsonPath;
     let assetJsonFilename = options.assetJsonFilename || undefined;
-        
+
 
     return {
         context: __dirname,
@@ -49,7 +60,13 @@ export default function getConfig(options) {
         resolve: {
             root: [
                 path.resolve(__dirname, 'bower_components')
-            ]
+            ],
+            alias: {
+                // Use the Modernizr bundled with Project Light as I've not yet
+                // worked out which tests the use (if any, other than .mq()).
+                modernizr: MODERNIZR_PATH,
+                'ios-orientation-zoom-bug-fix': IOS_ZOOM_FIX
+            }
         },
         module: {
             loaders: [
@@ -76,6 +93,42 @@ export default function getConfig(options) {
                     test: /\.(png|jpg|gif|woff2?|eot|ttf|svg)(\?.*)?$/,
                     loader: 'file-loader?name=' + filenameTemplateAsset
                 },
+                // Shim the project light JS as a commonjs module
+                {
+                    test: path.resolve(__dirname, './bower_components/project-light/javascripts/custom.js'),
+                    loader:'imports?'  + [
+                        // This is a pain, Project Light has a load of deps
+                        // we have to shim as commonjs modules
+                        'jQuery=jquery',
+                        '__jquery_migrate=jquery-migrate',
+                        'Modernizr=modernizr',
+                        '__ios_fix=ios-orientation-zoom-bug-fix'
+                    ].join(',')
+                },
+                // Shim modernizr as a commonjs module
+                {
+                    test: MODERNIZR_PATH,
+                    loader: 'imports?this=>global!exports?Modernizr'
+                },
+                // Shim jquery-migrate as a commonjs module.
+                {
+                    test: require.resolve('jquery-migrate'),
+                    loader: 'imports?jQuery=jquery,window=>global'
+                },
+                // Shim the ios rotate fix script from project light
+                {
+                    test: IOS_ZOOM_FIX,
+                    loader: 'imports?this=>global'
+                },
+                {
+                    test: path.resolve(FANCY_BOX_PATH, 'jquery.fancybox.js'),
+                    loader: 'imports?window=>global,document=>window.document,jQuery=jquery'
+                },
+                // Shim bootstrap.
+                {
+                    test: /bootstrap\/js\/\w+\.js$/,
+                    loader: 'imports?jQuery=jquery'
+                }
             ]
         },
         postcss: [require('autoprefixer')],
