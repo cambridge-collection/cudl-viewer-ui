@@ -16,6 +16,8 @@ There are several benefits to using webpack:
     * [Next-generation CSS features](http://cssnext.io/) can be used via postcss
     * Images can be optimised on the fly, or multiple resolutions created for use
       with [srcset](http://www.webkit.org/demos/srcset/)
+    * Internal modules can be shared between different projects. For example,
+      the embedded viewer and this (main) viewer can share code.
 * User benefits
     * Faster page loads
         * less resources to download due to bundling
