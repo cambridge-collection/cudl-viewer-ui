@@ -3,5 +3,6 @@
     "page-advancedsearch": ["common"],
     "page-document": [],
     "page-standard": ["common"],
-    "page-transcription": []
+    "page-transcription": [],
+    "page-login": ["common"]
 }

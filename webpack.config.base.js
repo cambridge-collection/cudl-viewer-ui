@@ -51,6 +51,7 @@ export default function getConfig(options) {
             'page-document': './src/js/pages/document.js',
             'page-advancedsearch': './src/js/pages/advancedsearch.js',
             'page-transcription': './src/js/pages/transcription.js',
+            'page-login': './src/js/pages/login.js'
         },
         devtool: 'source-map',
         output: {
@@ -144,7 +145,7 @@ export default function getConfig(options) {
             new webpack.optimize.CommonsChunkPlugin({
                 name: 'common',
                 filename: filenameTemplateJs,
-                chunks: [ 'page-standard', 'page-advancedsearch']
+                chunks: [ 'page-standard', 'page-advancedsearch', 'page-login']
             }),
             new ExtractTextPlugin(filenameTemplateCss, {
                 allChunks: true
