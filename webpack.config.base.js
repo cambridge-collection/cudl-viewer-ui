@@ -21,7 +21,8 @@ const MODERNIZR_PATH = path.resolve(
 
 const IOS_ZOOM_FIX = path.resolve(
     __dirname,
-    './bower_components/project-light/javascripts/libs/ios-orientationchange-fix.js');
+    './bower_components/project-light/javascripts/libs/' +
+    'ios-orientationchange-fix.js');
 
 const FANCY_BOX_PATH = path.resolve(__dirname,
                                     './bower_components/fancybox/source');
@@ -29,9 +30,12 @@ const FANCY_BOX_PATH = path.resolve(__dirname,
 export default function getConfig(options) {
     options = options || {};
 
-    let filenameTemplateJs = options.filenameTemplateJs || 'js/[name]-[chunkhash].js';
-    let filenameTemplateAsset = options.filenameTemplateAsset || 'assets/[name]-[hash].[ext]';
-    let filenameTemplateCss = options.filenameTemplateCss || 'css/[name]-[chunkhash].css';
+    let filenameTemplateJs = options.filenameTemplateJs ||
+        'js/[name]-[chunkhash].js';
+    let filenameTemplateAsset = options.filenameTemplateAsset ||
+        'assets/[name]-[hash].[ext]';
+    let filenameTemplateCss = options.filenameTemplateCss ||
+        'css/[name]-[chunkhash].css';
 
     let assetJsonBasePath = options.assetJsonBasePath || OUT_DIR
     // Write a JSON file with chunk filenames under our java namespace.
@@ -131,7 +135,9 @@ export default function getConfig(options) {
                 },
                 // Shim the project light JS as a commonjs module
                 {
-                    test: path.resolve(__dirname, './bower_components/project-light/javascripts/custom.js'),
+                    test: path.resolve(
+                        __dirname, './bower_components/project-light/' +
+                        'javascripts/custom.js'),
                     loader:'imports?'  + [
                         // This is a pain, Project Light has a load of deps
                         // we have to shim as commonjs modules
@@ -158,7 +164,8 @@ export default function getConfig(options) {
                 },
                 {
                     test: path.resolve(FANCY_BOX_PATH, 'jquery.fancybox.js'),
-                    loader: 'imports?window=>global,document=>window.document,jQuery=jquery'
+                    loader: 'imports?' +
+                        'window=>global,document=>window.document,jQuery=jquery'
                 },
                 // Shim bootstrap.
                 {
