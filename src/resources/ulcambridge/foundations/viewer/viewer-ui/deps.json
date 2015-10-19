@@ -4,5 +4,6 @@
     "page-document": [],
     "page-standard": ["common"],
     "page-transcription": [],
-    "page-login": ["common"]
+    "page-login": ["common"],
+    "page-collection-organisation": []
 }
