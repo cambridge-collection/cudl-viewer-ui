@@ -185,7 +185,12 @@ export default function getConfig(options) {
             new AssetsPlugin({
                 filename: assetJsonFilename,
                 path: assetJsonPath
-            })
+            }),
+            // Resolve main attr of bower modules
+            new webpack.ResolverPlugin(
+                new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(
+                    "bower.json", ["main"])
+            )
         ].concat(cssPlugins)
     };
 }
