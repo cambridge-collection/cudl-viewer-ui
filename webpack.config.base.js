@@ -43,6 +43,53 @@ export default function getConfig(options) {
     let assetJsonPath = options.assetJsonPath || defaultAssetJsonPath;
     let assetJsonFilename = options.assetJsonFilename || undefined;
 
+    let cssLoaders, cssPlugins;
+    if(options.extractCSS === undefined ? true : options.extractCSS) {
+        cssLoaders = [
+            {
+                test: /\.css$/,
+                include: path.resolve(__dirname, './src/css'),
+                loader: ExtractTextPlugin.extract(
+                    'style-loader',
+                    'css-loader?sourceMap!postcss-loader?sourceMap', {
+                        // Not 100% sure if I'm correct, but I'm
+                        // interpreting this as the path to the main
+                        // publicPath from the css's output path.
+                        // The css is in ./css/, so ../ is the output root.
+                        publicPath: '../'
+                    })
+            },
+            // Plain library CSS
+            {
+                test: /\.css(\?.*)?$/,
+                exclude: path.resolve(__dirname, './src/css'),
+                // FIXME: extract this
+                loader: 'style-loader!css-loader?sourceMap'
+            }
+        ];
+
+        cssPlugins = [
+            new ExtractTextPlugin(filenameTemplateCss, {
+                allChunks: true
+            })
+        ];
+    }
+    else {
+        cssLoaders = [
+            {
+                test: /\.css$/,
+                include: path.resolve(__dirname, './src/css'),
+                loader: 'style-loader!css-loader?sourceMap!postcss-loader?sourceMap'
+            },
+            // Plain library CSS
+            {
+                test: /\.css(\?.*)?$/,
+                exclude: path.resolve(__dirname, './src/css'),
+                loader: 'style-loader!css-loader?sourceMap'
+            }
+        ];
+        cssPlugins = [];
+    }
 
     return {
         context: __dirname,
@@ -56,7 +103,8 @@ export default function getConfig(options) {
         devtool: 'source-map',
         output: {
             path: OUT_DIR,
-            filename: filenameTemplateJs
+            filename: filenameTemplateJs,
+            publicPath: options.publicPath
         },
         resolve: {
             root: [
@@ -75,19 +123,6 @@ export default function getConfig(options) {
                     test: /\.js$/,
                     include: path.resolve(__dirname, './src/js'),
                     loader: 'babel-loader'
-                },
-                {
-                    test: /\.css$/,
-                    include: path.resolve(__dirname, './src/css'),
-                    loader: ExtractTextPlugin.extract(
-                        'style-loader',
-                        'css-loader?sourceMap!postcss-loader?sourceMap', {
-                            // Not 100% sure if I'm correct, but I'm
-                            // interpreting this as the path to the main
-                            // publicPath from the css's output path.
-                            // The css is in ./css/, so ../ is the output root.
-                            publicPath: '../'
-                        })
                 },
                 // Hash referenced external files
                 {
@@ -130,7 +165,7 @@ export default function getConfig(options) {
                     test: /bootstrap\/js\/\w+\.js$/,
                     loader: 'imports?jQuery=jquery'
                 }
-            ]
+            ].concat(cssLoaders)
         },
         postcss: [require('autoprefixer')],
         plugins: [
@@ -147,13 +182,10 @@ export default function getConfig(options) {
                 filename: filenameTemplateJs,
                 chunks: [ 'page-standard', 'page-advancedsearch', 'page-login']
             }),
-            new ExtractTextPlugin(filenameTemplateCss, {
-                allChunks: true
-            }),
             new AssetsPlugin({
                 filename: assetJsonFilename,
                 path: assetJsonPath
             })
-        ]
+        ].concat(cssPlugins)
     };
 }

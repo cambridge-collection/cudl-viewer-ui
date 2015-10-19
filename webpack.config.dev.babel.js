@@ -10,5 +10,7 @@ export default getConfig({
     filenameTemplateAsset: 'assets/[name].[ext]',
     filenameTemplateCss: 'css/[name].css',
     assetJsonBasePath: path.resolve(__dirname, './src'),
-    assetJsonFilename: 'webpack-assets-dev.json'
+    assetJsonFilename: 'webpack-assets-dev.json',
+    extractCSS: false,
+    publicPath: 'http://localhost:8080/'
 });
