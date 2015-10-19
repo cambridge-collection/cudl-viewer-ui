@@ -1,7 +1,6 @@
 /* The login page uses font awesome and bootstrap-social */
-
-/* Use the normal CUDL style */
-@import './style.css';
-
 @import '~bootstrap-social';
 @import '~font-awesome/css/font-awesome.css';
+
+/* Extend the normal CUDL style */
+@import './style.css';

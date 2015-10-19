@@ -1,3 +1,5 @@
+@import './style.css';
+
 .campl-main-content {
     min-height: 350px;
 }
@@ -7,7 +9,7 @@
     overflow: visible;
     float: none;
 }
-.advancedsearchform span.hint--right, 
+.advancedsearchform span.hint--right,
 .advancedsearchform span.hint--bottom,
 .advancedsearchform span.hint--left,
 .advancedsearchform span.hint--top {
@@ -159,18 +161,18 @@ ol#tree > li > strong {
 /* sticky menu */
 /* .sticky-wrapper {
     background-color: #F3F3F3;
-} 
+}
 .searchform {
     z-index: 1000;
 }*/
-    
+
 @media screen and (max-width: 767px) {
     /* search results carousel */
     .collections_carousel_image_box {
         margin-left: 10px;
     }
-    
-    .collections_carousel_text.campl-column8 {  
+
+    .collections_carousel_text.campl-column8 {
         width: inherit;
     }
     .collections_carousel_text ul li {
