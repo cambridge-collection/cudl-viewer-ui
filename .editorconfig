@@ -12,5 +12,11 @@ indent_size = 4
 charset = utf-8
 trim_trailing_whitespace = true
 
-[{package.json,bower.json}]
+[*.js]
+indent_size = 4
+
+[package.json]
+indent_size = 2
+
+[bower.json]
 indent_size = 2
