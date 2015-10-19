@@ -1,0 +1,13 @@
+/* This fixes an issue with the Project Light top nav menu.
+   It is hidden in the Project Light CSS and shown by JavaScript.
+   However, with non-extracted CSS, the hiding styles don't seem to apply
+   before the jQuery.show() call is made, so it does nothing. After the show()
+   call the CSS is applied which hides the top nav.
+
+   This overrides the PL CSS to always show the top nav. */
+
+.js #global-header-controls,
+.js .campl-carousel li,
+.js .campl-secondary-content {
+    display: initial;
+}

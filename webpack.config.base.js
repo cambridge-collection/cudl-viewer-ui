@@ -102,7 +102,9 @@ export default function getConfig(options) {
             'page-document': './src/js/pages/document.js',
             'page-advancedsearch': './src/js/pages/advancedsearch.js',
             'page-transcription': './src/js/pages/transcription.js',
-            'page-login': './src/js/pages/login.js'
+            'page-login': './src/js/pages/login.js',
+            'page-collection-organisation':
+                './src/js/pages/collection-organisation.js'
         },
         devtool: 'source-map',
         output: {
@@ -144,7 +146,11 @@ export default function getConfig(options) {
                         'jQuery=jquery',
                         '__jquery_migrate=jquery-migrate',
                         'Modernizr=modernizr',
-                        '__ios_fix=ios-orientation-zoom-bug-fix'
+                        '__ios_fix=ios-orientation-zoom-bug-fix',
+                        '__project_light_style=project-light/stylesheets/full-stylesheet.css',
+                        '__workaround=' + path.resolve(
+                            __dirname,
+                            './src/css/projectlight-hidden-menu-workaround.css')
                     ].join(',')
                 },
                 // Shim modernizr as a commonjs module
@@ -171,6 +177,12 @@ export default function getConfig(options) {
                 {
                     test: /bootstrap\/js\/\w+\.js$/,
                     loader: 'imports?jQuery=jquery'
+                },
+                // Shim jquery.paging
+                {
+                    test: /\/jquery\.paging\.js$/,
+                    include: /\/bower_components\/paging\//,
+                    loader: 'imports?jQuery=jquery,this=>global'
                 }
             ].concat(cssLoaders)
         },
