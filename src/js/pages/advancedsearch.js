@@ -4,5 +4,5 @@
  * It extends the standard page with additional styles.
  */
 
-import '../../css/style.css';
 import '../../css/advancedsearch.css';
+import '../base.js';
