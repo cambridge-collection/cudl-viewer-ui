@@ -4,11 +4,15 @@ import '../../css/style.css';
 import $ from 'jquery';
 import 'paging'; // jquery paging plugin
 
-import '../base.js';
-import * as cudl from '../cudl.js';
+import '../base';
+import * as cudl from '../cudl';
+import { getPageContext } from '../context';
+import { possiblyEnableEditing } from '../admin/edit';
 
 $(function() {
-    let context = $(document.body).data('context');
+    possiblyEnableEditing();
+
+    let context = getPageContext();
 
     var currentSlice;
 

@@ -22,6 +22,8 @@
     "imports-loader": "^0",
     "jquery-migrate": "^1",
     "lodash": "^3",
+    "jade": "^1",
+    "jade-loader": "^0",
     "minimist": "^1",
     "postcss-loader": "^0",
     "style-loader": "^0",

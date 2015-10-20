@@ -114,7 +114,8 @@ export default function getConfig(options) {
         },
         resolve: {
             root: [
-                path.resolve(__dirname, 'bower_components')
+                path.resolve(__dirname, 'bower_components'),
+                path.resolve(__dirname, 'vendor')
             ],
             alias: {
                 // Use the Modernizr bundled with Project Light as I've not yet
@@ -129,6 +130,11 @@ export default function getConfig(options) {
                     test: /\.js$/,
                     include: path.resolve(__dirname, './src/js'),
                     loader: 'babel-loader'
+                },
+                {
+                    test: /\.jade$/,
+                    include: path.resolve(__dirname, './src'),
+                    loader: 'jade-loader'
                 },
                 // Hash referenced external files
                 {
@@ -183,6 +189,15 @@ export default function getConfig(options) {
                     test: /\/jquery\.paging\.js$/,
                     include: /\/bower_components\/paging\//,
                     loader: 'imports?jQuery=jquery,this=>global'
+                },
+                // Shim ckeditor
+                {
+                    test: /\/ckeditor\.js$/,
+                    include: /\/vendor\/ckeditor\//,
+                    // It would be tricky to shim ckeditor in such a way that
+                    // it wouldn't create a global on window as it relies on
+                    // various properties of window.
+                    loader: 'exports?window.CKEDITOR'
                 }
             ].concat(cssLoaders)
         },
@@ -209,7 +224,11 @@ export default function getConfig(options) {
             new webpack.ResolverPlugin(
                 new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(
                     "bower.json", ["main"])
-            )
+            ),
+            new webpack.DefinePlugin({
+                // Relative to the public path
+                CKEDITOR_LOCATION: JSON.stringify('vendor/ckeditor/')
+            })
         ].concat(cssPlugins)
     };
 }
