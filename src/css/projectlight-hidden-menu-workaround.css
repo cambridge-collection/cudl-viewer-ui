@@ -1,13 +1,21 @@
-/* This fixes an issue with the Project Light top nav menu.
-   It is hidden in the Project Light CSS and shown by JavaScript.
-   However, with non-extracted CSS, the hiding styles don't seem to apply
-   before the jQuery.show() call is made, so it does nothing. After the show()
-   call the CSS is applied which hides the top nav.
+/* This fixes an issue with the Project Light top nav menu being hidden in dev
+   mode. It is hidden in the Project Light CSS and shown by JavaScript.
 
-   This overrides the PL CSS to always show the top nav. */
+   However, with non-extracted CSS, the stylesheet link is inserted just before
+   the project light JS executes. However, the styles don't get applied until
+   after the call stack has cleared. As a result, jQuery.show() call does
+   nothing, leaving the elements hidden. The PL css is then applied, hiding the
+   menu.
 
-.js #global-header-controls,
-.js .campl-carousel li,
-.js .campl-secondary-content {
+   This overrides the PL FOUC CSS to always show the top nav. Note that the
+   selectors need to be higher priority than the PL selectors, hense the html
+   prefix. This is because webpack doesn't define/guarantee loading order of
+   CSS files require()d via js.
+   See: https://webpack.github.io/docs/stylesheets.html
+ */
+
+html.js #global-header-controls,
+html.js .campl-carousel li,
+html.js .campl-secondary-content {
     display: initial;
 }
