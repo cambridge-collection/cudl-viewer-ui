@@ -45,7 +45,7 @@ export default function getConfig(options) {
         JAVA_NAMESPACE.replace(/\./g, '/'));
 
     let assetJsonPath = options.assetJsonPath || defaultAssetJsonPath;
-    let assetJsonFilename = options.assetJsonFilename || undefined;
+    let assetJsonFilename = options.assetJsonFilename || 'webpack-assets.json';
 
     let cssLoaders, cssPlugins;
     if(options.extractCSS === undefined ? true : options.extractCSS) {
