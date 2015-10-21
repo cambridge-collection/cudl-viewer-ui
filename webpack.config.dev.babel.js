@@ -6,6 +6,7 @@ import getConfig from './webpack.config.base';
 
 
 export default getConfig({
+    isDevBuild: true,
     filenameTemplateJs: 'js/[name].js',
     filenameTemplateJsChunk: 'js/chunks/[name].js',
     filenameTemplateAsset: 'assets/[name].[ext]',

@@ -236,7 +236,8 @@ export default function getConfig(options) {
             ),
             new webpack.DefinePlugin({
                 // Relative to the public path
-                CKEDITOR_LOCATION: JSON.stringify('' + ckeditorLocation)
+                CKEDITOR_LOCATION: JSON.stringify('' + ckeditorLocation),
+                CUDL_PRODUCTION_BUILD: JSON.stringify(!options.isDevBuild)
             })
         ].concat(cssPlugins)
     };
