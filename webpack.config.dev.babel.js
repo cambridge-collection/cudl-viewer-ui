@@ -12,5 +12,7 @@ export default getConfig({
     assetJsonBasePath: path.resolve(__dirname, './src'),
     assetJsonFilename: 'webpack-assets-dev.json',
     extractCSS: false,
-    publicPath: 'http://localhost:8080/'
+    publicPath: 'http://localhost:8080/',
+    // The location of the ckeditor assets, relative to the webpack public path
+    ckeditorLocation: 'vendor/ckeditor/'
 });

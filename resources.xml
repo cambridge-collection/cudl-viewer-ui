@@ -12,5 +12,22 @@
             </excludes>
             <outputDirectory>META-INF/resources/ui</outputDirectory>
         </fileSet>
+
+        <!-- ckeditor can't be completley bundled up with webpack due to it
+             resolving its own dependencies in its own way. We have to bundle
+             it in the resources jar to allow its assets to be fetchable. -->
+        <fileSet>
+            <directory>${project.build.directory}/vendor/ckeditor</directory>
+            <excludes>
+                <exclude>**/*.md</exclude>
+                <exclude>samples/**/*</exclude>
+                <!-- Pre-loaded via webpack -->
+                <exclude>lang/**/*</exclude>
+                <exclude>ckeditor.js</exclude>
+                <exclude>config.js</exclude>
+                <exclude>style.js</exclude>
+            </excludes>
+            <outputDirectory>META-INF/resources/ui/vendor/ckeditor</outputDirectory>
+        </fileSet>
     </fileSets>
 </assembly>

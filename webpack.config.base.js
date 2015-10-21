@@ -95,6 +95,9 @@ export default function getConfig(options) {
         cssPlugins = [];
     }
 
+    // ui/vendor/ckeditor is the location the Maven build places ckeditor
+    let ckeditorLocation = options.ckeditorLocation || 'ui/vendor/ckeditor/';
+
     return {
         context: __dirname,
         entry: {
@@ -227,7 +230,7 @@ export default function getConfig(options) {
             ),
             new webpack.DefinePlugin({
                 // Relative to the public path
-                CKEDITOR_LOCATION: JSON.stringify('vendor/ckeditor/')
+                CKEDITOR_LOCATION: JSON.stringify('' + ckeditorLocation)
             })
         ].concat(cssPlugins)
     };
