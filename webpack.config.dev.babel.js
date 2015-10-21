@@ -7,6 +7,7 @@ import getConfig from './webpack.config.base';
 
 export default getConfig({
     filenameTemplateJs: 'js/[name].js',
+    filenameTemplateJsChunk: 'js/chunks/[name].js',
     filenameTemplateAsset: 'assets/[name].[ext]',
     filenameTemplateCss: 'css/[name].css',
     assetJsonBasePath: path.resolve(__dirname, './src'),

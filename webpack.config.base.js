@@ -32,6 +32,8 @@ export default function getConfig(options) {
 
     let filenameTemplateJs = options.filenameTemplateJs ||
         'js/[name]-[chunkhash].js';
+    let filenameTemplateJsChunk = options.filenameTemplateJsChunk ||
+        'js/chunks/[name]-[chunkhash].js';
     let filenameTemplateAsset = options.filenameTemplateAsset ||
         'assets/[name]-[hash].[ext]';
     let filenameTemplateCss = options.filenameTemplateCss ||
@@ -113,6 +115,7 @@ export default function getConfig(options) {
         output: {
             path: OUT_DIR,
             filename: filenameTemplateJs,
+            chunkFilename: filenameTemplateJsChunk,
             publicPath: options.publicPath
         },
         resolve: {
@@ -216,7 +219,7 @@ export default function getConfig(options) {
             //       what order.
             new webpack.optimize.CommonsChunkPlugin({
                 name: 'common',
-                filename: filenameTemplateJs,
+                filename: filenameTemplateJsChunk,
                 chunks: [ 'page-standard', 'page-advancedsearch', 'page-login']
             }),
             new AssetsPlugin({
