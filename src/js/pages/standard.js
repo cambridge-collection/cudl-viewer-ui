@@ -3,8 +3,14 @@
  * css. For example, the about, news and help pages.
  */
 
+import $ from 'jquery';
+
 // Use the normal CUDL style
 import '../../css/style.css';
 import '../base.js';
+import { possiblyEnableEditing } from '../admin/edit';
 
-console.log('This is the standard page');
+
+$(function() {
+    possiblyEnableEditing();
+});
