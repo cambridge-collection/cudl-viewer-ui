@@ -50,7 +50,12 @@ export default function getConfig(options) {
     let assetJsonFilename = options.assetJsonFilename || 'webpack-assets.json';
 
     let cssLoaders, cssPlugins;
-    if(options.extractCSS === undefined ? true : options.extractCSS) {
+    if(options.extractCSS === undefined || options.extractCSS) {
+        // Not 100% sure if I'm correct, but I'm interpreting this as the path
+        // to the main publicPath from the css's output path. The css is in
+        // ./css/, so ../ is the output root.
+        let publicPath = '../';
+
         cssLoaders = [
             {
                 test: /\.css$/,
@@ -58,19 +63,17 @@ export default function getConfig(options) {
                 loader: ExtractTextPlugin.extract(
                     'style-loader',
                     'css-loader?sourceMap!postcss-loader?sourceMap', {
-                        // Not 100% sure if I'm correct, but I'm
-                        // interpreting this as the path to the main
-                        // publicPath from the css's output path.
-                        // The css is in ./css/, so ../ is the output root.
-                        publicPath: '../'
+                        publicPath: publicPath
                     })
             },
             // Plain library CSS
             {
                 test: /\.css(\?.*)?$/,
                 exclude: path.resolve(__dirname, './src/css'),
-                // FIXME: extract this
-                loader: 'style-loader!css-loader?sourceMap'
+                loader: ExtractTextPlugin.extract(
+                    'style-loader', 'css-loader?sourceMap', {
+                    publicPath: publicPath
+                })
             }
         ];
 
