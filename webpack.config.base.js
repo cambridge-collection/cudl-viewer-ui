@@ -156,14 +156,8 @@ export default function getConfig(options) {
                         __dirname, './bower_components/project-light/' +
                         'javascripts/custom.js'),
                     loader:'imports?'  + [
-                        // This is a pain, Project Light has a load of deps
-                        // we have to shim as commonjs modules
-                        '__jquery_migrate=jquery-migrate',
-                        '__ios_fix=ios-orientation-zoom-bug-fix',
-                        '__project_light_style=project-light/stylesheets/full-stylesheet.css',
-                        '__workaround=' + path.resolve(
-                            __dirname,
-                            './src/css/projectlight-hidden-menu-workaround.css'),
+                        '__1=jquery-migrate',
+                        '__2=ios-orientation-zoom-bug-fix',
                     ].join(',')
                 },
                 // Shim modernizr as a commonjs module
