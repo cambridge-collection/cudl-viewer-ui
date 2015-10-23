@@ -130,7 +130,9 @@ export default function getConfig(options) {
                 // Use the Modernizr bundled with Project Light as I've not yet
                 // worked out which tests the use (if any, other than .mq()).
                 modernizr: MODERNIZR_PATH,
-                'ios-orientation-zoom-bug-fix': IOS_ZOOM_FIX
+                'ios-orientation-zoom-bug-fix': IOS_ZOOM_FIX,
+                openseadragon: 'openseadragon/built-openseadragon/' +
+                               'openseadragon/openseadragon'
             }
         },
         module: {
@@ -199,7 +201,13 @@ export default function getConfig(options) {
                     // it wouldn't create a global on window as it relies on
                     // various properties of window.
                     loader: 'exports?window.CKEDITOR'
-                }
+                },
+                // Shim openseadragon as a commonjs module
+                {
+                    test: /\/openseadragon\.js$/,
+                    include: /\/bower_components\/openseadragon\//,
+                    loader: 'exports?OpenSeadragon'
+                },
             ].concat(cssLoaders)
         },
         postcss: [require('autoprefixer')],

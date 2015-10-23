@@ -3,80 +3,99 @@
  * CUDL item with the zooming image viewer.
  */
 
+// Page styles
 import '../../css/style-document.css';
 
-import '../cudl';
+import $ from 'jquery';
+import 'bootstrap';
+import OpenSeadragon from 'openseadragon';
+import range from 'lodash/utility/range';
 
+import '../cudl';
+import { msgBus } from '../cudl';
+import { getPageContext } from '../context';
+import paginationTemplate from './document-thumbnail-pagination.jade';
 
 /*
+    We have the following attributes set by the Java in the context JSON.
 
-    We have the following variables set by the Java.
-
-    cudl.JSONURL
-    cudl.JSONTHUMBURL
-    cudl.pagenum
-    cudl.docId
-    cudl.docURL
-    cudl.imageServer
-    cudl.services
+    jsonURL
+    jsonThumbURL
+    pageNum
+    docId
+    docURL - not used
+    imageServer
+    services
 
     // Read in Attributes
-    cudl.collectionURL
-    cudl.collectionTitle
-    cudl.parentCollectionURL
-    cudl.parentCollectionTitle
-    cudl.itemTitle
-    cudl.itemAuthors
-    cudl.itemAuthorsFullForm
-
+    collectionURL
+    collectionTitle
+    parentCollectionURL
+    parentCollectionTitle
+    itemTitle
+    itemAuthors - not used
+    itemAuthorsFullForm - not used
  */
 
-cudl.data; // stores the JSON data for this book.
-var store = {}; // This is used when changing pages from links in the text.
-cudl.currentThumbnailPage = 1;
+let context;
 
-cudl.thumbnailProps = {}; // stores thumbnail properties
-cudl.thumbnailProps.MAX_THUMBNAIL_ITEMS_ON_PAGE = 42;
-cudl.thumbnailProps.MAX_THUMBNAIL_ITEMS_ON_ROW = 3;
+let pageNum;
+let data; // stores the JSON data for this book.
 
-store.loadPage = function(pagenumber) {
+// The OpenSeadragon viewer
+let viewer;
+
+// This is used when changing pages from links in the text.
+window.store = {
+    loadPage: function(pageNumber) {
+        throw new Error('TODO: implement');
+    }
+};
+let currentThumbnailPage = 1;
+
+let thumbnailProps = {
+    MAX_THUMBNAIL_ITEMS_ON_PAGE: 42,
+    MAX_THUMBNAIL_ITEMS_ON_ROW: 3
+};
+
+function loadPage(pagenumber) {
 
     // validation
     if (isNaN(pagenumber)) { alert ("Please enter a number."); return; }
     else if (pagenumber < 0 ) { pagenumber = 0; }
-    else if (pagenumber > cudl.data.numberOfPages ) {
-        pagenumber = cudl.data.numberOfPages;
+    else if (pagenumber > data.numberOfPages ) {
+        pagenumber = data.numberOfPages;
     }
 
     // test for images
     var imageavailable = true;
-    if (typeof(cudl.data.pages[pagenumber-1].displayImageURL) == "undefined") {
-        cudl.viewer._showMessage("No image available for page: "+cudl.data.pages[pagenumber-1].label);
+    if (typeof(data.pages[pagenumber-1].displayImageURL) == "undefined") {
+        viewer._showMessage("No image available for page: "+data.pages[pagenumber-1].label);
         imageavailable = false;
     }
 
     function openDzi(dziPath) {
 
         // ajax call to fetch .dzi
-        $.get(cudl.imageServer + dziPath).success(function(xml) {
+        $.get(context.imageServer + dziPath).success(function(xml) {
 
             // Seadragon AJAX supported being given a DZI as a string
             // and rewriting the tilesource to an external URL
             // openseadragon won't accept an external DZI so we build an
             // inline tilesource with a modified URL
 
-            xmlDoc = $.parseXML(xml);
-            $xml = $(xmlDoc);
-
+            let xmlDoc = $.parseXML(xml);
+            let $xml = $(xmlDoc);
+            let $image, $size;
             if(navigator.appVersion.indexOf("MSIE 9.")!=-1) {
-              // If using IE 9
-              $image = $(xml).find('Image');
-              $size = $(xml).find('Size');
+                // If using IE 9
+                $image = $(xml).find('Image');
+                $size = $(xml).find('Size');
 
             } else {
-              // Any other browser
-              $image = $xml.find('Image');
-              $size = $xml.find('Size');
+                // Any other browser
+                $image = $xml.find('Image');
+                $size = $xml.find('Size');
             }
 
             var path = dziPath;
@@ -84,7 +103,7 @@ store.loadPage = function(pagenumber) {
             var dzi = {
                 Image : {
                     xmlns : $image.attr('xmlns'),
-                    Url : cudl.imageServer + path + '_files/',
+                    Url : context.imageServer + path + '_files/',
                     Format : $image.attr('Format'),
                     Overlap : $image.attr('Overlap'),
                     TileSize : $image.attr('TileSize'),
@@ -95,43 +114,41 @@ store.loadPage = function(pagenumber) {
                 }
             };
 
-            cudl.viewer.open(dzi);
+            viewer.open(dzi);
         }).error(function(jqXHR, textStatus, errorThrown) {
-            cudl.viewer._showMessage("Image server temporarily unavailable");
+            viewer._showMessage("Image server temporarily unavailable");
         });
     }
-    ;
-
 
     // open Image
-    if (imageavailable) { openDzi(cudl.data.pages[pagenumber - 1].displayImageURL); }
+    if (imageavailable) { openDzi(data.pages[pagenumber - 1].displayImageURL); }
 
     // Fire an event to notify listeners of the page number change
-    $(cudl).trigger('change.cudl.pagenum', pagenumber);
+    msgBus.emit('change.pageNum', pagenumber);
 
     // update current page
-    cudl.pagenum = pagenumber;
-    $("#pageInput").val(cudl.pagenum);
-    $("#maxPage").html(cudl.data.numberOfPages);
+    pageNum = pagenumber;
+    $("#pageInput").val(pageNum);
+    $("#maxPage").html(data.numberOfPages);
 
     // update transcription data
-    cudl.setTranscriptionPage(cudl.data, pagenumber);
+    setTranscriptionPage(data, pagenumber);
 
     // update metadata
-    cudl.updatePageMetadata(cudl.data, pagenumber);
+    updatePageMetadata(data, pagenumber);
 
     // Google analytics
     ga('create', googleAnalyticsID, 'auto');
     ga('send', 'pageview');
     // end of analytics
 
-};
+}
 
 // Update the metadata that changes on page change
-cudl.updatePageMetadata = function (data, pagenumber) {
+function updatePageMetadata(data, pagenumber) {
 
     try {
-       var newURL = "/view/" + cudl.docId + "/" + pagenumber;
+       var newURL = "/view/" + context.docId + "/" + pagenumber;
 
        if (data.descriptiveMetadata[0].downloadImageRights==null || data.descriptiveMetadata[0].downloadImageRights.trim()=="") {
            $('#downloadOption').css("display", "none");
@@ -145,23 +162,23 @@ cudl.updatePageMetadata = function (data, pagenumber) {
        }
 
        $('#currentURL').text("http://cudl.lib.cam.ac.uk"+newURL);
-       $('#embedCode').text("<div style='position: relative; width: 100%; padding-bottom: 80%;'><iframe type='text/html' width='600' height='410' style='position: absolute; width: 100%; height: 100%;' src='http://cudl.lib.cam.ac.uk/embed/#item="+cudl.docId+"&page="+pagenumber+"&hide-info=true' frameborder='0' allowfullscreen='' onmousewheel=''></iframe></div>")
+       $('#embedCode').text("<div style='position: relative; width: 100%; padding-bottom: 80%;'><iframe type='text/html' width='600' height='410' style='position: absolute; width: 100%; height: 100%;' src='http://cudl.lib.cam.ac.uk/embed/#item="+context.docId+"&page="+pagenumber+"&hide-info=true' frameborder='0' allowfullscreen='' onmousewheel=''></iframe></div>")
        $('#about-metadata').empty();
-       cudl.highlightMetadataForPageViewed(pagenumber, data.logicalStructures);
+       highlightMetadataForPageViewed(pagenumber, data.logicalStructures);
        $('#pageLabel').html("Page: "+data.pages[pagenumber-1].label);
 
        // update URL bar, does not work in ie9.
-       window.history.replaceState(cudl.docId + " page:"+ pagenumber, "Cambridge Digital Library",newURL);
+       window.history.replaceState(context.docId + " page:"+ pagenumber, "Cambridge Digital Library",newURL);
 
     } catch (e) { /* the above does not work in fullscreen mode*/ }
 
 };
 
 
-cudl.setupSeaDragon = function(data) {
+function setupSeaDragon(data) {
 
     OpenSeadragon.setString("Tooltips.Home", "Reset View");
-    cudl.viewer = new OpenSeadragon.Viewer({
+    viewer = new OpenSeadragon.Viewer({
         id : "doc",
         debugMode : false,
         prefixUrl : "/img/",
@@ -172,23 +189,23 @@ cudl.setupSeaDragon = function(data) {
         rotateRightButton : "rotateRight",
         fullPageButton: "fullscreen"
     });
-    cudl.viewer.clearControls(); // hides controls.
+    viewer.clearControls(); // hides controls.
 
     // Setup forward and backward buttons
     function nextPage() {
 
-        if (cudl.pagenum < cudl.data.pages.length) {
-            cudl.pagenum++;
-            store.loadPage(cudl.pagenum);
+        if (pageNum < data.pages.length) {
+            pageNum++;
+            loadPage(pageNum);
         }
         return false;
     }
 
     function prevPage() {
 
-        if (cudl.pagenum > 1) {
-            cudl.pagenum--;
-            store.loadPage(cudl.pagenum);
+        if (pageNum > 1) {
+            pageNum--;
+            loadPage(pageNum);
         }
         return false;
     }
@@ -200,25 +217,25 @@ cudl.setupSeaDragon = function(data) {
         return prevPage();
     });
     $("#pageInput").change(function(input) {
-        store.loadPage(input.target.value);
+        loadPage(input.target.value);
     });
 
     // move the pagination controls to the image when going fullscreen
     // then back to the header bar when full screen is exited.
     // Also update transcriptions / metadata etc elements when
     // going back to normal view as page may have changed.
-    cudl.viewer.addHandler("pre-full-screen", function (data) {
+    viewer.addHandler("pre-full-screen", function (data) {
         if (data.fullScreen) {
           $(".cudl-viewer-buttons-pagination").appendTo("#doc");
         }
     });
-    cudl.viewer.addHandler("full-screen", function (data) {
+    viewer.addHandler("full-screen", function (data) {
         if (data.fullScreen) {
           $('#doc').css("top", "0px");
         } else {
           $(".cudl-viewer-buttons-pagination").appendTo(".navbar-header");
-          cudl.setTranscriptionPage(cudl.data, cudl.pagenum);
-          cudl.updatePageMetadata(cudl.data, cudl.pagenum);
+          setTranscriptionPage(data, pageNum);
+          updatePageMetadata(data, pageNum);
           $('#doc').css("top", "68px");
         }
     });
@@ -228,36 +245,36 @@ cudl.setupSeaDragon = function(data) {
 
             switch (e.charCode) {
                 case 118:  // v
-                    cudl.pagenum++;
-                    store.loadPage(cudl.pagenum);
+                    pageNum++;
+                    store.loadPage(pageNum);
                     return false;
                 case 99: // c
-                    cudl.pagenum--;
-                    store.loadPage(cudl.pagenum);
+                    pageNum--;
+                    store.loadPage(pageNum);
                     return false;
                 case 113: case 43: // q or + zoom in
-                    cudl.viewer.viewport.zoomBy(2);
+                    viewer.viewport.zoomBy(2);
                     return false;
                 case 101: case 45: // e or - zoom out
-                    cudl.viewer.viewport.zoomBy(0.5);
+                    viewer.viewport.zoomBy(0.5);
                     return false;
                 case 122: // z rotate left 90
-                    cudl.viewer.viewport.setRotation(cudl.viewer.viewport.getRotation()-90);
+                    viewer.viewport.setRotation(viewer.viewport.getRotation()-90);
                     return false;
                 case 120: // x rotate right 90
-                    cudl.viewer.viewport.setRotation(cudl.viewer.viewport.getRotation()+90);
+                    viewer.viewport.setRotation(viewer.viewport.getRotation()+90);
                     return false;
                 case 90: // Z rotate left
-                    cudl.viewer.viewport.setRotation(cudl.viewer.viewport.getRotation()-10);
+                    viewer.viewport.setRotation(viewer.viewport.getRotation()-10);
                     return false;
                 case 88: // X rotate right
-                    cudl.viewer.viewport.setRotation(cudl.viewer.viewport.getRotation()+10);
+                    viewer.viewport.setRotation(viewer.viewport.getRotation()+10);
                     return false;    f
                 case 102: // f fullscreen toggle
-                    if (cudl.viewer.isFullPage()) {
-                      cudl.viewer.setFullScreen(false);
+                    if (viewer.isFullPage()) {
+                      viewer.setFullScreen(false);
                     } else {
-                      cudl.viewer.setFullScreen(true);
+                      viewer.setFullScreen(true);
                     }
                    return false;
                 case 114: // r toggle right panel
@@ -272,26 +289,26 @@ cudl.setupSeaDragon = function(data) {
 
 };
 
-cudl.setupInfoPanel = function(data) {
+function setupInfoPanel(data) {
 
-    breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li><li><a href=\""
-            + cudl.collectionURL
+    let breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li><li><a href=\""
+            + context.collectionURL
             + "\">"
-            + cudl.collectionTitle
+            + context.collectionTitle
             + "</a></li><li class='active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
-    if (cudl.parentCollectionTitle) {
+    if (context.parentCollectionTitle) {
         breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li><li><a href=\""
-                + cudl.parentCollectionURL
+                + context.parentCollectionURL
                 + "\">"
-                + cudl.parentCollectionTitle
+                + context.parentCollectionTitle
                 + "</a></li><li><a href=\""
-                + cudl.collectionURL
+                + context.collectionURL
                 + "\">"
-                + cudl.collectionTitle + "</a></li><li class='active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
+                + context.collectionTitle + "</a></li><li class='active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
     }
     $('#doc-breadcrumb').html(breadcrumbHTML);
 
-    $('#about-header').html(cudl.itemTitle+ " ("+data.descriptiveMetadata[0].shelfLocator.displayForm+")");
+    $('#about-header').html(context.itemTitle+ " ("+data.descriptiveMetadata[0].shelfLocator.displayForm+")");
     $('#about-imagerights').html(data.descriptiveMetadata[0].displayImageRights);
     try {
         $('#about-abstract').html(data.descriptiveMetadata[0].abstract.displayForm);
@@ -361,7 +378,7 @@ cudl.setupInfoPanel = function(data) {
     // setup toggle behaviour
     var infoPanelExpanded = true;
 
-    cudl.toggleRightPanel = function() {
+    function toggleRightPanel() {
 
         if (infoPanelExpanded) {
             $('#right-panel').css({
@@ -390,8 +407,8 @@ cudl.setupInfoPanel = function(data) {
         }
 
     }
-    $('#right-panel-toggle').click(cudl.toggleRightPanel);
-    if ($(window).width()<760) { cudl.toggleRightPanel(); }
+    $('#right-panel-toggle').click(toggleRightPanel);
+    if ($(window).width()<760) { toggleRightPanel(); }
 
     //update panel positon on resize
     $(window).resize(function () {
@@ -404,31 +421,31 @@ cudl.setupInfoPanel = function(data) {
     });
 
     // tab content needs fixed height for scrolling
-    cudl.resizeRightPanel = function() {
+    function resizeRightPanel() {
     if (!$('.fullpage').length) {
 
             $('#tab-content').height($(window).height() - $('.navbar-header').height() - $('#doc-breadcrumb').height() - $('#rightTabs .nav-tabs').height());
         }
     };
 
-    $(window).resize(cudl.resizeRightPanel);
+    $(window).resize(resizeRightPanel);
 
-    cudl.resizeRightPanel();
+    resizeRightPanel();
 
 };
 
 /* Allows you to link to a tab panel */
-cudl.showPanel = function (panelHREF) {
+function showPanel(panelHREF) {
 
     $('a[href="' + panelHREF + '"]').tab('show');
 
 };
 
-cudl.addBookmark = function () {
+function addBookmark() {
 
     // Generate bookmarkPath
-    var thumbnailURL = cudl.imageServer+cudl.data.pages[cudl.pagenum-1].thumbnailImageURL;
-    var bookmarkPath = "/mylibrary/addbookmark/?itemId="+cudl.docId+"&page="+cudl.pagenum+"&thumbnailURL="+encodeURIComponent(thumbnailURL);
+    var thumbnailURL = context.imageServer+data.pages[pageNum-1].thumbnailImageURL;
+    var bookmarkPath = "/mylibrary/addbookmark/?itemId="+context.docId+"&page="+pageNum+"&thumbnailURL="+encodeURIComponent(thumbnailURL);
 
     // ajax call to make the bookmark:
     $.get(bookmarkPath).success(function(xml) {
@@ -453,54 +470,49 @@ cudl.addBookmark = function () {
 
 }
 
-cudl.downloadImage = function () {
-
-  $('#downloadConfirmation').hide();
-  var downloadImageURL = cudl.data.pages[cudl.pagenum-1].downloadImageURL;
-  if (typeof downloadImageURL != "undefined") {
-        window.open(cudl.imageServer+downloadImageURL);
-  } else {
-      alert ("No image available to download.");
-  }
-
+function downloadImage() {
+    var downloadImageURL = data.pages[pageNum-1].downloadImageURL;
+    if (typeof downloadImageURL != "undefined") {
+        window.open(context.imageServer+downloadImageURL);
+    } else {
+        alert ("No image available to download.");
+    }
 }
 
-cudl.setupThumbnails = function (data) {
+function setupThumbnails(data) {
 
-    var props = cudl.thumbnailProps;
-    props.NUM_THUMBNAIL_PAGES = 1; // set below
-    function generatePagination(data) {
+    var props = thumbnailProps;
+    props.NUM_THUMBNAIL_PAGES = 1;
 
-        // create the pagination
-        NUM_THUMBNAIL_PAGES = 1;
-        if (data.numberOfPages > props.MAX_THUMBNAIL_ITEMS_ON_PAGE) {
-            props.NUM_THUMBNAIL_PAGES = Math.ceil(data.numberOfPages
-                    / props.MAX_THUMBNAIL_ITEMS_ON_PAGE);
-        }
-
-        var html = "<ul class='pagination'>";
-        html = html
-                .concat("<li class='thumbnailpaginationstart' onclick='return cudl.showThumbnailPage(cudl.currentThumbnailPage-1);'><a href='#'>&laquo;</a></li>");
-
-        for (i = 1; i <= props.NUM_THUMBNAIL_PAGES; i++) {
-            html = html.concat("<li class='thumbnailpaginationitem" + i
-                    + "'><a href='#' onclick='return cudl.showThumbnailPage(" + i
-                    + ");'>" + i + "</a></li>");
-        }
-
-        html = html
-                .concat("<li class='thumbnailpaginationend'><a href='#' onclick='return cudl.showThumbnailPage(cudl.currentThumbnailPage+1);'>&raquo;</a></li></ul>");
-
-        $('#thumbnailpaginationtop').html(html);
-        $('#thumbnailpaginationbottom').html(html);
+    if (data.numberOfPages > props.MAX_THUMBNAIL_ITEMS_ON_PAGE) {
+        props.NUM_THUMBNAIL_PAGES = Math.ceil(data.numberOfPages /
+            props.MAX_THUMBNAIL_ITEMS_ON_PAGE);
     }
+    // create the pagination
 
-    generatePagination(data);
+    let pagination = paginationTemplate({
+        pages: range(1, props.NUM_THUMBNAIL_PAGES + 1)
+    });
 
+    $('#thumbnailpaginationtop,#thumbnailpaginationbottom')
+        .html(pagination)
+        .on('click', 'li', e => {
+            let li = $(e.currentTarget);
+            let page;
+
+            if(li.is('.thumbnailpaginationstart'))
+                page = currentThumbnailPage - 1;
+            else if(li.is('.thumbnailpaginationend'))
+                page = currentThumbnailPage + 1;
+            else
+                page = parseInt(li.data('page'));
+
+            showThumbnailPage(page);
+        });
 };
 
 
-cudl.showThumbnailPage = function (pagenum) {
+function showThumbnailPage(pagenum) {
 
     /**
      * PageNum should be between 1 and NUM_THUMBNAIL_PAGES
@@ -514,7 +526,7 @@ cudl.showThumbnailPage = function (pagenum) {
                 data.pages.length - 1);
         var thumbnailhtml = "";
 
-        for (i = startIndex; i <= endIndex; i++) {
+        for (let i = startIndex; i <= endIndex; i++) {
 
             if (i == startIndex) {
                 thumbnailhtml = thumbnailhtml
@@ -530,7 +542,7 @@ cudl.showThumbnailPage = function (pagenum) {
                     .concat("<div class='col-md-4'><a href='' onclick='store.loadPage("
                             + (data.pages[i].sequence)
                             + ");return false;' class='thumbnail'><img src='"
-                            + cudl.imageServer
+                            + context.imageServer
                             + data.pages[i].thumbnailImageURL
                             + "' ");
 
@@ -558,53 +570,52 @@ cudl.showThumbnailPage = function (pagenum) {
     };
 
 
-    if (pagenum > 0 && pagenum <= cudl.thumbnailProps.NUM_THUMBNAIL_PAGES) {
-        cudl.currentThumbnailPage = pagenum;
-        showThumbnailPageImages(cudl.thumbnailProps, cudl.currentThumbnailPage,
-                cudl.data);
+    if (pagenum > 0 && pagenum <= thumbnailProps.NUM_THUMBNAIL_PAGES) {
+        currentThumbnailPage = pagenum;
+        showThumbnailPageImages(thumbnailProps, currentThumbnailPage,
+                data);
 
         // Update pagination page selected
-
-        $("#thumbnails-content ul.pagination").find("li").removeClass('active');
-        $("#thumbnails-content ul.pagination").find(
-                ".thumbnailpaginationitem" + pagenum).addClass("active");
+        $("#thumbnails-content ul.pagination li.active").removeClass('active');
+        $(`#thumbnails-content ul.pagination .thumbnailpaginationitem[data-page=${pagenum}]`)
+            .addClass("active");
 
     }
 };
 
-cudl.setupMetadata = function (data) {
+function setupMetadata(data) {
 
     // set content of more info tab.
     $('#metadatacontent').html("<ul>"+ getHTMLForLogicalStructure(data.logicalStructures, 0, Number.MAX_VALUE)+"</ul>");
 
 
-  function getHTMLForLogicalStructure(array, level, maxlevel) {
+    function getHTMLForLogicalStructure(array, level, maxlevel) {
 
-    var html = "";
+        var html = "";
 
-    for (var i=0; i<array.length; i++) {
+        for (var i=0; i<array.length; i++) {
 
-      var meta = findDescriptiveMetadata(array[i].descriptiveMetadataID, data);
-      html = html.concat("<div class=\"panel-group\" id=\"accordion\"><div class=\"panel panel-default\" id=\"panel"+escape(array[i].descriptiveMetadataID).replace(/%/g, "")+"\">");
-      html = html.concat("<div class=\"panel-heading\"><h4 class=\"panel-title\">");
-      //html = html.concat("<a data-toggle=\"collapse\" data-target=\"#collapse"+array[i].descriptiveMetadataID+"\" href=\"#collapse"+array[i].descriptiveMetadataID+"\">");
-      if (level==0) {
-          html = html.concat("Information about this document"); // title for full document metadata
-      } else {
-          html = html.concat("Section shown in images "+array[i].startPagePosition+" to "+array[i].endPagePosition);
-      }
-      //html = html.concat("</a>");
-      html = html.concat("</h4></div><div id=\"collapse"+array[i].descriptiveMetadataID+"\" class=\"panel-collapse collapse in\"><div class=\"panel-body\">");
-      html = html.concat("<ul>"+getHTMLForDescriptiveMetadata(meta)+"</ul>");
-      html = html.concat("</div></div></div>");
+            var meta = findDescriptiveMetadata(array[i].descriptiveMetadataID, data);
+            html = html.concat("<div class=\"panel-group\" id=\"accordion\"><div class=\"panel panel-default\" id=\"panel"+escape(array[i].descriptiveMetadataID).replace(/%/g, "")+"\">");
+            html = html.concat("<div class=\"panel-heading\"><h4 class=\"panel-title\">");
+            //html = html.concat("<a data-toggle=\"collapse\" data-target=\"#collapse"+array[i].descriptiveMetadataID+"\" href=\"#collapse"+array[i].descriptiveMetadataID+"\">");
+            if (level==0) {
+                html = html.concat("Information about this document"); // title for full document metadata
+            } else {
+                html = html.concat("Section shown in images "+array[i].startPagePosition+" to "+array[i].endPagePosition);
+            }
+            //html = html.concat("</a>");
+            html = html.concat("</h4></div><div id=\"collapse"+array[i].descriptiveMetadataID+"\" class=\"panel-collapse collapse in\"><div class=\"panel-body\">");
+            html = html.concat("<ul>"+getHTMLForDescriptiveMetadata(meta)+"</ul>");
+            html = html.concat("</div></div></div>");
 
-      if (array[i].children && level<maxlevel) {
-        level = level+1;
-        html = html.concat(getHTMLForLogicalStructure(array[i].children, level, maxlevel));
-      }
+            if (array[i].children && level<maxlevel) {
+                level = level+1;
+                html = html.concat(getHTMLForLogicalStructure(array[i].children, level, maxlevel));
+            }
+        }
+        return html;
     }
-    return html;
-  }
 
     function findDescriptiveMetadata (id, data) {
 
@@ -613,7 +624,7 @@ cudl.setupMetadata = function (data) {
                 return data.descriptiveMetadata[i];
             }
         }
-    };
+    }
 
     function getHTMLForDescriptiveMetadata(descriptiveMetadata) {
         var metadata = "";
@@ -754,9 +765,7 @@ cudl.setupMetadata = function (data) {
  * Note special characters are removed from the descriptiveMetadataID used to identify the logical structure
  * as these are not supported by jquery functions used.
  */
-cudl.highlightMetadataForPageViewed = function(pageNumber, logicalStructures) {
-
-
+function highlightMetadataForPageViewed(pageNumber, logicalStructures) {
     var lsArray = new Array();
     for ( var i = 0; i < logicalStructures.length; i++) {
         var ls = logicalStructures[i];
@@ -775,13 +784,13 @@ cudl.highlightMetadataForPageViewed = function(pageNumber, logicalStructures) {
         }
 
         if (ls.children) {
-            cudl.highlightMetadataForPageViewed(pageNumber, ls.children);
+            highlightMetadataForPageViewed(pageNumber, ls.children);
         }
 
     }
 }
 
-cudl.setTranscriptionPage = function (data, pagenum) {
+function setTranscriptionPage(data, pagenum) {
 
     // check for existance of transcription frame, if not,
     // then in fullscreen mode so do nothing.
@@ -792,7 +801,7 @@ cudl.setTranscriptionPage = function (data, pagenum) {
     // normalised transcriptions
     var url = data.pages[pagenum-1].transcriptionNormalisedURL;
     if (typeof url != 'undefined' && typeof data.allTranscriptionNormalisedURL == 'undefined') {
-        document.getElementById('transcriptionnormframe').src = cudl.services + url;
+        document.getElementById('transcriptionnormframe').src = context.services + url;
     } else {
         document.getElementById('transcriptionnormframe').src = 'data:text/html;charset=utf-8,%3Chtml%3E%3Chead%3E%3Clink href%3D%22styles%2Fstyle-transcription.css%22 rel%3D%22stylesheet%22 type%3D%22text%2Fcss%22%2F%3E%0A%3C%2Fhead%3E%3Cbody%3E%3Cdiv class%3D%22transcription%22%3ENo transcription available for this image.%3C%2Fdiv%3E%3C%2Fbody%3E%3C%2Fhtml%3E';
     }
@@ -800,7 +809,7 @@ cudl.setTranscriptionPage = function (data, pagenum) {
     // diplomatic transcriptions
     var url = data.pages[pagenum-1].transcriptionDiplomaticURL;
     if (typeof url != 'undefined' && typeof data.allTranscriptionDiplomaticURL == 'undefined') {
-        document.getElementById('transcriptiondiploframe').src = cudl.services + url;
+        document.getElementById('transcriptiondiploframe').src = context.services + url;
     } else {
         document.getElementById('transcriptiondiploframe').src = 'data:text/html;charset=utf-8,%3Chtml%3E%3Chead%3E%3Clink href%3D%22styles%2Fstyle-transcription.css%22 rel%3D%22stylesheet%22 type%3D%22text%2Fcss%22%2F%3E%0A%3C%2Fhead%3E%3Cbody%3E%3Cdiv class%3D%22transcription%22%3ENo transcription available for this image.%3C%2Fdiv%3E%3C%2Fbody%3E%3C%2Fhtml%3E';
     }
@@ -808,7 +817,7 @@ cudl.setTranscriptionPage = function (data, pagenum) {
     // translation
     var url = data.pages[pagenum-1].translationURL;
     if (typeof url != 'undefined') {
-        document.getElementById('translationframe').src = cudl.services + url;
+        document.getElementById('translationframe').src = context.services + url;
     } else {
         document.getElementById('translationframe').src = 'data:text/html;charset=utf-8,%3Chtml%3E%3Chead%3E%3Clink href%3D%22styles%2Fstyle-transcription.css%22 rel%3D%22stylesheet%22 type%3D%22text%2Fcss%22%2F%3E%0A%3C%2Fhead%3E%3Cbody%3E%3Cdiv class%3D%22transcription%22%3ENo translation available for this image.%3C%2Fdiv%3E%3C%2Fbody%3E%3C%2Fhtml%3E';
     }
@@ -816,30 +825,93 @@ cudl.setTranscriptionPage = function (data, pagenum) {
     // set all normalised transcriptions (all transcriptions on one page)
     var url = data.allTranscriptionNormalisedURL;
     if (typeof url != 'undefined') {
-        document.getElementById('transcriptionnormframe').src = cudl.services + url;
+        document.getElementById('transcriptionnormframe').src = context.services + url;
     }
 
     // set all diplomatic transcriptions (all transcriptions on one page)
     var url = data.allTranscriptionDiplomaticURL;
     if (typeof url != 'undefined') {
-        document.getElementById('transcriptiondiploframe').src = cudl.services + url;
+        document.getElementById('transcriptiondiploframe').src = context.services + url;
     }
 
 }
 
+function setupViewMoreOptions() {
+    $('#downloadOption a').on('click', e => {
+        $('#downloadConfirmation').show();
+        return false;
+    });
+    setupDownloadConfirmation();
+
+    $('#bookmarkOption a').on('click', e => {
+        $('#bookmarkConfirmation').show();
+        return false;
+    });
+    setupBookmarkConfirmation();
+}
+
+function setupConfirmation(confirmation) {
+    confirmation.find('.close,button:not(.btn-success)').on('click', () => {
+        confirmation.hide();
+        return false;
+    });
+}
+
+function setupDownloadConfirmation() {
+    let confirmation = $('#downloadConfirmation');
+
+    setupConfirmation(confirmation);
+
+    confirmation.find('button.btn-success').on('click', () => {
+        confirmation.hide();
+        downloadImage();
+        return false;
+    });
+}
+
+function setupBookmarkConfirmation() {
+    let confirmation = $('#bookmarkConfirmation');
+
+    setupConfirmation(confirmation);
+
+    confirmation.find('button.btn-success').on('click', () => {
+        confirmation.hide();
+        addBookmark();
+        return false;
+    });
+}
+
+function setupKnowMoreLinks() {
+    $('#know-more a.show-metadata').on('click', () => {
+        showPanel('#metadata');
+        return false;
+    });
+
+    $('#know-more a.show-download').on('click', () => {
+        showPanel('#download');
+        return false;
+    });
+}
+
 $(document).ready(function() {
+    context = getPageContext();
+    pageNum = context.pageNum;
+
     // Read in the JSON
-    $.getJSON(cudl.JSONURL).done(function(data) {
+    $.getJSON(context.jsonURL).done(function(jsonData) {
 
         // set seadragon options and load in dzi.
-        if (cudl.pagenum==0) { cudl.pagenum=1; } // page 0 returns item level metadata.
-        cudl.data = data;
-        cudl.setupSeaDragon(data);
-        cudl.setupInfoPanel(data);
-        cudl.setupThumbnails(data);
-        cudl.setupMetadata(data);
-        cudl.setupSimilarityTab(data, cudl.docId);
-        store.loadPage(cudl.pagenum);
-        cudl.showThumbnailPage(cudl.currentThumbnailPage);
+        if(pageNum == 0) { pageNum = 1; } // page 0 returns item level metadata.
+        data = jsonData;
+        setupSeaDragon(data);
+        setupInfoPanel(data);
+        setupThumbnails(data);
+        setupMetadata(data);
+        setupViewMoreOptions();
+        setupKnowMoreLinks();
+        // FIXME: re-add similarity
+        // setupSimilarityTab(data, context.docId);
+        loadPage(pageNum);
+        showThumbnailPage(currentThumbnailPage);
     });
 });

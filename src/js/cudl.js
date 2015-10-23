@@ -1,5 +1,9 @@
+import EventEmitter from 'events';
+
 import $ from 'jquery';
 
+// A message bus for global CUDL events
+export const msgBus = new EventEmitter();
 
 export function toggleDiv (divid) {
     if (document.getElementById(divid).style.display == 'none') {

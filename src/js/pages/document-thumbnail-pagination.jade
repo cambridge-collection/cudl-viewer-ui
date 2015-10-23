@@ -1,0 +1,8 @@
+ul.pagination
+    li.thumbnailpaginationstart
+        a(href='#') &laquo;
+    each page in pages
+        li.thumbnailpaginationitem(data-page=page)
+            a(href='#')= page
+    li.thumbnailpaginationend
+        a(href='#') &raquo;

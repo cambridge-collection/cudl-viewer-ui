@@ -4,7 +4,8 @@
   "description": "This only exists to record bower dependencies",
   "dependencies": {
     "project-light": "git@bitbucket.org:CUDL/project-light-mirror.git#2917ec42cd4b62079ea16200c1f418bfdf5d2d07",
-    "fancybox": "~2",
-    "paging": "~1"
+    "fancybox": "^2",
+    "paging": "^1",
+    "openseadragon": "^1"
   }
 }
