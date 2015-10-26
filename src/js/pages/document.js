@@ -136,12 +136,6 @@ function loadPage(pagenumber) {
 
     // update metadata
     updatePageMetadata(data, pagenumber);
-
-    // Google analytics
-    ga('create', googleAnalyticsID, 'auto');
-    ga('send', 'pageview');
-    // end of analytics
-
 }
 
 // Update the metadata that changes on page change
