@@ -142,6 +142,11 @@ export default function getConfig(options) {
                     include: path.resolve(__dirname, './src/js'),
                     loader: 'babel-loader'
                 },
+                // Meta-modules which export a string which is used as their src
+                {
+                    test: path.resolve(__dirname, './src/js/google-analytics.js'),
+                    loader: 'val'
+                },
                 {
                     test: /\.jade$/,
                     include: path.resolve(__dirname, './src'),

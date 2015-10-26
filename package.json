@@ -22,11 +22,13 @@
     "extract-text-webpack-plugin": "^0",
     "file-loader": "^0",
     "imports-loader": "^0",
+    "isogram": "0.5.0",
     "jade": "^1",
     "jade-loader": "^0",
     "minimist": "^1",
     "postcss-loader": "^0",
     "style-loader": "^0",
+    "val-loader": "^0",
     "webpack": "^1"
   },
   "license": "UNLICENSED",
