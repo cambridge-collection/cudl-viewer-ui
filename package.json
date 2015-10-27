@@ -4,11 +4,11 @@
   "dependencies": {
     "bootstrap": "^3",
     "bootstrap-social": "^4",
-    "lodash": "^3",
     "font-awesome": "^4",
     "hint.css": "^1",
     "jquery": "^1",
     "jquery-migrate": "^1",
+    "lodash": "^3",
     "spin.js": "^2"
   },
   "devDependencies": {
