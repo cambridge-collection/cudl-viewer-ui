@@ -94,6 +94,9 @@
 }
 
 /* pagination */
+.pagination {
+    display: block;
+}
 .pagination.toppagination {
     margin: 30px 0;
 }

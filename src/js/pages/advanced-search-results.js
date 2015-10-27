@@ -1,4 +1,4 @@
-import '../../css/advanced-search-results.css';
+import '../../css/advancedsearch.css';
 
 import $ from 'jquery';
 import 'paging'; // jquery paging plugin
@@ -59,7 +59,7 @@ function init() {
 
                             // query duration
                             requestTime = new Date().getTime() - requestStartTime;
-                            $("#reqtime").text(moment.duration(parseInt(requestTime)).asSeconds() + ' seconds');
+                            $("#reqtime").text(requestTime / 1000 + ' seconds');
 
                             spinner.stop();
 
@@ -193,14 +193,7 @@ function init() {
     hashChange();
 
     // Show the pagination toolbars if enough elements are present
-    if ((numResults / pageLimit) > 1) {
-        $(".toppagination")[0].style.display = "block";
-        $(".toppagination")[1].style.display = "block";
-    } else {
-        $(".toppagination")[0].style.display = "none";
-        $(".toppagination")[1].style.display = "none";
-    }
-
+    $(".toppagination").toggle((numResults / pageLimit) > 1);
 }
 
 const DOWN_ARROW = '▾',
@@ -217,6 +210,12 @@ function collapseListItems() {
         }
         $(this).parent().find("ul").toggleClass("hide");
     });
+}
+
+function styleSnippet(s) {
+    s = s.replace(/<b>/g, "<span class=\"campl-search-term\">");
+    s = s.replace(/<\/b>/g, "</span>");
+    return s;
 }
 
 $(() => {
