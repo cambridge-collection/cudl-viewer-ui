@@ -86,7 +86,7 @@
     padding-bottom: .5em;
 }
 .collections_carousel_text ul li:before {
-    content: "\002022";
+    content: "•";
     color: #999;
 }
 .collections_carousel_text ul li > span {
