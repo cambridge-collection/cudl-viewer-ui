@@ -1,1 +1,34 @@
-{"page-advancedsearch":{"js":"http://localhost:8080/js/page-advancedsearch.js","jsSourceMap":"http://localhost:8080/js/page-advancedsearch.js.map"},"page-collection-organisation":{"js":"http://localhost:8080/js/page-collection-organisation.js","jsSourceMap":"http://localhost:8080/js/page-collection-organisation.js.map"},"page-document":{"js":"http://localhost:8080/js/page-document.js","jsSourceMap":"http://localhost:8080/js/page-document.js.map"},"page-login":{"js":"http://localhost:8080/js/page-login.js","jsSourceMap":"http://localhost:8080/js/page-login.js.map"},"page-standard":{"js":"http://localhost:8080/js/page-standard.js","jsSourceMap":"http://localhost:8080/js/page-standard.js.map"},"page-transcription":{"js":"http://localhost:8080/js/page-transcription.js","jsSourceMap":"http://localhost:8080/js/page-transcription.js.map"},"common":{"js":"http://localhost:8080/js/common.js","jsSourceMap":"http://localhost:8080/js/common.js.map"}}
+{
+  "page-advancedsearch": {
+    "js": "http://localhost:8080/js/page-advancedsearch.js",
+    "jsSourceMap": "http://localhost:8080/js/page-advancedsearch.js.map"
+  },
+  "page-collection-organisation": {
+    "js": "http://localhost:8080/js/page-collection-organisation.js",
+    "jsSourceMap": "http://localhost:8080/js/page-collection-organisation.js.map"
+  },
+  "page-document": {
+    "js": "http://localhost:8080/js/page-document.js",
+    "jsSourceMap": "http://localhost:8080/js/page-document.js.map"
+  },
+  "page-login": {
+    "js": "http://localhost:8080/js/page-login.js",
+    "jsSourceMap": "http://localhost:8080/js/page-login.js.map"
+  },
+  "page-my-library": {
+    "js": "http://localhost:8080/js/page-my-library.js",
+    "jsSourceMap": "http://localhost:8080/js/page-my-library.js.map"
+  },
+  "page-standard": {
+    "js": "http://localhost:8080/js/page-standard.js",
+    "jsSourceMap": "http://localhost:8080/js/page-standard.js.map"
+  },
+  "page-transcription": {
+    "js": "http://localhost:8080/js/page-transcription.js",
+    "jsSourceMap": "http://localhost:8080/js/page-transcription.js.map"
+  },
+  "common": {
+    "js": "http://localhost:8080/js/chunks/common.js",
+    "jsSourceMap": "http://localhost:8080/js/chunks/common.js.map"
+  }
+}

@@ -233,7 +233,8 @@ export default function getConfig(options) {
             }),
             new AssetsPlugin({
                 filename: assetJsonFilename,
-                path: assetJsonPath
+                path: assetJsonPath,
+                prettyPrint: true
             }),
             // Resolve main attr of bower modules
             new webpack.ResolverPlugin(
