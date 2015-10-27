@@ -1,3 +1,5 @@
+@import '~hint.css/hint.css';
+
 /* Extend the normal CUDL style */
 @import './style.css';
 

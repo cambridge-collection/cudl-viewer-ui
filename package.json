@@ -6,7 +6,7 @@
     "bootstrap-social": "^4",
     "lodash": "^3",
     "font-awesome": "^4",
-    "hint": "^2",
+    "hint.css": "^1",
     "jquery": "^1",
     "jquery-migrate": "^1",
     "spin.js": "^2"
