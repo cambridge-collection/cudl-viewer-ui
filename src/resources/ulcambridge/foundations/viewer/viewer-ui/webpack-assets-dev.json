@@ -1,4 +1,8 @@
 {
+  "page-advanced-search-results": {
+    "js": "http://localhost:8080/js/page-advanced-search-results.js",
+    "jsSourceMap": "http://localhost:8080/js/page-advanced-search-results.js.map"
+  },
   "page-advancedsearch": {
     "js": "http://localhost:8080/js/page-advancedsearch.js",
     "jsSourceMap": "http://localhost:8080/js/page-advancedsearch.js.map"
