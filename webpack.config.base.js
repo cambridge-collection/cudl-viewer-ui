@@ -112,7 +112,8 @@ export default function getConfig(options) {
             'page-transcription': './src/js/pages/transcription.js',
             'page-login': './src/js/pages/login.js',
             'page-collection-organisation':
-                './src/js/pages/collection-organisation.js'
+                './src/js/pages/collection-organisation.js',
+            'page-my-library': './src/js/pages/my-library.js'
         },
         devtool: 'source-map',
         output: {
