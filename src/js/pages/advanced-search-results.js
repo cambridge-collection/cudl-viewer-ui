@@ -75,7 +75,7 @@ function init() {
                     if (!this.active)
                         return '<span class="disabled">' + this.value + '</span>';
                     else if (this.value != this.page)
-                        return '<em><a href="" onclick="viewPage(' + this.value + '); return false;">' + this.value + '</a></em>';
+                        return '<em><a href="#">' + this.value + '</a></em>';
                     return '<span class="current">' + this.value + '</span>';
 
                 case 'right':
@@ -84,38 +84,36 @@ function init() {
                     if (!this.active) {
                         return '';
                     }
-                    return '<a href="" onclick="viewPage(' + this.value + '); return false;">' + this.value + '</a>';
+                    return '<a href="">' + this.value + '</a>';
 
                 case 'next':
                     if (this.active)
-                        return '<a href="" onclick="viewPage(' + this.value
-                                + '); return false;" class="next"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></a>';
+                        return '<a href="" class="next"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></a>';
                     return '<span class="disabled"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></span>';
 
                 case 'prev':
                     if (this.active)
-                        return '<a href="" onclick="viewPage(' + this.value
-                                + '); return false;" class="prev"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></a>';
+                        return '<a href="" class="prev"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></a>';
                     return '<span class="disabled"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></span>';
 
                 case 'first':
                     if (this.active)
-                        return '<a href="" onclick="viewPage(' + this.value + '); return false;" class="first">|<</a>';
+                        return '<a href="" class="first">|<</a>';
                     return '<span class="disabled">|<</span>';
 
                 case 'last':
                     if (this.active)
-                        return '<a href="" onclick="viewPage(' + this.value + '); return false;" class="last">>|</a>';
+                        return '<a href="" class="last">>|</a>';
                     return '<span class="disabled">>|</span>';
 
                 case "leap":
                     if (this.active)
-                        return "...";
+                        return "&hellip;";
                     return "";
 
                 case 'fill':
                     if (this.active)
-                        return "...";
+                        return "&hellip;";
                     return "";
             }
         }
