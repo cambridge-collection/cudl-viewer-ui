@@ -7,10 +7,14 @@ function markExternalLinksSensible() {
     let host = window.location.host;
 
     $('#content a').not(".campl-carousel a").filter((_, a) => {
-        return !isLocalDomain(a.host);
+        return isHttp(a.protocol) && !isLocalDomain(a.host);
     }).addClass("campl-external").attr({
         "title": $(this).attr("title") + " (Link to an external website)"
     });
+}
+
+function isHttp(proto) {
+    return proto === 'http:' || proto === 'https:';
 }
 
 function isLocalDomain(host, localHost) {
