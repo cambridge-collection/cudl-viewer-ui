@@ -1,0 +1,30 @@
+mixin searchResultItem(result)
+    - var item = result.item;
+    - var url = `/view/${encodeURIComponent(item.id)}/${encodeURIComponent(result.startPage)}`
+
+    div.collections_carousel_item
+        div.collections_carousel_image_box.campl-column4
+            div.collections_carousel_image
+                a(href=url)
+                    img(src=result.pageThumbnailURL, alt=item.id, style=item.thumbnailOrientation[0] === 'portrait' ? 'height: 100%' : 'width: 100%')
+        div.collections_carousel_text.campl-column8
+            h3
+                a(href=url)= result.itemType === 'essay' ? 'Essay: ' : '' + item.title
+                = ' '
+                //- FIXME: Get rid of <font> tag & inline style
+                font(style='color:#999;font-weight:normal;font-size:14px;')
+                    | (
+                    span(title='Shelf locator')= item.shelfLocator
+                    = item.shelfLocator[0].length <= 0 ? "" : " "
+                    = 'Page: ' + result.startPageLabel
+                    | )
+            = item.abstractShort.join(', ')
+            | &hellip;
+            br
+            br
+            ul
+                each snippet in result.snippets
+                    if snippet
+                        li
+                            span!= styleSnippet(snippet)
+        div.clear
