@@ -28,7 +28,8 @@ function init() {
     var opts = {
             length: 7, // The length of each line
             width: 4, // The line thickness
-            radius: 10, // The radius of the inner circle
+            radius: 10, // The radius of the inner circle,
+            position: 'fixed'
     };
 
     var target = document.getElementById('content');
