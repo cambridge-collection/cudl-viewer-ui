@@ -15,6 +15,10 @@
     "js": "http://localhost:8080/js/page-document.js",
     "jsSourceMap": "http://localhost:8080/js/page-document.js.map"
   },
+  "page-error-500": {
+    "js": "http://localhost:8080/js/page-error-500.js",
+    "jsSourceMap": "http://localhost:8080/js/page-error-500.js.map"
+  },
   "page-login": {
     "js": "http://localhost:8080/js/page-login.js",
     "jsSourceMap": "http://localhost:8080/js/page-login.js.map"

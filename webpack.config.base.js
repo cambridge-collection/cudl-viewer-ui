@@ -114,7 +114,8 @@ export default function getConfig(options) {
             'page-collection-organisation':
                 './src/js/pages/collection-organisation.js',
             'page-my-library': './src/js/pages/my-library.js',
-            'page-advanced-search-results': './src/js/pages/advanced-search-results.js'
+            'page-advanced-search-results': './src/js/pages/advanced-search-results.js',
+            'page-error-500': './src/js/pages/error-500.js'
         },
         devtool: 'source-map',
         output: {

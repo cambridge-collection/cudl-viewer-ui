@@ -1,0 +1,7 @@
+/* Extend the normal CUDL style */
+@import './style.css';
+
+pre.stacktrace {
+    white-space: pre;
+    word-wrap: normal;
+}
