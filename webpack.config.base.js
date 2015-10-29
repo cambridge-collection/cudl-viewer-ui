@@ -149,7 +149,7 @@ export default function getConfig(options) {
                 // Meta-modules which export a string which is used as their src
                 {
                     test: path.resolve(__dirname, './src/js/google-analytics.js'),
-                    loader: 'val'
+                    loader: 'val?cacheable=true'
                 },
                 {
                     test: /\.jade$/,
