@@ -13,32 +13,6 @@ export function toggleDiv (divid) {
     }
 }
 
-/* Fancybox setup */
-$(document).ready(function() {
-
-    try {
-        $(".iframe").fancybox({
-            'width' : '75%',
-            'height' : '75%',
-            'autoSize' : false,
-            'transitionIn' : 'none',
-            'transitionOut' : 'none',
-            'type' : 'iframe',
-            'title': null
-        });
-
-        $(".fancybox-inline").fancybox({
-            'width' : '75%',
-            'height' : '75%',
-            'autoSize' : false,
-            'transitionIn' : 'none',
-            'transitionOut' : 'none'
-        });
-    } catch (exception) {
-        /* ignore, fancybox not always present */
-    }
-});
-
 export function setCookie(name, value, days) {
     let expires;
 

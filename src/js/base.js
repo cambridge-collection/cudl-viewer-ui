@@ -5,6 +5,7 @@ import './configure-jquery-migrate';
 import { patchProjectLight } from './projectlight';
 import ga from './google-analytics';
 import { setupGa } from './analytics';
+import { enableLightboxes } from './lightbox';
 
 
 function init() {
@@ -17,6 +18,8 @@ function init() {
     $(() => {
         setupGa();
         ga('send', 'pageview');
+
+        enableLightboxes();
     })
 }
 
