@@ -23,6 +23,10 @@
     "js": "http://localhost:8080/js/page-error-500.js",
     "jsSourceMap": "http://localhost:8080/js/page-error-500.js.map"
   },
+  "page-feedback": {
+    "js": "http://localhost:8080/js/page-feedback.js",
+    "jsSourceMap": "http://localhost:8080/js/page-feedback.js.map"
+  },
   "page-login": {
     "js": "http://localhost:8080/js/page-login.js",
     "jsSourceMap": "http://localhost:8080/js/page-login.js.map"
