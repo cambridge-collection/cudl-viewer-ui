@@ -3,6 +3,10 @@
     "js": "http://localhost:8080/js/page-admin.js",
     "jsSourceMap": "http://localhost:8080/js/page-admin.js.map"
   },
+  "page-admin-file-browse": {
+    "js": "http://localhost:8080/js/page-admin-file-browse.js",
+    "jsSourceMap": "http://localhost:8080/js/page-admin-file-browse.js.map"
+  },
   "page-advanced-search-results": {
     "js": "http://localhost:8080/js/page-advanced-search-results.js",
     "jsSourceMap": "http://localhost:8080/js/page-advanced-search-results.js.map"

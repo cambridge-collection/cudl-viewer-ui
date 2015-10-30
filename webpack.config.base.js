@@ -117,7 +117,8 @@ export default function getConfig(options) {
             'page-advanced-search-results': './src/js/pages/advanced-search-results.js',
             'page-error-500': './src/js/pages/error-500.js',
             'page-admin': './src/js/pages/admin.js',
-            'page-feedback': './src/js/pages/embedded/feedback.js'
+            'page-feedback': './src/js/pages/embedded/feedback.js',
+            'page-admin-file-browse': './src/js/pages/embedded/admin-file-browse.js',
         },
         devtool: 'source-map',
         output: {
