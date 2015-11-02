@@ -1,6 +1,6 @@
-import _ from 'lodash';
+// Default to production build
+if(!process.env.WEBPACK_ENV) {
+    process.env.WEBPACK_ENV = 'production';
+}
 
-import getConfig from './webpack.config.base';
-
-
-export default getConfig();
+export default require('./webpack-config');

@@ -29,7 +29,8 @@
     "postcss-loader": "^0",
     "style-loader": "^0",
     "val-loader": "^0",
-    "webpack": "^1"
+    "webpack": "^1",
+    "webpack-config": "^1.1.1"
   },
   "license": "UNLICENSED",
   "private": true
