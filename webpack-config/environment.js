@@ -130,7 +130,4 @@ export function populateEnvironment(environ) {
             }),
         }
     });
-
-    require('assert').equal(environ.value('env'), 'production');
-    require('assert').equal(environ.value('cudl-viewer-ui.env'), 'production');
 }
