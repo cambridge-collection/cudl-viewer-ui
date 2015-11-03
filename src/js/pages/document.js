@@ -179,6 +179,7 @@ function setupSeaDragon(data) {
         showRotationControl : true,
         zoomInButton : "zoomIn",
         zoomOutButton : "zoomOut",
+        zoomPerClick : 1, // genizah tagging
         rotateLeftButton : "rotateLeft",
         rotateRightButton : "rotateRight",
         fullPageButton: "fullscreen"
@@ -905,6 +906,10 @@ $(document).ready(function() {
         setupKnowMoreLinks();
         // FIXME: re-add similarity
         // setupSimilarityTab(data, context.docId);
+
+        // FIXME: integrate tagging
+        // if ('function' == typeof cudl.setupTaggingTab)
+        //     require('blah-tagging-foo').setupTaggingTab(data, cudl.docId, cudl.pagenum);
         loadPage(pageNum);
         showThumbnailPage(currentThumbnailPage);
     });
