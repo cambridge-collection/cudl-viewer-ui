@@ -10,6 +10,7 @@ import $ from 'jquery';
 import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
 import range from 'lodash/utility/range';
+import { setUpTaggingTab } from 'cudl-viewer-tagging-ui';
 
 import '../cudl';
 import { msgBus } from '../cudl';
@@ -907,9 +908,9 @@ $(document).ready(function() {
         // FIXME: re-add similarity
         // setupSimilarityTab(data, context.docId);
 
-        // FIXME: integrate tagging
-        // if ('function' == typeof cudl.setupTaggingTab)
-        //     require('blah-tagging-foo').setupTaggingTab(data, cudl.docId, cudl.pagenum);
+        // FIXME: load on demand if tagging is enabled.
+        setupTaggingTab(data, context.docId, viewer);
+
         loadPage(pageNum);
         showThumbnailPage(currentThumbnailPage);
     });

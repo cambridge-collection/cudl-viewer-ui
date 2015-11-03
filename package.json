@@ -4,6 +4,7 @@
   "dependencies": {
     "bootstrap": "^3",
     "bootstrap-social": "^4",
+    "cudl-viewer-tagging-ui": "git+ssh://git@bitbucket.org/CUDL/cudl-viewer-tagging-ui.git#integrate",
     "font-awesome": "^4",
     "hint.css": "^1",
     "jquery": "^1",
