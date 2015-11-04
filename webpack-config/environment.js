@@ -122,12 +122,7 @@ export function populateEnvironment(environ) {
             }),
 
             // The location of the ckeditor assets, relative to the webpack public path
-            ckeditorLocation: ifEnv({
-                dev:        'vendor/ckeditor/',
-                // ui/vendor/ckeditor is the location the Maven build places ckeditor
-                // FIXME: should just be able to resolve against public path and eliminate this difference...
-                production: 'ui/vendor/ckeditor/'
-            }),
+            ckeditorLocation: 'vendor/ckeditor/'
         }
     });
 }
