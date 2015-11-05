@@ -1,7 +1,7 @@
 import '../../css/advancedsearch.css';
 
 import $ from 'jquery';
-import 'paging'; // jquery paging plugin
+import 'jquery-paging';
 import Spinner from 'spin.js';
 
 import '../base.js';

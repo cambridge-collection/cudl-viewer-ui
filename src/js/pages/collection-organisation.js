@@ -2,7 +2,7 @@
 import '../../css/style.css';
 
 import $ from 'jquery';
-import 'paging'; // jquery paging plugin
+import 'jquery-paging';
 
 import '../base';
 import * as cudl from '../cudl';
