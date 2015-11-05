@@ -10,7 +10,7 @@ import $ from 'jquery';
 import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
 import range from 'lodash/utility/range';
-import { setUpTaggingTab } from 'cudl-viewer-tagging-ui';
+import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
 
 import '../cudl';
 import { msgBus } from '../cudl';
@@ -912,7 +912,12 @@ $(document).ready(function() {
         // setupSimilarityTab(data, context.docId);
 
         // FIXME: load on demand if tagging is enabled.
-        setupTaggingTab(data, context.docId, viewer);
+        setupTaggingTab({
+            data: data,
+            docId: context.docId,
+            viewer: viewer,
+            taggingEnabled: context.taggingEnabled
+        });
 
         loadPage(pageNum);
         showThumbnailPage(currentThumbnailPage);
