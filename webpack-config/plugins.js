@@ -27,17 +27,6 @@ export default new WebpackConfig().merge({
             path: env('cudl-viewer-ui.assetJsonPath'),
             prettyPrint: true
         }),
-        // Resolve main attr of bower modules
-        new webpack.ResolverPlugin([
-            // package.json's main attr gets used by default, but if we don't
-            // include this here then bower.json takes priority. Some packages
-            // include a bower.json and a package.json, with bower providing
-            // a minified entry point (e.g. d3-cloud).
-            new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(
-                "package.json", ["main"]),
-            new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(
-                "bower.json", ["main"])
-        ]),
         new webpack.DefinePlugin({
             // Relative to the public path
             CKEDITOR_LOCATION:
