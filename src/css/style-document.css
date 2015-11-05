@@ -104,6 +104,10 @@ body {
     transition-delay: 0s;
 }
 
+.openseadragon-canvas:focus {
+    outline: none;
+}
+
 .openseadragon-message {
     color: #fff;
 }
