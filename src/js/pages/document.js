@@ -419,8 +419,11 @@ function setupInfoPanel(data) {
     // tab content needs fixed height for scrolling
     function resizeRightPanel() {
     if (!$('.fullpage').length) {
-
-            $('#tab-content').height($(window).height() - $('.navbar-header').height() - $('#doc-breadcrumb').height() - $('#rightTabs .nav-tabs').height());
+            let height = $(window).height() -
+                $('.navbar-header').outerHeight() -
+                $('#doc-breadcrumb').outerHeight() -
+                $('#rightTabs .nav-tabs').outerHeight();
+            $('#tab-content').height(height);
         }
     };
 
