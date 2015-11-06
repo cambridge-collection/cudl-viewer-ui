@@ -16,6 +16,7 @@ import '../cudl';
 import { msgBus } from '../cudl';
 import { getPageContext } from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
+import { ViewerModel } from '../viewer/models';
 
 /*
     We have the following attributes set by the Java in the context JSON.
@@ -39,9 +40,7 @@ import paginationTemplate from './document-thumbnail-pagination.jade';
  */
 
 let context;
-
-let pageNum;
-let data; // stores the JSON data for this book.
+let viewerModel;
 
 // The OpenSeadragon viewer
 let viewer;
@@ -60,6 +59,7 @@ let thumbnailProps = {
 };
 
 function loadPage(pagenumber) {
+    let data = viewerModel.getMetadata();
 
     // validation
     if (isNaN(pagenumber)) { alert ("Please enter a number."); return; }
@@ -124,12 +124,9 @@ function loadPage(pagenumber) {
     // open Image
     if (imageavailable) { openDzi(data.pages[pagenumber - 1].displayImageURL); }
 
-    // Fire an event to notify listeners of the page number change
-    msgBus.emit('change.pageNum', pagenumber);
-
     // update current page
-    pageNum = pagenumber;
-    $("#pageInput").val(pageNum);
+    viewerModel.setPageNumber(pagenumber);
+    $("#pageInput").val(pagenumber);
     $("#maxPage").html(data.numberOfPages);
 
     // update transcription data
@@ -190,6 +187,8 @@ function setupSeaDragon(data) {
     // Setup forward and backward buttons
     function nextPage() {
 
+        let pageNum = viewerModel.getPageNumber();
+
         if (pageNum < data.pages.length) {
             pageNum++;
             loadPage(pageNum);
@@ -198,6 +197,7 @@ function setupSeaDragon(data) {
     }
 
     function prevPage() {
+        let pageNum = viewerModel.getPageNumber();
 
         if (pageNum > 1) {
             pageNum--;
@@ -227,12 +227,14 @@ function setupSeaDragon(data) {
     });
     viewer.addHandler("full-screen", function (data) {
         if (data.fullScreen) {
-          $('#doc').css("top", "0px");
+            $('#doc').css("top", "0px");
         } else {
-          $(".cudl-viewer-buttons-pagination").appendTo(".navbar-header");
-          setTranscriptionPage(data, pageNum);
-          updatePageMetadata(data, pageNum);
-          $('#doc').css("top", "68px");
+            let pageNum = viewerModel.getPageNumber();
+
+            $(".cudl-viewer-buttons-pagination").appendTo(".navbar-header");
+            setTranscriptionPage(data, pageNum);
+            updatePageMetadata(data, pageNum);
+            $('#doc').css("top", "68px");
         }
     });
 
@@ -441,6 +443,8 @@ function showPanel(panelHREF) {
 };
 
 function addBookmark() {
+    let pageNum = viewerModel.getPageNumber(),
+        data = viewerModel.getMetadata();
 
     // Generate bookmarkPath
     var thumbnailURL = context.imageServer+data.pages[pageNum-1].thumbnailImageURL;
@@ -470,6 +474,9 @@ function addBookmark() {
 }
 
 function downloadImage() {
+    let pageNum = viewerModel.getPageNumber(),
+        data = viewerModel.getMetadata();
+
     var downloadImageURL = data.pages[pageNum-1].downloadImageURL;
     if (typeof downloadImageURL != "undefined") {
         window.open(context.imageServer+downloadImageURL);
@@ -568,11 +575,10 @@ function showThumbnailPage(pagenum) {
         $('#thumbnailimages').html(thumbnailhtml);
     };
 
-
     if (pagenum > 0 && pagenum <= thumbnailProps.NUM_THUMBNAIL_PAGES) {
         currentThumbnailPage = pagenum;
-        showThumbnailPageImages(thumbnailProps, currentThumbnailPage,
-                data);
+        showThumbnailPageImages(
+            thumbnailProps, currentThumbnailPage, viewerModel.getMetadata());
 
         // Update pagination page selected
         $("#thumbnails-content ul.pagination li.active").removeClass('active');
@@ -894,14 +900,20 @@ function setupKnowMoreLinks() {
 
 $(document).ready(function() {
     context = getPageContext();
-    pageNum = context.pageNum;
+    let pageNum = context.pageNum;
 
     // Read in the JSON
-    $.getJSON(context.jsonURL).done(function(jsonData) {
+    $.getJSON(context.jsonURL).done(function(data) {
 
         // set seadragon options and load in dzi.
         if(pageNum == 0) { pageNum = 1; } // page 0 returns item level metadata.
-        data = jsonData;
+
+        viewerModel = new ViewerModel({
+            pageNumber: pageNum,
+            metadata: data,
+            taggingEnabled: context.taggingEnabled
+        });
+
         setupSeaDragon(data);
         setupInfoPanel(data);
         setupThumbnails(data);
@@ -916,7 +928,7 @@ $(document).ready(function() {
             data: data,
             docId: context.docId,
             viewer: viewer,
-            taggingEnabled: context.taggingEnabled
+            viewerModel: viewerModel
         });
 
         loadPage(pageNum);
