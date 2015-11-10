@@ -322,7 +322,7 @@ function setupInfoPanel(data) {
     try {
         // Set contents panel
         function addTreeNodes(array, edgeSpacing) {
-            list = "";
+            let list = "";
             for (var i = 0; i < array.length; i++) {
                 list = list.concat("<a href='' onclick='store.loadPage("
                         + (array[i].startPagePosition)
