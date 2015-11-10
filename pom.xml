@@ -5,7 +5,7 @@
 
     <groupId>ulcambridge.foundations.viewer</groupId>
     <artifactId>viewer-ui</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>CUDL Viewer UI</name>
