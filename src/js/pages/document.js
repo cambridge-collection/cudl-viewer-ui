@@ -10,6 +10,7 @@ import $ from 'jquery';
 import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
 import range from 'lodash/utility/range';
+import { setupSimilarityTab } from 'cudl-viewer-bubbles';
 import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
 
 import '../cudl';
@@ -920,12 +921,17 @@ $(document).ready(function() {
         setupMetadata(data);
         setupViewMoreOptions();
         setupKnowMoreLinks();
-        // FIXME: re-add similarity
-        // setupSimilarityTab(data, context.docId);
+
+        // FIXME: load on demand when similarity tab is first opened
+        setupSimilarityTab({
+            viewerModel: viewerModel,
+            docId: context.docId,
+            servicesBaseUrl: context.services,
+            imageServerBaseUrl: context.imageServer
+        });
 
         // FIXME: load on demand if tagging is enabled.
         setupTaggingTab({
-            data: data,
             docId: context.docId,
             viewer: viewer,
             viewerModel: viewerModel

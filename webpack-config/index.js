@@ -7,6 +7,7 @@ let pwd = resolver(__dirname);
 populateEnvironment(WebpackConfig.environment);
 
 export default new WebpackConfig()
+    .extend(('cudl-viewer-bubbles/webpack-config/external'))
     .extend(('cudl-viewer-tagging-ui/webpack-config/external'))
     .extend(pwd('./output.js'))
     .extend(pwd('./misc.js'))
