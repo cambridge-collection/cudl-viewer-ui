@@ -10,10 +10,7 @@
             <excludes>
                 <exclude>resources/**/*</exclude>
             </excludes>
-            <!-- FIXME: use Spring mvc:resources to map our files from fixed
-                 package into URL namespace, rather than us packaging them into
-                 /ui here. -->
-            <outputDirectory>META-INF/resources/ui</outputDirectory>
+            <outputDirectory>${cudl.outputAssetPath}</outputDirectory>
         </fileSet>
 
         <!-- ckeditor can't be completley bundled up with webpack due to it
@@ -30,7 +27,7 @@
                 <exclude>config.js</exclude>
                 <exclude>style.js</exclude>
             </excludes>
-            <outputDirectory>META-INF/resources/ui/vendor/ckeditor</outputDirectory>
+            <outputDirectory>${cudl.outputAssetPath}/vendor/ckeditor</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>

@@ -15,6 +15,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cudl.webpack-output-dir>${project.build.directory}/webpack</cudl.webpack-output-dir>
         <cudl.webpack-resources-dir>${cudl.webpack-output-dir}/resources</cudl.webpack-resources-dir>
+        <!-- The path in the resource jar (i.e. namespace) to store the built assets -->
+        <cudl.outputAssetPath>ulcambridge/foundations/viewer/viewer-ui/assets</cudl.outputAssetPath>
     </properties>
 
     <scm>
