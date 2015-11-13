@@ -98,3 +98,69 @@ Note that you'll still need a copy of this artifact installed when using the
 webpack dev server, as the artifact contains metadata JSON as well as the
 webpack-built assets. The assets themselves will be ignored when using the
 webpack devserver.
+
+# Releasing
+
+The maven release plugin should be used to tag release versions and deploy
+release artifacts to the
+[CUDL Maven repository](https://wiki.cam.ac.uk/cudl-docs/CUDL_Maven_Repository).
+
+## Step 1: Update `package.json`
+Make sure the versions of CUDL dependencies are locked down to tagged versions
+in `package.json`, e.g:
+
+```
+{
+  ...
+  "dependencies": {
+    ...
+    "cudl-viewer-bubbles": "git+ssh://git@bitbucket.org/CUDL/cudl-viewer-bubbles.git#1.1.0",
+    "cudl-viewer-tagging-ui": "git+ssh://git@bitbucket.org/CUDL/cudl-viewer-tagging-ui.git#1.0.0",
+    ...
+  }
+  ...
+}
+```
+
+Update the version in `package.json` to the version to be released. (It'd be
+nice to automate this.)
+
+## Step 2
+
+Run the prepare mojo of the Maven release plugin:
+
+```
+$ mvn release:prepare
+```
+
+It'll prompt you for the version to be released and the next development version.
+**[Follow semver](http://semver.org/) when choosing version numbers**.
+
+This will run a full build, which will take longer than usual (several minutes)
+due to minifying being enabled.
+
+Once it's done you'll have two new commits on your current branch and a new tag.
+None of these will have been pushed upstream yet.
+
+# Step 3
+
+Run the perform mojo of the Maven release plugin:
+
+```
+$ mvn release:perform
+```
+
+This will checkout the tag that `prepare` just created into a subdirectory, run
+ANOTHER full rebuild with that and deploy the result to the CUDL Maven
+repository.
+
+# Step 4
+
+Push the new commits and tag to the upstream repository:
+
+```
+$ git push origin master 1.0.0
+```
+
+(Assuming you're on the master branch and you just created `1.0.0`. Adjust
+version as appropriate.)
