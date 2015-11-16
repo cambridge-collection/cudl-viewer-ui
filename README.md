@@ -42,7 +42,7 @@ so that they're available as shell commands:
 
 ```
 # You'll need to run with sudo if node is installed systemwide.
-$ npm install -g webpack webpack-dev-server bower
+$ npm install -g webpack webpack-dev-server bower babel-core@^5
 ```
 
 ## Install project dependencies
