@@ -80,29 +80,22 @@ function loadPage(pagenumber) {
     function openDzi(dziPath) {
 
         // ajax call to fetch .dzi
-        $.get(context.imageServer + dziPath).success(function(xml) {
-
+        $.ajax({
+            url: context.imageServer + dziPath,
+            'type': 'GET',
+            // Handle data conversion ourselves
+            dataType: 'text'
+        }).success(function(xml) {
             // Seadragon AJAX supported being given a DZI as a string
             // and rewriting the tilesource to an external URL
             // openseadragon won't accept an external DZI so we build an
             // inline tilesource with a modified URL
 
-            let xmlDoc = $.parseXML(xml);
-            let $xml = $(xmlDoc);
-            let $image, $size;
-            if(navigator.appVersion.indexOf("MSIE 9.")!=-1) {
-                // If using IE 9
-                $image = $(xml).find('Image');
-                $size = $(xml).find('Size');
+            let $xml = $($.parseXML(xml));
+            let $image = $xml.find('Image');
+            let $size = $xml.find('Size');
+            var path = dziPath.substring(0, dziPath.length - 4);
 
-            } else {
-                // Any other browser
-                $image = $xml.find('Image');
-                $size = $xml.find('Size');
-            }
-
-            var path = dziPath;
-            path = path.substring(0, path.length - 4);
             var dzi = {
                 Image : {
                     xmlns : $image.attr('xmlns'),
