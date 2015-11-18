@@ -40,6 +40,8 @@ export class XDomainRequestAjaxTransport {
         this.xdr.onload = $.proxy(this.onLoad, this);
         this.xdr.onerror = $.proxy(this.onError, this, "error");
         this.xdr.ontimeout = $.proxy(this.onError, this, "timeout");
+        // Workaround IE9 bug, see http://stackoverflow.com/questions/8058446/ie-xdomainrequest-not-always-work
+        this.xdr.onprogress = () => {};
 
         this.xdr.open(this.options.type, this.options.url);
         this.xdr.send(this.options.data);
