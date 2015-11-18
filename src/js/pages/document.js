@@ -50,7 +50,7 @@ let viewer;
 // This is used when changing pages from links in the text.
 window.store = {
     loadPage: function(pageNumber) {
-        throw new Error('TODO: implement');
+        loadPage(pageNumber);
     }
 };
 let currentThumbnailPage = 1;
@@ -215,7 +215,7 @@ function setupSeaDragon(data) {
         return prevPage();
     });
     $("#pageInput").change(function(input) {
-        loadPage(input.target.value);
+        loadPage(parseInt(input.target.value));
     });
 
     // move the pagination controls to the image when going fullscreen
