@@ -5,6 +5,7 @@
 
 // Page styles
 import '../../css/style-document.css';
+import '../polyfill';
 
 import $ from 'jquery';
 import 'bootstrap';

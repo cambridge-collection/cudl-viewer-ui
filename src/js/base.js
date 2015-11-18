@@ -1,3 +1,5 @@
+import './polyfill';
+
 import $ from 'jquery';
 
 import './dynamic-public-path';
