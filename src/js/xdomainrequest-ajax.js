@@ -18,15 +18,20 @@ export class XDomainRequestAjaxTransport {
 
     onLoad() {
         this.completeCallback(
-            200, "success", this.getResponses());
+            200, "success", this.getResponses(), this.getResponseHeaders());
     }
 
     onError(message) {
-        this.completeCallback(0, message, this.getResponses());
+        this.completeCallback(0, message, this.getResponses(),
+                              this.getResponseHeaders());
     }
 
     getResponses() {
         return {text: this.xdr.responseText};
+    }
+
+    getResponseHeaders() {
+        return `Content-Type: ${this.xdr.contentType}`;
     }
 
     send(headers, completeCallback) {
