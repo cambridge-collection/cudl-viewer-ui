@@ -33,7 +33,8 @@ export default new WebpackConfig()
             new AssetsPlugin({
                 filename: env('cudl-viewer-ui.assetJsonFilename'),
                 path: env('cudl-viewer-ui.assetJsonPath'),
-                prettyPrint: true
+                prettyPrint: true,
+                fullPath: false
             }),
             new webpack.DefinePlugin({
                 // Relative to the public path

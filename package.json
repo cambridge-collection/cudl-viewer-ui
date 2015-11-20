@@ -15,7 +15,7 @@
     "spin.js": "^2"
   },
   "devDependencies": {
-    "assets-webpack-plugin": "^2",
+    "assets-webpack-plugin": "^3.1",
     "autoprefixer": "^6",
     "babel-core": "^5",
     "babel-loader": "^5",
