@@ -1,6 +1,6 @@
 mixin searchResultItem(result)
     - var item = result.item;
-    - var url = '/view/${encodeURIComponent(item.id)}/${encodeURIComponent(result.startPage)}'
+    - var url = '/view/' + encodeURIComponent(item.id) + '/' + encodeURIComponent(result.startPage);
 
     div.collections_carousel_item
         div.collections_carousel_image_box.campl-column4
