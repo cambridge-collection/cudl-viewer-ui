@@ -19,6 +19,10 @@ import { msgBus } from '../cudl';
 import { getPageContext } from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
 import { ViewerModel } from '../viewer/models';
+import { applyStyles } from '../style';
+
+
+applyStyles();
 
 /*
     We have the following attributes set by the Java in the context JSON.

@@ -8,9 +8,12 @@ import { patchProjectLight } from './projectlight';
 import ga from './google-analytics';
 import { setupGa } from './analytics';
 import { enableLightboxes } from './lightbox';
+import { applyStyles } from './style';
 
 
 function init() {
+    applyStyles();
+
     // 3rd party libs included for their side-effects
     require('project-light/javascripts/custom.js');
     require('bootstrap');

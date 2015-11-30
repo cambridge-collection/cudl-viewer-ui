@@ -1,8 +1,5 @@
-/* 3rd party CSS libs */
-@import "~bootstrap/dist/css/bootstrap.css";
-@import "~project-light/stylesheets/full-stylesheet.css";
-
 @import "./cudl-editor.css";
+
 
 /* homepage style */
 .carousel-panel {
