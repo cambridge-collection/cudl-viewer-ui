@@ -1,8 +1,10 @@
 /**
  * The production loaders extract CSS into separate CSS files.
  */
+import webpack from 'webpack';
 import WebpackConfig from 'webpack-config';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import { env } from 'cudl-webpack-config/lib/util';
 
 import { rootPath, resolver } from '../paths';
 
@@ -17,6 +19,10 @@ let publicPath = '../';
 export default new WebpackConfig()
     .extend(pwd('./base.js'))
     .merge({
+        entry: {
+            bootstrap: ['bootstrap/dist/css/bootstrap.css'],
+            projectlight: ['project-light/stylesheets/full-stylesheet.css']
+        },
         module: {
             loaders: [
                 {
@@ -40,6 +46,11 @@ export default new WebpackConfig()
             ]
         },
         plugins: [
+            new webpack.optimize.CommonsChunkPlugin({
+                name: ['bootstrap', 'projectlight'],
+                filename: env('cudl-viewer-ui.filenameTemplateJsChunk'),
+                minChunks: Infinity
+            }),
             new ExtractTextPlugin('css/[name]-[chunkhash].css', {
                 allChunks: true
             })
