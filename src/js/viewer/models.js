@@ -14,15 +14,20 @@ export class ViewerModel extends Model {
 
     constructor(options) {
         super();
-        let {pageNumber, metadata, taggingEnabled} = assign({}, options,
+        let {docId, pageNumber, metadata, taggingEnabled} = assign({}, options,
                                         this.constructor.DEFAULT_OPTIONS);
 
         this.validatePageNumber(pageNumber);
         this.validateMetadata(metadata);
 
+        this.docId = docId;
         this.pageNumber = pageNumber;
         this.metadata = metadata;
         this.taggingEnabled = !!taggingEnabled;
+    }
+
+    getDocId() {
+        return this.docId;
     }
 
     getPageNumber() {

@@ -904,6 +904,7 @@ $(document).ready(function() {
         if(pageNum == 0) { pageNum = 1; } // page 0 returns item level metadata.
 
         viewerModel = new ViewerModel({
+            docId: context.docId,
             pageNumber: pageNum,
             metadata: data,
             taggingEnabled: context.taggingEnabled
