@@ -368,14 +368,16 @@ body {
 }
 
 #transcriptionnormframe, #transcriptiondiploframe, #translationframe {
-    height: 98%; 
+    height: 98%;
     width: 100%;
     border: 0px;
     padding: 0px;
 }
 
 /* pop up confirmations */
-#bookmarkConfirmation {
+#bookmarkConfirmation,
+#downloadConfirmation,
+#downloadMetadataConfirmation {
     width: 350px;
     position: absolute;
     margin-left: auto;
@@ -387,24 +389,9 @@ body {
     color: #000;
 }
 
-#bookmarkConfirmation .close {
-    margin-top: -15px;
-    margin-right: -10px;
-}
-
-#downloadConfirmation {
-    width: 350px;
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    z-index: 9000;
-    left: 0;
-    right: 0;
-    top: 200px;
-    color: #000;
-}
-
-#downloadConfirmation .close {
+#bookmarkConfirmation.close,
+#downloadConfirmation .close,
+#downloadMetadataConfirmation .close {
     margin-top: -15px;
     margin-right: -10px;
 }

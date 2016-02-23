@@ -150,6 +150,12 @@ function updatePageMetadata(data, pagenumber) {
            $('#downloadCopyright2').html(data.descriptiveMetadata[0].downloadImageRights);
        }
 
+       if(data.descriptiveMetadata[0].metadataRights==null || data.descriptiveMetadata[0].metadataRights.trim()=="") {
+           $('#downloadMetadataOption').css("display", "none");
+       } else {
+           $('#downloadMetadataCopyright').html(data.descriptiveMetadata[0].metadataRights);
+       }
+
        if (data.embeddable==null || data.embeddable==false) {
            $('#embedOption').css("display", "none");
        }
@@ -484,6 +490,15 @@ function downloadImage() {
     } else {
         alert ("No image available to download.");
     }
+}
+
+function downloadMetadata() {
+    let downloadMetadataURL = viewerModel.getMetadata().sourceData;
+
+    if(downloadMetadataURL)
+        window.open(context.services + downloadMetadataURL);
+    else
+        alert("No metadata available to download.");
 }
 
 function setupThumbnails(data) {
@@ -854,6 +869,12 @@ function setupViewMoreOptions() {
         return false;
     });
     setupBookmarkConfirmation();
+
+    $('#downloadMetadataOption a').on('click', e => {
+        $('#downloadMetadataConfirmation').show();
+        return false;
+    });
+    setupDownloadMetadataConfirmation();
 }
 
 function setupConfirmation(confirmation) {
@@ -883,6 +904,18 @@ function setupBookmarkConfirmation() {
     confirmation.find('button.btn-success').on('click', () => {
         confirmation.hide();
         addBookmark();
+        return false;
+    });
+}
+
+function setupDownloadMetadataConfirmation() {
+    let confirmation = $('#downloadMetadataConfirmation');
+
+    setupConfirmation(confirmation);
+
+    confirmation.find('button.btn-success').on('click', () => {
+        confirmation.hide();
+        downloadMetadata();
         return false;
     });
 }
