@@ -12,6 +12,9 @@ import { rootPath } from './paths';
 
 const DEFAULT_ENV = 'production';
 
+const DEVSERVER_DEFAULT_HOST = 'localhost';
+const DEVSERVER_DEFAULT_PORT = 8080;
+
 // JSON metadata gets bundled under this package in the maven-built jar
 const JAVA_NAMESPACE = 'ulcambridge.foundations.viewer.viewer-ui';
 
@@ -47,6 +50,17 @@ function envDependant(environ, key, values, defaultValue) {
     return () => {
         return resultDefaultFunc(values, environ.value(key), defaultValue);
     }
+}
+
+/**
+ * Try to guess the correct public path if --host or --port are provided to our
+ * process. The devserver uses these to control how it listens.
+ */
+function defaultDevPublicPath(args) {
+    let host = args['host'] || DEVSERVER_DEFAULT_HOST,
+        port = args['port'] || DEVSERVER_DEFAULT_PORT;
+
+    return `http://${host}:${port}/`;
 }
 
 export function populateEnvironment(environ) {
@@ -117,7 +131,7 @@ export function populateEnvironment(environ) {
             // have baseurls like blob:
             // In production the public path provided at runtime by the viewer.
             publicPath: ifEnv({
-                dev:        'http://localhost:8080/',
+                dev:        defaultDevPublicPath(args),
                 production: null
             }),
 
