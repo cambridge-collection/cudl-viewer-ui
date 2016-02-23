@@ -124,6 +124,12 @@ function loadPage(pagenumber) {
     $("#pageInput").val(pagenumber);
     $("#maxPage").html(data.numberOfPages);
 
+    // Open a tab identified by the URL hash
+    let defaultTabId = window.location.hash;
+    $('#rightTabs .nav-tabs li a[href]')
+        .filter((i, e) =>  $(e).attr('href') === defaultTabId)
+        .tab('show');
+
     // update transcription data
     setTranscriptionPage(data, pagenumber);
 
