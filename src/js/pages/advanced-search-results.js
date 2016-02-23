@@ -2,7 +2,9 @@ import '../../css/advancedsearch.css';
 
 import $ from 'jquery';
 import 'jquery-paging';
+import defer from 'lodash/function/defer';
 import Spinner from 'spin.js';
+import 'bootstrap-slider';
 
 import '../base.js';
 import { getPageContext } from '../context';
@@ -156,7 +158,13 @@ function styleSnippet(s) {
     return s;
 }
 
+function createVariableRecallSlider() {
+    // Use bootstrap slider to create a slider bar
+    $('#recall-slider-input').slider();
+}
+
 $(() => {
     init();
     collapseListItems();
+    defer(createVariableRecallSlider);
 });

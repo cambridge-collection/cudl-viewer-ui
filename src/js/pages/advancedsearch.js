@@ -8,6 +8,8 @@ import '../../css/advancedsearch.css';
 
 import $ from 'jquery';
 import debounce from 'lodash/function/debounce'
+import defer from 'lodash/function/defer';
+import 'bootstrap-slider';
 
 import '../base.js';
 
@@ -24,5 +26,16 @@ function changeHintDirection() {
     }
 }
 
-$(document).ready(changeHintDirection);
-$(window).resize(debounce(changeHintDirection, 50));
+function createVariableRecallSlider() {
+    // Use bootstrap slider to create a slider bar
+    $('#recall-slider-input').slider();
+}
+
+$(() => {
+    $(window).resize(debounce(changeHintDirection, 50));
+    changeHintDirection();
+
+    // Initialisation needs to be deferred in dev mode as otherwise the CSS is
+    // not in place when the width of the slider is calculated.
+    defer(createVariableRecallSlider);
+});
