@@ -287,6 +287,18 @@ function renderSelectedFacets(state, selectedFacets) {
     return selectedFacets.map(renderSelectedFacet.bind(undefined, state));
 }
 
+function renderChangeQueryUrl(state) {
+    var query = serialiseQueryPairs(
+        Object.keys(state)
+            .filter(function(k) {
+                return !/^(?:facet\w+|page)$/.test(k);
+            })
+            .map(function(k) { return [k, state[k]]; })
+    );
+
+    return './query' + query;
+}
+
 function loadPage(state) {
     setBusy(true);
 
@@ -367,6 +379,9 @@ function requery(state) {
         $('#selected_facets')
             .empty()
             .append(renderSelectedFacets(state, data.facets.selected))
+
+        $('.query-actions .change-query')
+            .attr('href', renderChangeQueryUrl(state));
     });
 }
 
