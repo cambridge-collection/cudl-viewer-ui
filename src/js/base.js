@@ -8,6 +8,7 @@ import { patchProjectLight } from './projectlight';
 import ga from './google-analytics';
 import { setupGa } from './analytics';
 import { enableLightboxes } from './lightbox';
+import { setup as setupQuickSearch } from './quicksearch';
 
 
 function init() {
@@ -22,7 +23,8 @@ function init() {
         ga('send', 'pageview');
 
         enableLightboxes();
-    })
+        setupQuickSearch();
+    });
 }
 
 init();

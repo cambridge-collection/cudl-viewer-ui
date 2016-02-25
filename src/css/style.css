@@ -3,6 +3,7 @@
 @import "~project-light/stylesheets/full-stylesheet.css";
 
 @import "./cudl-editor.css";
+@import "./recall-slider.css";
 
 /* homepage style */
 .carousel-panel {
