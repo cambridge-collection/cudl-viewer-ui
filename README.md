@@ -14,6 +14,12 @@ for use in cudl-viewer.
 [Webpack](http://webpack.github.io/) is used to compile the various js and css
 files into bundles.
 
+# Maven version
+
+This project requires at least maven 3.1, which isn't available in Ubuntu
+14.04 LTS (but is on newer versions). On 14.04 either [install it manually](https://maven.apache.org/download.cgi),
+or add a 3rd party apt repo such as [this PPA](https://launchpad.net/~andrei-pozolotin/+archive/ubuntu/maven3).
+
 # Quickstart
 
 Simply edit a file and then run `$ mvn install`.
