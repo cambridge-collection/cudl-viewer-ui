@@ -85,20 +85,9 @@
     background-color: #FFFFFF;
 }
 
-#cookienotice {
+.cookienotice {
     color: #fff;
-    padding: 8px 8px 8px 0;
-    bottom: 0;
-}
-
-#cookienotice input {
-    background: #333333;
-    border-color: #ffffff;
-    text-align: center;
-    border-style: solid;
-    border-width: 1px;
-    padding: 4px;
-    color: #ffffff;
+    background: #171717;
 }
 
 /* Text for downtime message on main page */
@@ -1058,4 +1047,8 @@ div.pagination a.next:hover, div.pagination a.last:hover, div.pagination a.first
 .bookmark-removelink {
     float: right;
     margin-right: 10px;
+}
+
+.campl-btn.campl-primary-cta.campl-btn-darkbg {
+    border: 1px solid #545454;
 }

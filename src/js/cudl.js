@@ -37,13 +37,24 @@ export function getCookie(name) {
 }
 
 export function displayCookieNotice() {
-    if(!cudl.getCookie("cudlcookies")) {
-        document.getElementById("cookienotice").style.display = "inline";
+    if(getCookie('cudlcookies')) {
+        return;
     }
+
+    $('.cookienotice')
+        .show()
+        .on('click', 'button', () => {
+            acceptCookies();
+            return false;
+        })
+        .on('click', 'a', () => {
+            acceptCookies();
+            // Continue to follow the link
+            return true;
+        })
 }
 
 export function acceptCookies() {
-    cudl.setCookie("cudlcookies", "true", 183);
-    document.getElementById("cookienotice").style.display = "none";
-    return false;
+    setCookie("cudlcookies", "true", 183);
+    $('.cookienotice').hide();
 }
