@@ -21,8 +21,8 @@
         <connection>scm:git:ssh://git@bitbucket.org/CUDL/cudl-viewer-ui.git</connection>
         <developerConnection>scm:git:ssh://git@bitbucket.org/CUDL/cudl-viewer-ui.git</developerConnection>
         <url>https://bitbucket.org/CUDL/cudl-viewer-ui</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
         <plugins>
