@@ -205,10 +205,11 @@ nice to automate this.)
 
 ## Step 2
 
-Run the prepare mojo of the Maven release plugin:
+Run the prepare mojo of the Maven release plugin (but via our script as we have
+to perform some extra steps which are awkward to do in maven):
 
 ```
-$ mvn release:prepare
+$ bin/release-prepare.sh
 ```
 
 It'll prompt you for the version to be released and the next development
