@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euf -o pipefail
+
+echo "Creating shrinkwrap file"
+./node/npm shrinkwrap
