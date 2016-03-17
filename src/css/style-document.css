@@ -82,8 +82,8 @@ body {
 }
 
 #doc {
-    position: absolute; 
-    top: 68px; 
+    position: absolute;
+    top: 68px;
     bottom: 0px;
     background-color: black;
 
@@ -233,7 +233,7 @@ body {
 .about-docAuthority {
     color: #333;
     font-size: 0.9em;
-    font-style:italic;  
+    font-style:italic;
 }
 
 #right-panel {
@@ -343,8 +343,8 @@ body {
 #transcriptionnorm, #transcriptiondiplo, #translation {
     height: 100%;
     width: 100%;
-    background-color: #fff;   
-    position:relative; 
+    background-color: #fff;
+    position:relative;
 }
 
 #transcriptionnorm .framediv, #transcriptiondiplo .framediv, #translation .framediv {
