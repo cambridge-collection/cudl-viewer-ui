@@ -4,7 +4,7 @@ import $ from 'jquery';
 
 import './dynamic-public-path';
 import './configure-jquery-migrate';
-import { patchProjectLight } from './projectlight';
+import { patchProjectLight, loadProjectLight } from './projectlight';
 import ga from './google-analytics';
 import { setupGa } from './analytics';
 import { enableLightboxes } from './lightbox';
@@ -14,12 +14,13 @@ import { displayCookieNotice } from './cudl';
 
 function init() {
     // 3rd party libs included for their side-effects
-    require('project-light/javascripts/custom.js');
     require('bootstrap');
 
     patchProjectLight();
 
     $(() => {
+        loadProjectLight();
+
         setupGa();
         ga('send', 'pageview');
 

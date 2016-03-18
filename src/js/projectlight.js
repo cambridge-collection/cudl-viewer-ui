@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import defer from 'lodash/function/defer';
+
+import { bootstrap as bootstrapProjectLight } from 'project-light/javascripts/custom';
 
 const CAM_HOST = 'cam.ac.uk';
 
@@ -31,32 +32,6 @@ function isDomainOrSubdomain(domain, other) {
         other.charAt(other.length - domain.length - 1) === '.';
 }
 
-/**
- * @return a function which when invoked, schedules f to be called on the next
- *         tick of the event loop.
- */
-function deferred(f) {
-    return () => defer(f);
-}
-
-/**
- * The Project Light init code assumes the stylesheet is already loaded.
- * Because our stylesheets get applied in the same event loop tick that the
- * init loop gets called, the stylesheets aren't applied. To work around this
- * we defer the init functions to run on the next tick of the event loop,
- * allowing the stylesheets to be applied.
- */
-function deferInitFunctions(projectlight) {
-    // This is normally performed by init() but is required before our
-    // deferred init is called.
-    projectlight.$window = $(window);
-
-    projectlight.init = deferred(projectlight.init);
-    projectlight.initTables = deferred(projectlight.initTables);
-    projectlight.localNav.init = deferred(projectlight.localNav.init);
-    projectlight.markExternalLinks = deferred(projectlight.markExternalLinks);
-}
-
 export function patchProjectLight(projectlight) {
     if(projectlight === undefined)
         projectlight = require('project-light/javascripts/custom');
@@ -64,7 +39,51 @@ export function patchProjectLight(projectlight) {
     // Override the default markExternalLinks which only considers cam.ac.uk
     // to be local. This screws everything up when running on say localhost.
     projectlight.markExternalLinks = markExternalLinksSensible;
-
-    // TODO: Could disable this in production as CSS is loaded in separate tick
-    deferInitFunctions(projectlight);
 }
+
+export function loadProjectLight() {
+    if(CUDL_PRODUCTION_BUILD) {
+        bootstrapProjectLight();
+    }
+    else {
+        loadProjectLightDev();
+    }
+}
+
+function loadProjectLightDev() {
+    // Start project light in the next tick to give CSS loaded in Blobs time to
+    // apply. The PL CSS must be applied before PL runs, as it shows stuff
+    // using $.show() which does nothing if the PL CSS has not made the target
+    // invisible.
+
+    let startTime = Date.now();
+
+    let loadedLinks = $('head link[rel=stylesheet][href^="blob:"]')
+        .toArray()
+        .map(link => new Promise((resolve, reject) => {
+            if(isLoaded(link))
+                resolve(link);
+            else {
+                $(link).on('load', () => resolve(link))
+                       .on('error', () => reject(link));
+            }
+        }));
+
+    Promise.all(loadedLinks)
+        .then(() => {
+            let millis = Date.now() - startTime;
+            console.info('All stylesheets loaded, starting projectlight ' +
+                         ` (${millis}ms delay)`);
+            bootstrapProjectLight();
+        })
+        .catch(link => {
+            console.error('Unable to load projectlight: ' +
+                          `stylesheet failed to load: ${link.href}`);
+        });
+}
+
+function isLoaded(styleLink) {
+    return [].slice.apply(window.document.styleSheets)
+        .some((sh) => sh.href === styleLink.href);
+}
+window.isLoaded = isLoaded;
