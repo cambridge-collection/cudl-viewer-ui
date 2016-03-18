@@ -1,6 +1,7 @@
 import '../../css/advancedsearch.css';
 
 import $ from 'jquery';
+import 'jquery.easing';
 import 'jquery-paging';
 import defer from 'lodash/function/defer';
 import Spinner from 'spin.js';
@@ -318,7 +319,7 @@ function loadPage(state) {
     })
     .done(function(data) {
 
-        paging.setPage(parseInt(state.page));
+        withoutUserInteraction(() => paging.setPage(parseInt(state.page)));
 
         // query duration
         $("#reqtime").text((Date.now() - startTime) / 1000 + ' seconds');
@@ -470,7 +471,21 @@ function setStatePage(page) {
     if(paging === undefined) {
         return;
     }
+
+    // Scroll to the top only if the page change was initiated directly by a
+    // user interaction (rather than restoring a history state or initialising
+    // the page)
+    if(userInteracting) {
+        scrollToTopOfResults();
+    }
+
     requestState(Object.assign({}, currentState, {page: '' + page}));
+}
+
+function scrollToTopOfResults() {
+    $(document.body).animate({
+        scrollTop: $("#collections_carousel").offset().top - 50
+    }, 800, 'easeInOutQuint');
 }
 
 /**
@@ -544,19 +559,38 @@ function setBusy(busy) {
 let pageLimit = 20;
 let numResults, paging, spinner, currentState;
 
+let userInteracting = true;
+/**
+ * Execute f() without user interaction marked as enabled.
+ *
+ * Currently this is used to disable resetting the scroll position when the
+ * user has not initiated a page change.
+ */
+function withoutUserInteraction(f) {
+    userInteracting = false;
+    try {
+        f();
+    }
+    finally {
+        userInteracting = true;
+    }
+}
+
 function init() {
     let context = getPageContext();
 
     numResults = context.resultCount;
 
     // Setup pagination
-    paging = $(".pagination").paging(numResults, {
-        format : "< (q-) ncnnnnnn (-p) >",  //[< (q-) ncnnnnnn (-p) >]
-        perpage : pageLimit,
-        lapping : 0,
-        page : 1,
-        onSelect: setStatePage,
-        onFormat : formatPagination
+    withoutUserInteraction(() => {
+        paging = $(".pagination").paging(numResults, {
+            format : "< (q-) ncnnnnnn (-p) >",  //[< (q-) ncnnnnnn (-p) >]
+            perpage : pageLimit,
+            lapping : 0,
+            page : 1,
+            onSelect: setStatePage,
+            onFormat : formatPagination
+        });
     });
 
     spinner = getSpinner();
