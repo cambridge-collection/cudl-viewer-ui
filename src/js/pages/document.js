@@ -3,6 +3,9 @@
  * CUDL item with the zooming image viewer.
  */
 
+// Bootstrap styles
+import '../../less/bootstrap/cudl-bootstrap.less';
+
 // Page styles
 import '../../css/style-document.css';
 import '../polyfill';

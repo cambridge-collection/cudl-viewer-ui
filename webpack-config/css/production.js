@@ -33,9 +33,20 @@ export default new WebpackConfig()
                     test: /\.css(\?.*)?$/,
                     exclude: rootPath('./src/css'),
                     loader: ExtractTextPlugin.extract(
-                        'style-loader', 'css-loader?sourceMap', {
-                        publicPath: publicPath
-                    })
+                        'style-loader',
+                        'css-loader?sourceMap', {
+                            publicPath: publicPath
+                        })
+                },
+                // Bootstrap less - don't want to apply postcss
+                {
+                    include: rootPath('./src/less/bootstrap'),
+                    test: /\.less$/,
+                    loader: ExtractTextPlugin.extract(
+                        'style-loader',
+                        'css-loader?sourceMap!less-loader?sourceMap', {
+                            publicPath: publicPath
+                        })
                 }
             ]
         },

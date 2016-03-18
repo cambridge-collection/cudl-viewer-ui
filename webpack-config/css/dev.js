@@ -20,6 +20,12 @@ export default new WebpackConfig()
                     test: /\.css(\?.*)?$/,
                     exclude: rootPath('./src/css'),
                     loader: 'style-loader!css-loader?sourceMap'
+                },
+                // Bootstrap less - don't want to apply postcss
+                {
+                    include: rootPath('./src/less/bootstrap'),
+                    test: /\.less$/,
+                    loader: 'style-loader!css-loader?sourceMap!less-loader?sourceMap'
                 }
             ]
         }

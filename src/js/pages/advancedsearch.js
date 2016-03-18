@@ -4,6 +4,8 @@
  * It extends the standard page with additional styles.
  */
 
+// Bootstrap styles
+import '../../less/bootstrap/cudl-bootstrap.less';
 import '../../css/advancedsearch.css';
 
 import $ from 'jquery';
