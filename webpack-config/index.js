@@ -1,12 +1,12 @@
-import WebpackConfig from 'webpack-config';
+import { Config } from 'cudl-webpack-config/lib/config';
 
 import { resolver } from './paths';
 import { populateEnvironment } from './environment';
 
 let pwd = resolver(__dirname);
-populateEnvironment(WebpackConfig.environment);
+populateEnvironment(Config.environment);
 
-export default new WebpackConfig()
+export default new Config()
     .extend(('cudl-viewer-bubbles/webpack-config/external'))
     .extend(('cudl-viewer-tagging-ui/webpack-config/external'))
     .extend(pwd('./output.js'))

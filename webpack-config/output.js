@@ -1,10 +1,10 @@
-import WebpackConfig from 'webpack-config';
+import { Config } from 'cudl-webpack-config/lib/config';
 import { env } from 'cudl-webpack-config/lib/util';
 
 import { rootPath } from './paths';
 
 
-export default new WebpackConfig().merge({
+export default new Config().merge({
     output: {
         path: env('cudl-viewer-ui.outDir'),
         filename: env('cudl-viewer-ui.filenameTemplateJs'),

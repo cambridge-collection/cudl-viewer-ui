@@ -1,11 +1,11 @@
-import WebpackConfig from 'webpack-config';
+import { Config } from 'cudl-webpack-config/lib/config';
 
 import { rootPath, resolver } from './paths';
 
 
 let p = resolver(rootPath('./src/js/pages/'));
 
-export default new WebpackConfig().merge({
+export default new Config().merge({
     entry: {
         'page-standard': p('./standard.js'),
         'page-document': p('./document.js'),

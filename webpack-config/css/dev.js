@@ -1,11 +1,11 @@
-import WebpackConfig from 'webpack-config';
+import { Config } from 'cudl-webpack-config/lib/config';
 
 import { rootPath, resolver } from '../paths';
 
 
 let pwd = resolver(__dirname);
 
-export default new WebpackConfig()
+export default new Config()
     .extend(pwd('./base.js'))
     .merge({
         module: {

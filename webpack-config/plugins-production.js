@@ -2,7 +2,7 @@ import { gzip, Z_BEST_COMPRESSION } from 'zlib';
 import optional from 'optional';
 let zopfli = optional('node-zopfli');
 
-import WebpackConfig from 'webpack-config';
+import { Config } from 'cudl-webpack-config/lib/config';
 import CompressionPlugin from 'compression-webpack-plugin';
 
 function compressZlibGzip(buf, callback) {
@@ -13,7 +13,7 @@ function compressZopfliGzip(buf, callback) {
     return zopfli.gzip(buf, callback);
 }
 
-export default new WebpackConfig().merge({
+export default new Config().merge({
     plugins: [
         new CompressionPlugin({
             asset: "[file].gz",

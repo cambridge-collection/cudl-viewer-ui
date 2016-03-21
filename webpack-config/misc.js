@@ -1,9 +1,9 @@
-import WebpackConfig from 'webpack-config';
+import { Config } from 'cudl-webpack-config/lib/config';
 
 import { rootPath } from './paths';
 
 
-export default new WebpackConfig().merge({
+export default new Config().merge({
     context: rootPath('./'),
     devtool: 'source-map'
 });

@@ -1,11 +1,11 @@
-import WebpackConfig from 'webpack-config';
+import { Config } from 'cudl-webpack-config/lib/config';
 import { shim } from 'cudl-webpack-config';
 
 import { rootPath } from './paths';
 
 
 // Include configurations to shim these libraries as commonjs modules
-export default new WebpackConfig()
+export default new Config()
     .merge(shim('cudl-webpack-config/lib/shims/bootstrap'))
     .merge(shim('cudl-webpack-config/lib/shims/ckeditor'))
     .merge(shim('cudl-webpack-config/lib/shims/fancybox'))

@@ -1,16 +1,20 @@
-import WebpackConfig from 'webpack-config';
+import { Config } from 'cudl-webpack-config/lib/config';
 import { env } from 'cudl-webpack-config/lib/util';
 
 import { rootPath } from './paths';
 
 
-export default new WebpackConfig().merge({
+export default new Config().merge({
     module: {
         loaders: [
             {
                 test: /\.js$/,
                 include: rootPath('./src/js'),
-                loader: 'babel-loader'
+                loader: 'babel-loader',
+                query: {
+                    cacheDirectory: true,
+                    presets: ['es2015']
+                }
             },
             // Meta-modules which export a string which is used as their src
             {

@@ -2,7 +2,6 @@ import path from 'path';
 import util from 'util';
 
 import ConfigEnvironment from 'webpack-config/lib/configEnvironment';
-import WebpackConfig from 'webpack-config';
 import result from 'lodash/result';
 import isFunction from 'lodash/isFunction';
 import parseArgs from 'minimist';

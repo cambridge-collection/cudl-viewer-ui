@@ -1,4 +1,4 @@
-import 'babel-core/polyfill';
+import 'babel-polyfill';
 import 'console-polyfill';
 
 import { register } from './xdomainrequest-ajax';

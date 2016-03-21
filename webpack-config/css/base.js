@@ -1,6 +1,6 @@
-import WebpackConfig from 'webpack-config';
+import { Config } from 'cudl-webpack-config/lib/config';
 
 
-export default new WebpackConfig().merge({
+export default new Config().merge({
     postcss: [require('autoprefixer')]
 });

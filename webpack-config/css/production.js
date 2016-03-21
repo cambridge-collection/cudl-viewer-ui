@@ -1,7 +1,7 @@
 /**
  * The production loaders extract CSS into separate CSS files.
  */
-import WebpackConfig from 'webpack-config';
+import { Config } from 'cudl-webpack-config/lib/config';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 import { rootPath, resolver } from '../paths';
@@ -14,7 +14,7 @@ let pwd = resolver(__dirname);
 // <publicPath>/css/, so ../ becomes <publicPath>/css/../ = <publicPath>
 let publicPath = '../';
 
-export default new WebpackConfig()
+export default new Config()
     .extend(pwd('./base.js'))
     .merge({
         module: {

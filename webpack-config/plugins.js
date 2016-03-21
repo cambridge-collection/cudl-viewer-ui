@@ -1,7 +1,7 @@
 import without from 'lodash/without';
 import AssetsPlugin from 'assets-webpack-plugin';
 import webpack from 'webpack';
-import WebpackConfig from 'webpack-config';
+import { Config } from 'cudl-webpack-config/lib/config';
 import { env } from 'cudl-webpack-config/lib/util';
 
 import { rootPath, resolver } from './paths';
@@ -10,7 +10,7 @@ import entryConfig from './entry';
 
 let pwd = resolver(__dirname);
 
-export default new WebpackConfig()
+export default new Config()
     .merge({
         plugins: [
             // Every page apart from document and transcription share a fair
