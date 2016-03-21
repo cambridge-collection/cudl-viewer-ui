@@ -1,5 +1,5 @@
-import assign from 'lodash/object/assign';
-import isObject from 'lodash/lang/isObject';
+import assign from 'lodash/assign';
+import isObject from 'lodash/isObject';
 
 import { Model } from '../models';
 import { ValueError } from '../exceptions';

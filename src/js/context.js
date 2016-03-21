@@ -5,7 +5,7 @@
  */
 
 import $ from 'jquery';
-import isObject from 'lodash/lang/isObject';
+import isObject from 'lodash/isObject';
 
 
 /**

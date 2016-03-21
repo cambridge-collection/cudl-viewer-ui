@@ -1,4 +1,4 @@
-import without from 'lodash/array/without';
+import without from 'lodash/without';
 import AssetsPlugin from 'assets-webpack-plugin';
 import webpack from 'webpack';
 import WebpackConfig from 'webpack-config';

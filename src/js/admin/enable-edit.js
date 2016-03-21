@@ -1,7 +1,7 @@
 import CKEDITOR from '../ckeditor';
 import $ from 'jquery';
-import forEach from 'lodash/collection/forEach';
-import assign from 'lodash/object/assign';
+import forEach from 'lodash/forEach';
+import assign from 'lodash/assign';
 
 import '../../css/cudl-editor.css';
 import editorConfirmation from './editor-confirmation.jade';

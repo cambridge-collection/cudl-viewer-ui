@@ -13,7 +13,7 @@
     "jquery": "^1",
     "jquery-migrate": "^1",
     "jquery.easing": "^1",
-    "lodash": "^3",
+    "lodash": "^4",
     "spin.js": "^2"
   },
   "devDependencies": {
@@ -24,7 +24,7 @@
     "bower": "^1",
     "compression-webpack-plugin": "^0.3",
     "css-loader": "^0",
-    "cudl-webpack-config": "git+ssh://git@bitbucket.org/CUDL/cudl-webpack-config.git#1.1.0",
+    "cudl-webpack-config": "git+ssh://git@bitbucket.org/CUDL/cudl-webpack-config.git#1.1.1",
     "exports-loader": "^0",
     "extract-text-webpack-plugin": "^0",
     "file-loader": "^0",

@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import 'bootstrap-slider';
-import defer from 'lodash/function/defer';
+import defer from 'lodash/defer';
 
 import { ValueError } from './exceptions';
 

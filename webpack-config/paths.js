@@ -1,6 +1,6 @@
 import path from 'path';
 
-import toArray from 'lodash/lang/toArray';
+import toArray from 'lodash/toArray';
 
 
 export function resolver(base) {

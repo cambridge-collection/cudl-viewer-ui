@@ -5,7 +5,7 @@ import '../../css/advancedsearch.css';
 import $ from 'jquery';
 import 'jquery.easing';
 import 'jquery-paging';
-import defer from 'lodash/function/defer';
+import defer from 'lodash/defer';
 import Spinner from 'spin.js';
 import 'bootstrap-slider';
 

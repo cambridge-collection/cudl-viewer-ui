@@ -3,8 +3,8 @@ import util from 'util';
 
 import ConfigEnvironment from 'webpack-config/lib/configEnvironment';
 import WebpackConfig from 'webpack-config';
-import result from 'lodash/object/result';
-import isFunction from 'lodash/lang/isFunction';
+import result from 'lodash/result';
+import isFunction from 'lodash/isFunction';
 import parseArgs from 'minimist';
 
 import { rootPath } from './paths';

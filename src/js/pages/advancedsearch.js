@@ -9,8 +9,8 @@ import '../../less/bootstrap/cudl-bootstrap.less';
 import '../../css/advancedsearch.css';
 
 import $ from 'jquery';
-import debounce from 'lodash/function/debounce'
-import defer from 'lodash/function/defer';
+import debounce from 'lodash/debounce'
+import defer from 'lodash/defer';
 import 'bootstrap-slider';
 
 import '../base.js';

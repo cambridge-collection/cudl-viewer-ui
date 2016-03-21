@@ -1,4 +1,4 @@
-import isString from 'lodash/lang/isString';
+import isString from 'lodash/isString';
 
 import ga from './google-analytics';
 import { getPageContext } from './context';
