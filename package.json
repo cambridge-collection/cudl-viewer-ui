@@ -35,6 +35,7 @@
     "less": "^2.6",
     "less-loader": "^2.2",
     "minimist": "^1",
+    "optional": "^0.1.3",
     "postcss-loader": "^0",
     "style-loader": "^0",
     "val-loader": "^0",
@@ -42,5 +43,8 @@
     "webpack-config": "^1.1.1"
   },
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "optionalDependencies": {
+    "node-zopfli": "^1.4"
+  }
 }
