@@ -11,7 +11,7 @@ function gzipBest(buf, callback) {
 export default new WebpackConfig().merge({
     plugins: [
         new CompressionPlugin({
-            asset: "{file}.gz",
+            asset: "[file].gz",
             algorithm: gzipBest,
             minRatio: 0.8
         })
