@@ -72,6 +72,10 @@ There are two config files:
 * `./webpack.config.dev.babel.js` — The development config. Intended for use
   with the devserver.
 
+> *You can use bin/show-config to show the resolved config for the dev or
+> production configs. Alternatively, run a `babel-node` repl and `require()` the
+> appropriate file to inspect the output.
+
 Specify them on the command line using the `--config` argument to `webpack` or
 `webpack-dev-server`.
 
