@@ -24,7 +24,7 @@
     "bower": "^1",
     "compression-webpack-plugin": "^0.3",
     "css-loader": "^0",
-    "cudl-webpack-config": "git+ssh://git@bitbucket.org/CUDL/cudl-webpack-config.git#1.1.1",
+    "cudl-webpack-config": "git+ssh://git@bitbucket.org/CUDL/cudl-webpack-config.git#1.1.2",
     "exports-loader": "^0",
     "extract-text-webpack-plugin": "^0",
     "file-loader": "^0",
@@ -40,7 +40,7 @@
     "style-loader": "^0",
     "val-loader": "^0",
     "webpack": "^1",
-    "webpack-config": "^1.1.1"
+    "webpack-config": "^4"
   },
   "license": "UNLICENSED",
   "private": true,

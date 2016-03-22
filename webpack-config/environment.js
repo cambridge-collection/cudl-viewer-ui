@@ -18,13 +18,6 @@ const DEVSERVER_DEFAULT_PORT = 8080;
 // JSON metadata gets bundled under this package in the maven-built jar
 const JAVA_NAMESPACE = 'ulcambridge.foundations.viewer.viewer-ui';
 
-function temporarilyMonkeyPatchWebpackConfig() {
-    let value = function(key) {
-        return result(this.variables, key);
-    }
-
-    ConfigEnvironment.prototype.value = value;
-}
 
 /**
  * As _.result() except if default is a function it's called to obtain the
@@ -48,7 +41,7 @@ function resultDefaultFunc(object, path, defaultValue) {
 
 function envDependant(environ, key, values, defaultValue) {
     return () => {
-        return resultDefaultFunc(values, environ.value(key), defaultValue);
+        return resultDefaultFunc(values, environ.get(key), defaultValue);
     }
 }
 
@@ -64,8 +57,6 @@ function defaultDevPublicPath(args) {
 }
 
 export function populateEnvironment(environ) {
-    temporarilyMonkeyPatchWebpackConfig();
-
     // Webpack doesn't expose its command line args, so have have to peek at
     // them in a hackish way.
     let args = parseArgs(process.argv);
@@ -78,18 +69,15 @@ export function populateEnvironment(environ) {
         return envDependant(environ, 'cudl-viewer-ui.env', values, defaultFunc);
     }
 
-    environ.add({
+    environ.setAll({
+        env: () => process.env.WEBPACK_ENV || DEFAULT_ENV,
         'cudl-viewer-ui': {
+            env: () => environ.get('env'),
+
             // Use ./built as the output path unless it's overridden on the
             // command line.
             outDir: rootPath(args['output-path'] ?
                              args['output-path'] : './built'),
-        }
-    });
-
-    environ.add({
-        'cudl-viewer-ui': {
-            env: () => environ.value('env') || DEFAULT_ENV,
 
             filenameTemplateJs: ifEnv({
                 dev:        'js/[name].js',
@@ -118,11 +106,11 @@ export function populateEnvironment(environ) {
 
             assetJsonBasePath: ifEnv({
                 dev:        rootPath('./src'),
-                production: environ.value('cudl-viewer-ui.outDir')
+                production: () => environ.get('cudl-viewer-ui.outDir')
             }),
 
             assetJsonPath: () => path.resolve(
-                environ.value('cudl-viewer-ui.assetJsonBasePath'),
+                environ.get('cudl-viewer-ui.assetJsonBasePath'),
                 'resources',
                 JAVA_NAMESPACE.replace(/\./g, '/')),
 
