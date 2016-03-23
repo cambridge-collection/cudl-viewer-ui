@@ -13,6 +13,10 @@ set -euf -o pipefail
 # iteration" commit created by maven.
 #
 
+function get_release_property() {
+    grep -F "$1" ./release.properties | sed -E 's/^[^=]*=(.*)$/\1/'
+}
+
 # Change to the repo dir
 cd "${0%/*}/../"
 
@@ -23,7 +27,9 @@ cd "${0%/*}/../"
 git diff --cached --exit-code &>/dev/null || { echo "fatal: You have staged changes in git"; exit 1; }
 git diff --exit-code &>/dev/null || { echo "fatal: You have unstaged changes in git"; exit 2; }
 
-RELEASE_TAG="$(grep -P '^scm\.tag=' ./release.properties | sed -E 's/^[^=]*=(.*)$/\1/')"
+export RELEASE_TAG="$(get_release_property 'scm.tag=')"
+export RELEASE_VERSION="$(get_release_property 'project.rel.ulcambridge.foundations.viewer\:viewer-ui=')"
+export DEV_VERSION="$(get_release_property 'project.dev.ulcambridge.foundations.viewer\:viewer-ui=')"
 
 # Ensure the tag exists
 git rev-parse "$RELEASE_TAG" -- &>/dev/null || { echo "fatal: No such tag: $RELEASE_TAG"; exit 3; }

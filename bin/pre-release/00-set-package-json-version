@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euf -o pipefail
+
+echo "Updating package.json version to: $RELEASE_TAG"
+./node/npm version --no-git-tag-version "$RELEASE_VERSION"
