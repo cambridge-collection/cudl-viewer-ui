@@ -60,3 +60,6 @@ EDITOR=':' git rebase --interactive --autosquash HEAD~4
 
 # Re-tag the release commit
 git tag -a -m "[maven-release-plugin] copy for tag $RELEASE_TAG" "$RELEASE_TAG" HEAD~1
+
+echo "Successfully released $RELEASE_VERSION, new dev version is $DEV_VERSION."
+echo "You should run $ mvn release:clean to remove maven's release files."
