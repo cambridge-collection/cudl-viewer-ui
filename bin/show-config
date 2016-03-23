@@ -7,6 +7,7 @@
 // For example:
 //    $ export PATH=$PATH:$(pwd)/node_modules/.bin
 //    $ show-config dev
+require('source-map-support').install();
 
 import { inspect } from 'util';
 import { resolve } from 'path';
