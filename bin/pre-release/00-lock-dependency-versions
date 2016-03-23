@@ -2,4 +2,6 @@
 set -euf -o pipefail
 
 echo "Creating shrinkwrap file"
-./node/npm shrinkwrap
+
+# --dev includes devDependencies as well as regular ones
+./node/npm shrinkwrap --dev
