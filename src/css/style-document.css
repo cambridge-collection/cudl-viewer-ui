@@ -237,7 +237,7 @@ body {
     right: 0;
 }
 
-#right-panel {
+.right-panel {
     color: #000;
     position: absolute;
     top: 68px;
@@ -247,18 +247,26 @@ body {
     transition: right 0.5s ease;
 }
 
-#right-panel-toggle {
+.right-panel .toggle-btn {
     position: absolute;
-    left: -30px;
     top: 44%;
-    width: 32px;
-    font-size: 30px;
-    background-color: #fff;
-    color: #000;
-    border-left: 6px solid #fff;
-    border-radius: 2px;
+    left: -30px;
+    width: 30px;
     z-index: 330;
+
+    font-size: 20px;
+    line-height: 30px;
+    padding: 0;
+
+    background-color: #fff;
+    color: #2F2F2F;
+    text-align: center;
+    border-radius: 2px 0 0 2px;
+
     cursor: pointer;
+}
+.right-panel .toggle-btn:focus {
+    outline: none;
 }
 
 #abouttab {

@@ -398,7 +398,7 @@ function setupInfoPanel(data) {
         infoPanelExpanded = !infoPanelExpanded;
         setPanelState(infoPanelExpanded);
     }
-    $('#right-panel-toggle').click(toggleRightPanel);
+    $('.right-panel .toggle-btn').click(toggleRightPanel);
 
     // tab content needs fixed height for scrolling
     function resizeRightPanel() {
