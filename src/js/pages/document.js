@@ -383,50 +383,22 @@ function setupInfoPanel(data) {
         $('#rightTabs a[href="#thumbnailstab"]').click(function(e){return false;}); // disable link;
     }
 
+    function setPanelState(open) {
+        $(document.body).toggleClass('panel-open', open)
+                        .toggleClass('panel-closed', !open);
+    }
+
     // setup toggle behaviour
-    var infoPanelExpanded = true;
+    var infoPanelExpanded = $(window).width() >= 760;
+
+    // ensure the clases are present
+    setPanelState(infoPanelExpanded);
 
     function toggleRightPanel() {
-
-        if (infoPanelExpanded) {
-            $('#right-panel').css({
-                'right' : (($('#right-panel').width() * -1) -1)
-            });
-            infoPanelExpanded = false;
-            $('#doc').width('100%');
-
-
-            // update icon
-            $('#right-panel-toggle i').removeClass('fa-angle-right');
-            $('#right-panel-toggle i').addClass('fa-angle-left');
-
-
-        } else {
-            $('#right-panel').css({
-                'right' : '0px'
-            });
-            infoPanelExpanded = true;
-            $('#doc').css( {'width':($(window).width() - $('#right-panel').width())} );
-
-            // update icon
-            $('#right-panel-toggle i').removeClass('fa-angle-left');
-            $('#right-panel-toggle i').addClass('fa-angle-right');
-
-        }
-
+        infoPanelExpanded = !infoPanelExpanded;
+        setPanelState(infoPanelExpanded);
     }
     $('#right-panel-toggle').click(toggleRightPanel);
-    if ($(window).width()<760) { toggleRightPanel(); }
-
-    //update panel positon on resize
-    $(window).resize(function () {
-        if (infoPanelExpanded) {
-          $('#doc').css( {'width':($(window).width() - $('#right-panel').width())} );
-        } else {
-          $('#doc').width('100%');
-          $('#right-panel').css( {'right':($('#right-panel').width() * -1)} );
-        }
-    });
 
     // tab content needs fixed height for scrolling
     function resizeRightPanel() {
@@ -442,7 +414,6 @@ function setupInfoPanel(data) {
     $(window).resize(resizeRightPanel);
 
     resizeRightPanel();
-
 };
 
 /* Allows you to link to a tab panel */

@@ -80,27 +80,20 @@ body {
     bottom: 0px;
 }
 
+.panel-closed #doc {
+    width: 100%;
+}
+
+.panel-open #doc {
+    width: 50%;
+}
+
 #doc {
     position: absolute;
     top: 68px;
     bottom: 0px;
     background-color: black;
-
-    width: 50%;
-    /*width: -moz-calc(50%);
-    width: -webkit-calc(50%);
-    width: calc(50%);*/
-
-    /* For Safari 3.1 to 6.0 */
-    -webkit-transition-property: width;
-    -webkit-transition-duration: 0.5s;
-    -webkit-transition-timing-function: linear;
-    -webkit-transition-delay: 0s;
-    /* Standard syntax */
-    transition-property: width;
-    transition-duration: 0.5s;
-    transition-timing-function: linear;
-    transition-delay: 0s;
+    transition: width 0.5s ease;
 }
 
 .openseadragon-canvas:focus {
@@ -235,27 +228,23 @@ body {
     font-style:italic;
 }
 
+
+.panel-closed #right-panel {
+    right: -50%;
+}
+
+.panel-open #right-panel {
+    right: 0;
+}
+
 #right-panel {
     color: #000;
     position: absolute;
-    right: 0px;
     top: 68px;
-    /*width: -moz-calc(50%);
-    width: -webkit-calc(50%);
-    width: calc(50%);*/
     width: 50%;
     z-index: 5000;
     background-color: #eee;
-    /* For Safari 3.1 to 6.0 */
-    -webkit-transition-property: right;
-    -webkit-transition-duration: 0.3s;
-    -webkit-transition-timing-function: linear;
-    -webkit-transition-delay: 0s;
-    /* Standard syntax */
-    transition-property: right;
-    transition-duration: 0.3s;
-    transition-timing-function: linear;
-    transition-delay: 0s;
+    transition: right 0.5s ease;
 }
 
 #right-panel-toggle {
@@ -397,7 +386,7 @@ body {
 }
 
 /** Responsive Design Stuff **/
-@media ( max-width :760px) {
+@media (max-width: 760px) {
     #cam-logo {
         margin-left: 20px;
     }
@@ -422,8 +411,17 @@ body {
         white-space: nowrap;
 
     }
+
+    .panel-open #doc {
+        width: 10%;
+    }
+
+    .panel-closed #right-panel {
+        right: -90%;
+    }
+
     #right-panel {
-       width:90%;
+        width: 90%;
     }
 }
 
