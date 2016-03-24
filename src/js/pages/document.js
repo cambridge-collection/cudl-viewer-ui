@@ -12,7 +12,7 @@ import '../polyfill';
 
 import $ from 'jquery';
 import 'bootstrap';
-import OpenSeadragon from 'openseadragon';
+import OpenSeadragon from '../openseadragon';
 import range from 'lodash/range';
 import { setupSimilarityTab } from 'cudl-viewer-bubbles';
 import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
@@ -178,7 +178,6 @@ function updatePageMetadata(data, pagenumber) {
 
 
 function setupSeaDragon(data) {
-
     OpenSeadragon.setString("Tooltips.Home", "Reset View");
     viewer = new OpenSeadragon.Viewer({
         id : "doc",
@@ -187,7 +186,6 @@ function setupSeaDragon(data) {
         showRotationControl : true,
         zoomInButton : "zoomIn",
         zoomOutButton : "zoomOut",
-        zoomPerClick : 1, // genizah tagging
         rotateLeftButton : "rotateLeft",
         rotateRightButton : "rotateRight",
         fullPageButton: "fullscreen"

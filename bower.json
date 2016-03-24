@@ -5,7 +5,6 @@
   "dependencies": {
     "project-light": "git@bitbucket.org:CUDL/project-light-mirror.git#363066667118782fa87dcdc61d36778769e1b3a5",
     "fancybox": "2.1.5",
-    "paging": "1.2.0",
-    "openseadragon": "1.2.1"
+    "paging": "1.2.0"
   }
 }
