@@ -9,7 +9,7 @@
     "cudl-viewer-bubbles": "git+ssh://git@bitbucket.org/CUDL/cudl-viewer-bubbles.git#master",
     "cudl-viewer-tagging-ui": "git+ssh://git@bitbucket.org/CUDL/cudl-viewer-tagging-ui.git#master",
     "font-awesome": "^4",
-    "hint.css": "^1",
+    "hint.css": "^2",
     "jquery": "^1",
     "jquery-migrate": "^1",
     "jquery.easing": "^1",
