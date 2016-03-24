@@ -123,7 +123,12 @@ export function populateEnvironment(environ) {
             }),
 
             // The location of the ckeditor assets, relative to the webpack public path
-            ckeditorLocation: 'vendor/ckeditor/'
+            ckeditorLocation: 'vendor/ckeditor/',
+
+            sourceMapType: ifEnv({
+                dev:        'eval-source-map',
+                production: 'source-map'
+            })
         }
     });
 }
