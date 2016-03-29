@@ -1,16 +1,26 @@
 import { gzip, Z_BEST_COMPRESSION } from 'zlib';
+
 import optional from 'optional';
 let zopfli = optional('node-zopfli');
+import assign from 'lodash/assign';
 
 import { Config } from 'cudl-webpack-config/lib/config';
 import CompressionPlugin from 'compression-webpack-plugin';
 
-function compressZlibGzip(buf, callback) {
-    return gzip(buf, {level: Z_BEST_COMPRESSION}, callback);
+function compressZlibGzip(buf, options, callback) {
+    if(callback === undefined && typeof options === 'function') {
+        callback = options;
+        options = {};
+    }
+    return gzip(buf, assign({level: Z_BEST_COMPRESSION}, options), callback);
 }
 
-function compressZopfliGzip(buf, callback) {
-    return zopfli.gzip(buf, callback);
+function compressZopfliGzip(buf, options, callback) {
+    if(callback === undefined && typeof options === 'function') {
+        callback = options;
+        options = {};
+    }
+    return zopfli.gzip(buf, options, callback);
 }
 
 export default new Config().merge({
