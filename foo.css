@@ -1,0 +1,7 @@
+@import "blah";
+
+@import "blah"
+
+.foo {
+    width: 1;
+}
