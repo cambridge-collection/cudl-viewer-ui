@@ -57,7 +57,7 @@ $(function() {
         confirm.find('.btn-success').on('click', () => {
             let selectedFilename = filenameInput.val();
             saveData(selectedFilename, data, (err) => {
-                if(err) {
+                if(!err) {
                     alert("Changes Saved.");
                 }
                 else {
