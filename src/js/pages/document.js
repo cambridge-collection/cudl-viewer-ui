@@ -22,6 +22,7 @@ import { msgBus } from '../cudl';
 import { getPageContext } from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
 import { ViewerModel } from '../viewer/models';
+import { ga } from '../analytics';
 
 /*
     We have the following attributes set by the Java in the context JSON.
@@ -138,6 +139,9 @@ function loadPage(pagenumber) {
 
     // update metadata
     updatePageMetadata(data, pagenumber);
+
+    // Record each page turn as a page view with Google analytics
+    ga('send', 'pageview');
 }
 
 // Update the metadata that changes on page change
