@@ -5,8 +5,7 @@ import $ from 'jquery';
 import './dynamic-public-path';
 import './configure-jquery-migrate';
 import { patchProjectLight, loadProjectLight } from './projectlight';
-import ga from './google-analytics';
-import { setupGa } from './analytics';
+import { ga } from './analytics';
 import { enableLightboxes } from './lightbox';
 import { setup as setupQuickSearch } from './quicksearch';
 import { displayCookieNotice } from './cudl';
@@ -22,7 +21,6 @@ function init() {
     $(() => {
         loadProjectLight();
 
-        setupGa();
         ga('send', 'pageview');
 
         enableLightboxes();
