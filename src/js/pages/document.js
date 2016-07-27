@@ -146,39 +146,34 @@ function loadPage(pagenumber) {
 
 // Update the metadata that changes on page change
 function updatePageMetadata(data, pagenumber) {
+   var newURL = "/view/" + context.docId + "/" + pagenumber;
 
-    try {
-       var newURL = "/view/" + context.docId + "/" + pagenumber;
+   if (data.descriptiveMetadata[0].downloadImageRights==null || data.descriptiveMetadata[0].downloadImageRights.trim()=="") {
+       $('#downloadOption').css("display", "none");
+   } else {
+       $('#downloadCopyright').html(data.descriptiveMetadata[0].downloadImageRights);
+       $('#downloadCopyright2').html(data.descriptiveMetadata[0].downloadImageRights);
+   }
 
-       if (data.descriptiveMetadata[0].downloadImageRights==null || data.descriptiveMetadata[0].downloadImageRights.trim()=="") {
-           $('#downloadOption').css("display", "none");
-       } else {
-           $('#downloadCopyright').html(data.descriptiveMetadata[0].downloadImageRights);
-           $('#downloadCopyright2').html(data.descriptiveMetadata[0].downloadImageRights);
-       }
+   if(data.descriptiveMetadata[0].metadataRights==null || data.descriptiveMetadata[0].metadataRights.trim()=="") {
+       $('#downloadMetadataOption').css("display", "none");
+   } else {
+       $('#downloadMetadataCopyright').html(data.descriptiveMetadata[0].metadataRights);
+   }
 
-       if(data.descriptiveMetadata[0].metadataRights==null || data.descriptiveMetadata[0].metadataRights.trim()=="") {
-           $('#downloadMetadataOption').css("display", "none");
-       } else {
-           $('#downloadMetadataCopyright').html(data.descriptiveMetadata[0].metadataRights);
-       }
+   if (data.embeddable==null || data.embeddable==false) {
+       $('#embedOption').css("display", "none");
+   }
 
-       if (data.embeddable==null || data.embeddable==false) {
-           $('#embedOption').css("display", "none");
-       }
+   $('#currentURL').text("http://cudl.lib.cam.ac.uk"+newURL);
+   $('#embedCode').text("<div style='position: relative; width: 100%; padding-bottom: 80%;'><iframe type='text/html' width='600' height='410' style='position: absolute; width: 100%; height: 100%;' src='https://cudl.lib.cam.ac.uk/embed/#item=" + encodeURIComponent(context.docId) + "&page=" + encodeURIComponent(pagenumber) + "&hide-info=true' frameborder='0' allowfullscreen='' onmousewheel=''></iframe></div>")
+   $('#about-metadata').empty();
+   highlightMetadataForPageViewed(pagenumber, data.logicalStructures);
+   $('#pageLabel').html("Page: "+data.pages[pagenumber-1].label);
+   updateCanonicalUrl();
 
-       $('#currentURL').text("http://cudl.lib.cam.ac.uk"+newURL);
-       $('#embedCode').text("<div style='position: relative; width: 100%; padding-bottom: 80%;'><iframe type='text/html' width='600' height='410' style='position: absolute; width: 100%; height: 100%;' src='https://cudl.lib.cam.ac.uk/embed/#item=" + encodeURIComponent(context.docId) + "&page=" + encodeURIComponent(pagenumber) + "&hide-info=true' frameborder='0' allowfullscreen='' onmousewheel=''></iframe></div>")
-       $('#about-metadata').empty();
-       highlightMetadataForPageViewed(pagenumber, data.logicalStructures);
-       $('#pageLabel').html("Page: "+data.pages[pagenumber-1].label);
-       updateCanonicalUrl();
-
-       // update URL bar, does not work in ie9.
-       window.history.replaceState(context.docId + " page:"+ pagenumber, "Cambridge Digital Library",newURL);
-
-    } catch (e) { /* the above does not work in fullscreen mode*/ }
-
+   // update URL bar, does not work in ie9.
+   window.history.replaceState(context.docId + " page:"+ pagenumber, "Cambridge Digital Library",newURL);
 };
 
 function getCanonicalUrl(model = viewerModel) {
