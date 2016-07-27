@@ -172,6 +172,7 @@ function updatePageMetadata(data, pagenumber) {
        $('#about-metadata').empty();
        highlightMetadataForPageViewed(pagenumber, data.logicalStructures);
        $('#pageLabel').html("Page: "+data.pages[pagenumber-1].label);
+       updateCanonicalUrl();
 
        // update URL bar, does not work in ie9.
        window.history.replaceState(context.docId + " page:"+ pagenumber, "Cambridge Digital Library",newURL);
@@ -180,6 +181,30 @@ function updatePageMetadata(data, pagenumber) {
 
 };
 
+function getCanonicalUrl(model = viewerModel) {
+    let url = `${model.getRootURL()}/view/${encodeURIComponent(model.getDocId())}`;
+
+    if(model.getPageNumber() < 2) {
+        return url;
+    }
+    return `${url}/${encodeURIComponent(model.getPageNumber())}`;
+}
+
+function updateCanonicalUrl(url = getCanonicalUrl()) {
+    $('html meta[property="schema:url"]')
+        .add('html meta[property="og:url"]')
+        .attr('content', url);
+
+    $('head link[rel=canonical]').attr('href', url);
+
+    updateAddThisShareUrl();
+}
+
+function updateAddThisShareUrl(url = getCanonicalUrl()) {
+    if(addthis) {
+        addthis.update('share', 'url', url);
+    }
+}
 
 function setupSeaDragon(data) {
     OpenSeadragon.setString("Tooltips.Home", "Reset View");
@@ -919,6 +944,7 @@ $(document).ready(function() {
         if(pageNum == 0) { pageNum = 1; } // page 0 returns item level metadata.
 
         viewerModel = new ViewerModel({
+            rootURL: context.rootURL,
             docId: context.docId,
             pageNumber: pageNum,
             metadata: data,
