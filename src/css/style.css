@@ -1017,31 +1017,6 @@ div.pagination a.next:hover, div.pagination a.last:hover, div.pagination a.first
     color: #FFF;
 }
 
-.openid_form a {
-    color: #FFF;
-}
-
-.openid_form {
-    text-align: center;
-    line-height: 30px;
-}
-
-.openid_form .google_account {
-    font-weight: bold;
-    font-size: 1.3em;
-    margin-left: 5px;
-}
-
-.openid_form button {
-    width: 150px;
-    margin: 10px;
-}
-
-.openid_form .login_alt_link {
-    margin-top: 10px;
-    margin-bottom: 0px;
-}
-
 #openid_identifier {
     height: 30px;
 }
