@@ -455,7 +455,7 @@ function addBookmark() {
     var bookmarkPath = "/mylibrary/addbookmark/?itemId="+context.docId+"&page="+pageNum+"&thumbnailURL="+encodeURIComponent(thumbnailURL);
 
     // ajax call to make the bookmark:
-    $.get(bookmarkPath).success(function(xml) {
+    $.post(bookmarkPath).success(function(xml) {
 
         // parse JSON response.
         if (xml.bookmarkcreated==true) {
