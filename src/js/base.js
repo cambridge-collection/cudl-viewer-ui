@@ -10,6 +10,7 @@ import { enableLightboxes } from './lightbox';
 import { setup as setupQuickSearch } from './quicksearch';
 import { displayCookieNotice } from './cudl';
 import { resizeLogoColumn } from './footer';
+import { registerCsrfPrefilter } from './ajax-csrf';
 
 
 function init() {
@@ -19,6 +20,7 @@ function init() {
     patchProjectLight();
 
     $(() => {
+        registerCsrfPrefilter();
         loadProjectLight();
 
         ga('send', 'pageview');

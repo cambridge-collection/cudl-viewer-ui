@@ -23,6 +23,7 @@ import { getPageContext } from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
 import { ViewerModel } from '../viewer/models';
 import { ga } from '../analytics';
+import { registerCsrfPrefilter } from '../ajax-csrf';
 
 /*
     We have the following attributes set by the Java in the context JSON.
@@ -929,6 +930,8 @@ function setupKnowMoreLinks() {
 }
 
 $(document).ready(function() {
+    registerCsrfPrefilter();
+
     context = getPageContext();
     let pageNum = context.pageNum;
 
