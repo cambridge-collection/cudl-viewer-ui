@@ -90,7 +90,7 @@ function loadPage(pagenumber) {
             'type': 'GET',
             // Handle data conversion ourselves
             dataType: 'text'
-        }).success(function(xml) {
+        }).done(function(xml) {
             // Seadragon AJAX supported being given a DZI as a string
             // and rewriting the tilesource to an external URL
             // openseadragon won't accept an external DZI so we build an
@@ -116,7 +116,7 @@ function loadPage(pagenumber) {
             };
 
             viewer.open(dzi);
-        }).error(function(jqXHR, textStatus, errorThrown) {
+        }).fail(function(jqXHR, textStatus, errorThrown) {
             viewer._showMessage("Image server temporarily unavailable");
         });
     }
@@ -455,7 +455,7 @@ function addBookmark() {
     var bookmarkPath = "/mylibrary/addbookmark/?itemId="+context.docId+"&page="+pageNum+"&thumbnailURL="+encodeURIComponent(thumbnailURL);
 
     // ajax call to make the bookmark:
-    $.post(bookmarkPath).success(function(xml) {
+    $.post(bookmarkPath).done(function(xml) {
 
         // parse JSON response.
         if (xml.bookmarkcreated==true) {

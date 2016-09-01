@@ -178,8 +178,8 @@ $(function() {
             Paging.setPage(1); // we dropped the initial page selection and need to run it manually
     };
 
-    $(window).bind('hashchange',hashChange);
-        hashChange();
+    $(window).on('hashchange', hashChange);
+    hashChange();
 
     // Show the pagination toolbars if enough elements are present
     if ((numResults/pageLimit)>1) {
