@@ -253,16 +253,18 @@ function setupSeaDragon(data) {
     // then back to the header bar when full screen is exited.
     // Also update transcriptions / metadata etc elements when
     // going back to normal view as page may have changed.
-    viewer.addHandler("pre-full-screen", function (data) {
-        if (data.fullScreen) {
-          $(".cudl-viewer-buttons-pagination").appendTo("#doc");
+    viewer.addHandler("pre-full-screen", function(event) {
+        if(event.fullScreen) {
+            $(".cudl-viewer-buttons-pagination").appendTo("#doc");
         }
     });
-    viewer.addHandler("full-screen", function (data) {
-        if (data.fullScreen) {
+    viewer.addHandler("full-screen", function(event) {
+        if(event.fullScreen) {
             $('#doc').css("top", "0px");
-        } else {
+        }
+        else {
             let pageNum = viewerModel.getPageNumber();
+            let data = viewerModel.getMetadata();
 
             $(".cudl-viewer-buttons-pagination").appendTo(".navbar-header");
             setTranscriptionPage(data, pageNum);
