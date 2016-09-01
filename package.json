@@ -4,7 +4,7 @@
   "dependencies": {
     "bootstrap": "^3",
     "bootstrap-slider": "^9",
-    "bootstrap-social": "^4",
+    "bootstrap-social": "^5",
     "console-polyfill": "^0",
     "cudl-viewer-bubbles": "git+ssh://git@bitbucket.org/CUDL/cudl-viewer-bubbles.git#master",
     "cudl-viewer-tagging-ui": "git+ssh://git@bitbucket.org/CUDL/cudl-viewer-tagging-ui.git#master",
