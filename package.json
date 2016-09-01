@@ -51,7 +51,7 @@
   "license": "UNLICENSED",
   "private": true,
   "optionalDependencies": {
-    "node-zopfli": "^1.4"
+    "node-zopfli": "^2"
   },
   "scripts": {
     "show-config": "./node_modules/.bin/babel-node ./bin/show-config"
