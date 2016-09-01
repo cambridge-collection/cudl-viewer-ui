@@ -12,7 +12,7 @@ import '../polyfill';
 
 import $ from 'jquery';
 import 'bootstrap';
-import OpenSeadragon from '../openseadragon';
+import OpenSeadragon from 'openseadragon';
 import range from 'lodash/range';
 import { setupSimilarityTab } from 'cudl-viewer-bubbles';
 import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
