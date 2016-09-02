@@ -1,7 +1,7 @@
 /**
  * The production loaders extract CSS into separate CSS files.
  */
-import { Config } from 'cudl-webpack-config/lib/config';
+import { Config } from 'webpack-config';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 import { rootPath, resolver } from '../paths';

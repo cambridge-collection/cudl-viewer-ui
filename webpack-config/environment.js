@@ -1,10 +1,12 @@
 import path from 'path';
 import util from 'util';
 
-import ConfigEnvironment from 'webpack-config/lib/configEnvironment';
+import { ConfigEnvironment } from 'webpack-config';
 import result from 'lodash/result';
 import isFunction from 'lodash/isFunction';
 import parseArgs from 'minimist';
+import RecursiveIterator from 'recursive-iterator';
+import { env } from 'cudl-webpack-config/lib/util';
 
 import { rootPath } from './paths';
 
@@ -17,6 +19,13 @@ const DEVSERVER_DEFAULT_PORT = 8080;
 // JSON metadata gets bundled under this package in the maven-built jar
 const JAVA_NAMESPACE = 'ulcambridge.foundations.viewer.viewer-ui';
 
+
+function resolve(value) {
+    if(typeof value === 'function') {
+        return value.call();
+    }
+    return value;
+}
 
 /**
  * As _.result() except if default is a function it's called to obtain the
@@ -40,7 +49,8 @@ function resultDefaultFunc(object, path, defaultValue) {
 
 function envDependant(environ, key, values, defaultValue) {
     return () => {
-        return resultDefaultFunc(values, environ.get(key), defaultValue);
+        return resultDefaultFunc(values, env(key, environ),
+                                 defaultValue);
     }
 }
 
@@ -53,6 +63,29 @@ function defaultDevPublicPath(args) {
         port = args['port'] || DEVSERVER_DEFAULT_PORT;
 
     return `http://${host}:${port}/`;
+}
+
+/**
+ * Enumerate pairs of [path, value] from leaf values in an object hierachy.
+ */
+function* flatten(obj, separator='.') {
+    let iterator = new RecursiveIterator(obj);
+
+    for(let {path, node} of iterator) {
+        if(iterator.isLeaf(node)) {
+            yield [path.join(separator), node];
+        }
+    }
+}
+
+/**
+ * Add all of the [key, value] pairs in the pairs iterable into the
+ * ConfigEnvironment.
+ */
+function setAll(env, pairs) {
+    for(let [k, v] of pairs) {
+        env.set(k, v);
+    }
 }
 
 export function populateEnvironment(environ) {
@@ -68,10 +101,11 @@ export function populateEnvironment(environ) {
         return envDependant(environ, 'cudl-viewer-ui.env', values, defaultFunc);
     }
 
-    environ.setAll({
+    setAll(environ, flatten({
+        // TODO: flatten
         env: () => process.env.WEBPACK_ENV || DEFAULT_ENV,
         'cudl-viewer-ui': {
-            env: () => environ.get('env'),
+            env: () => env('env', environ),
 
             // Use ./built as the output path unless it's overridden on the
             // command line.
@@ -105,11 +139,11 @@ export function populateEnvironment(environ) {
 
             assetJsonBasePath: ifEnv({
                 dev:        rootPath('./src'),
-                production: () => environ.get('cudl-viewer-ui.outDir')
+                production: () => env('cudl-viewer-ui.outDir', environ)
             }),
 
             assetJsonPath: () => path.resolve(
-                environ.get('cudl-viewer-ui.assetJsonBasePath'),
+                env('cudl-viewer-ui.assetJsonBasePath', environ),
                 'resources',
                 JAVA_NAMESPACE.replace(/\./g, '/')),
 
@@ -130,5 +164,5 @@ export function populateEnvironment(environ) {
                 production: 'source-map'
             })
         }
-    });
+    }));
 }

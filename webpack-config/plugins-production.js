@@ -4,7 +4,7 @@ import optional from 'optional';
 let zopfli = optional('node-zopfli');
 import assign from 'lodash/assign';
 
-import { Config } from 'cudl-webpack-config/lib/config';
+import { Config } from 'webpack-config';
 import CompressionPlugin from 'compression-webpack-plugin';
 
 function compressZlibGzip(buf, options, callback) {

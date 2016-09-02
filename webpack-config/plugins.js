@@ -1,7 +1,7 @@
 import without from 'lodash/without';
 import AssetsPlugin from 'assets-webpack-plugin';
 import webpack from 'webpack';
-import { Config } from 'cudl-webpack-config/lib/config';
+import { Config } from 'webpack-config';
 import { env } from 'cudl-webpack-config/lib/util';
 
 import { rootPath, resolver } from './paths';

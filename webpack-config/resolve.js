@@ -1,4 +1,4 @@
-import { Config } from 'cudl-webpack-config/lib/config';
+import { Config } from 'webpack-config';
 
 import { rootPath } from './paths';
 
