@@ -65,6 +65,10 @@ let thumbnailProps = {
     MAX_THUMBNAIL_ITEMS_ON_ROW: 3
 };
 
+function isLoggedIn() {
+    return !!context.isUser;
+}
+
 function loadPage(pagenumber) {
     let data = viewerModel.getMetadata();
 
@@ -862,6 +866,10 @@ function setupViewMoreOptions() {
         return false;
     });
     setupDownloadConfirmation();
+
+    if(!isLoggedIn()) {
+        $('#bookmarkOption').hide();
+    }
 
     $('#bookmarkOption a').on('click', e => {
         $('#bookmarkConfirmation').show();
