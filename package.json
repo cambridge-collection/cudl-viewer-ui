@@ -8,7 +8,7 @@
     "bootstrap-social": "^5",
     "console-polyfill": "^0",
     "cudl-viewer-bubbles": "git+ssh://git@bitbucket.org/CUDL/cudl-viewer-bubbles.git#v1.2.0",
-    "cudl-viewer-tagging-ui": "git+ssh://git@bitbucket.org/CUDL/cudl-viewer-tagging-ui.git#v1.1.0",
+    "cudl-viewer-tagging-ui": "git+ssh://git@bitbucket.org/CUDL/cudl-viewer-tagging-ui.git#v1.2.0",
     "font-awesome": "^4",
     "hint.css": "^2",
     "jquery": "^3",
