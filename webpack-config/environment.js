@@ -60,9 +60,10 @@ function envDependant(environ, key, values, defaultValue) {
  */
 function defaultDevPublicPath(args) {
     let host = args['host'] || DEVSERVER_DEFAULT_HOST,
-        port = args['port'] || DEVSERVER_DEFAULT_PORT;
+        port = args['port'] || DEVSERVER_DEFAULT_PORT,
+        scheme = args['https'] ? 'https' : 'http';
 
-    return `http://${host}:${port}/`;
+    return `${scheme}://${host}:${port}/`;
 }
 
 /**
