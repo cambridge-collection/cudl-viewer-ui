@@ -1,29 +1,15 @@
 // TODO: Move this module out into shared library, along with base models,
 // views etc.
 
-export class BaseError extends Error {
-    get name() {
-        return Object.getPrototypeOf(this).constructor.name;
-    }
+import ExtendableError from 'es6-error';
 
-    constructor(message) {
-        super(message);
-        this.message = message;
 
-        if(Error.captureStackTrace) {
-            Error.captureStackTrace(this, BaseError);
-        } else {
-            this.stack = new Error().stack;
-        }
-    }
-}
+export class KeyError extends ExtendableError { }
 
-export class KeyError extends BaseError { }
+export class NotImplementedError extends ExtendableError { }
 
-export class NotImplementedError extends BaseError { }
+export class ValueError extends ExtendableError { }
 
-export class ValueError extends BaseError { }
+export class IllegalStateException extends ExtendableError { }
 
-export class IllegalStateException extends BaseError { }
-
-export class RuntimeException extends BaseError { }
+export class RuntimeException extends ExtendableError { }
