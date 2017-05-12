@@ -6,12 +6,12 @@ import { rootPath } from './paths';
 
 export default new Config().merge({
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.js$/,
                 include: rootPath('./src/js'),
                 loader: 'babel-loader',
-                query: {
+                options: {
                     cacheDirectory: true,
                     presets: ['es2015']
                 }
@@ -19,7 +19,7 @@ export default new Config().merge({
             // Meta-modules which export a string which is used as their src
             {
                 test: rootPath('./src/js/google-analytics.js'),
-                loader: 'val?cacheable=true'
+                loader: 'val-loader?cacheable=true'
             },
             {
                 test: /\.jade$/,

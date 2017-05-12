@@ -166,4 +166,18 @@ export function populateEnvironment(environ) {
             })
         }
     }));
+
+    // Sanity check that env() is using same environment as environ
+    if(env('cudl-viewer-ui.env') !== env('cudl-viewer-ui.env', environ)) {
+        console.error(`
+ERROR: multiple instances of webpack-config detected:
+    cudl-webpack-config is not using the same webpack-config module as
+    cudl-viewer-ui. Try uninstalling and reinstalling cudl-webpack-config:
+
+    $ npm uninstall cudl-webpack-config && npm install
+`);
+
+        throw new Error(
+            'cudl-webpack-config\'s environment is not the same as ours');
+    }
 }

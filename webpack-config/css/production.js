@@ -18,40 +18,47 @@ export default new Config()
     .extend(pwd('./base.js'))
     .merge({
         module: {
-            loaders: [
+            rules: [
                 {
                     test: /\.css$/,
                     include: rootPath('./src/css'),
-                    loader: ExtractTextPlugin.extract(
-                        'style-loader',
-                        'css-loader?sourceMap!postcss-loader?sourceMap', {
-                            publicPath: publicPath
-                        })
+                    loader: ExtractTextPlugin.extract({
+                        fallback: 'style-loader',
+                        use: [
+                            'css-loader?sourceMap',
+                            'postcss-loader?sourceMap'
+                        ],
+                        publicPath: publicPath
+                    })
                 },
                 // Plain library CSS
                 {
                     test: /\.css(\?.*)?$/,
                     exclude: rootPath('./src/css'),
-                    loader: ExtractTextPlugin.extract(
-                        'style-loader',
-                        'css-loader?sourceMap', {
-                            publicPath: publicPath
-                        })
+                    loader: ExtractTextPlugin.extract({
+                        fallback: 'style-loader',
+                        use: 'css-loader?sourceMap',
+                        publicPath: publicPath
+                    })
                 },
                 // Bootstrap less - don't want to apply postcss
                 {
                     include: rootPath('./src/less/bootstrap'),
                     test: /\.less$/,
-                    loader: ExtractTextPlugin.extract(
-                        'style-loader',
-                        'css-loader?sourceMap!less-loader?sourceMap', {
-                            publicPath: publicPath
-                        })
+                    loader: ExtractTextPlugin.extract({
+                        fallback: 'style-loader',
+                        use: [
+                            'css-loader?sourceMap',
+                            'less-loader?sourceMap'
+                        ],
+                        publicPath: publicPath
+                    })
                 }
             ]
         },
         plugins: [
-            new ExtractTextPlugin('css/[name]-[chunkhash].css', {
+            new ExtractTextPlugin({
+                filename: 'css/[name]-[chunkhash].css',
                 allChunks: true
             })
         ]

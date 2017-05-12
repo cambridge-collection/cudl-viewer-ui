@@ -26,3 +26,6 @@ let configModule = require(path),
 
 console.log(`${path} to depth ${depth}:`);
 console.log(inspect(config, false, depth, true));
+
+// blah
+
