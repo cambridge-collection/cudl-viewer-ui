@@ -36,23 +36,10 @@ $(function() {
             $.ajax({
                 "url": context.collectionUrl + '/itemJSON?start=' + this.slice[0] + '&end=' + this.slice[1],
                 "success": function(data) {
-                    // Spinner.stop();
-
-                    // hide content
-                    // cont.slice(prev[0], prev[1]).css('display','none');
-
                     // This ensures that asynchronous requests don;t mean that you see a different
                     // page to the last one you requested because the order of the ajax response
                     // was different to the order it was requested.
                     if (currentSlice[0]==data.request.start && currentSlice[1]==data.request.end) {
-
-                        var historyStateObject = context.collectionTitle + " page: "+ page;
-                        var historyTitle = "Cambridge Digital Library, " + context.collectionTitle + " page: "+ page;
-                        var historyUrl = location.protocol + '//' + location.host + context.collectionUrl + "?page=" + page;
-                        if(window.history.replaceState) window.history.replaceState(historyStateObject, historyTitle, historyUrl);
-                        context.collectionPage = page;
-                        $(document.body).attr('data-context', JSON.stringify(context));
-
 
                         // content replace
                         //    var data = this.slice;
@@ -87,12 +74,10 @@ $(function() {
                             container.appendChild(itemDiv);
                         }
                     }
-                    // show items
-                      //cont.slice(data[0], data[1]).fadeIn("fast");
-                      //prev = data;
-                }
-            });
 
+                    updatePageHistory(page);
+                }
+            })
 
             return false;
         },
@@ -165,4 +150,14 @@ $(function() {
         $(".toppagination")[0].style.display="none";
         $(".toppagination")[1].style.display="none";
     }
+
+    function updatePageHistory(page){
+        var historyStateObject = context.collectionTitle + " page: "+ page;
+        var historyTitle = "Cambridge Digital Library, " + context.collectionTitle + " page: "+ page;
+        var historyUrl = location.protocol + '//' + location.host + context.collectionUrl + "/" + page;
+        if(window.history.replaceState) window.history.replaceState(historyStateObject, historyTitle, historyUrl);
+        context.collectionPage = page;
+        $(document.body).attr('data-context', JSON.stringify(context));
+    }
+
 });
