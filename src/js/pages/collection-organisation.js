@@ -18,24 +18,9 @@ $(function() {
     let context = getPageContext();
 
     var currentSlice;
-
-    var viewPage = function(pageNum) {
-        if(window.history.replaceState) {
-            window.history.replaceState(pageNum, "Cambridge Digital Library",
-                                        "#" + pageNum);
-        }
-        else if(window.location) {
-            window.location.hash = pageNum;
-        }
-
-        cudl.setCookie(context.collectionCookieName, '' + pageNum);
-
-        return false;
-    };
-
-
     var pageLimit = 8;
     var numResults = context.collectionSize;
+    var pageNumber = context.collectionPage || 1;
 
     // initalise paging.
     var Paging = $(".pagination").paging(numResults, {
@@ -43,7 +28,7 @@ $(function() {
         format : "< (q-) ncnn (-p) >", //[< (q-) ncn (-p) >]
         perpage : pageLimit,
         lapping : 0,
-        page : 1,
+        page : pageNumber,
         onSelect : function(page) {
 
             currentSlice =  this.slice;
@@ -51,11 +36,6 @@ $(function() {
             $.ajax({
                 "url": context.collectionUrl + '/itemJSON?start=' + this.slice[0] + '&end=' + this.slice[1],
                 "success": function(data) {
-                    // Spinner.stop();
-
-                    // hide content
-                    // cont.slice(prev[0], prev[1]).css('display','none');
-
                     // This ensures that asynchronous requests don;t mean that you see a different
                     // page to the last one you requested because the order of the ajax response
                     // was different to the order it was requested.
@@ -94,12 +74,10 @@ $(function() {
                             container.appendChild(itemDiv);
                         }
                     }
-                    // show items
-                      //cont.slice(data[0], data[1]).fadeIn("fast");
-                      //prev = data;
-                }
-            });
 
+                    updatePageHistory(page);
+                }
+            })
 
             return false;
         },
@@ -112,7 +90,7 @@ $(function() {
                 if(!this.active)
                     return '<span class="disabled">' + this.value + '</span>';
                 else if(this.value != this.page)
-                    return '<em><a href="" onclick="viewPage(' + this.value + '); return false;">' +
+                    return '<em><a href="#" onclick="return false;">' +
                         this.value + '</a></em>';
                 return '<span class="current">' + this.value + '</span>';
 
@@ -122,30 +100,30 @@ $(function() {
                     if(!this.active) {
                         return '';
                     }
-                    return '<a href="" onclick="viewPage(' + this.value + '); return false;">' + this.value + '</a>';
+                    return '<a href="#" onclick="return false;">' + this.value + '</a>';
 
                 case 'next':
 
                     if(this.active)
-                        return '<a href="" onclick="viewPage('+ this.value + '); return false;" class="next"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></a>';
+                        return '<a href="#" onclick="return false;" class="next"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></a>';
                     return '<span class="disabled"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></span>';
 
                 case 'prev':
 
                     if(this.active)
-                        return '<a href="" onclick="viewPage('+ this.value + '); return false;" class="prev"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></a>';
+                        return '<a href="#" onclick="return false;" class="prev"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></a>';
                     return '<span class="disabled"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></span>';
 
                 case 'first':
 
                     if(this.active)
-                        return '<a href="" onclick="viewPage(' + this.value + '); return false;" class="first">|<</a>';
+                        return '<a href="#" onclick="return false;" class="first">|<</a>';
                     return '<span class="disabled">|<</span>';
 
                 case 'last':
 
                     if(this.active)
-                        return '<a href="" onclick="viewPage(' + this.value + '); return false;" class="last">>|</a>';
+                        return '<a href="#" onclick="return false;" class="last">>|</a>';
                     return '<span class="disabled">>|</span>';
 
                 case "leap":
@@ -163,24 +141,6 @@ $(function() {
         }
     });
 
-    // Read in # value from session cookie
-    var cookiePageNum = cudl.getCookie(context.collectionCookieName);
-    if(cookiePageNum) {
-        viewPage(cookiePageNum);
-    }
-
-    // Handle updating the Page selected from the hash part of the URL
-    var hashChange = function() {
-
-        if(window.location.hash)
-            Paging.setPage(window.location.hash.substr(1));
-        else
-            Paging.setPage(1); // we dropped the initial page selection and need to run it manually
-    };
-
-    $(window).on('hashchange', hashChange);
-    hashChange();
-
     // Show the pagination toolbars if enough elements are present
     if ((numResults/pageLimit)>1) {
         $(".toppagination")[0].style.display="block";
@@ -190,4 +150,14 @@ $(function() {
         $(".toppagination")[0].style.display="none";
         $(".toppagination")[1].style.display="none";
     }
+
+    function updatePageHistory(page){
+        var historyStateObject = context.collectionTitle + " page: "+ page;
+        var historyTitle = "Cambridge Digital Library, " + context.collectionTitle + " page: "+ page;
+        var historyUrl = location.protocol + '//' + location.host + context.collectionUrl + "/" + page;
+        if(window.history.replaceState) window.history.replaceState(historyStateObject, historyTitle, historyUrl);
+        context.collectionPage = page;
+        $(document.body).attr('data-context', JSON.stringify(context));
+    }
+
 });
