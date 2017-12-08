@@ -1,0 +1,2 @@
+# src dir gets built to lib, so ignore it for packaging purposes
+src

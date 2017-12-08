@@ -1,0 +1,60 @@
+@indicator-bgcolor: rgba(24,24,24,.8);
+@indicator-fontsize: .85em;
+@indicator-color-person: rgb(4,50,39);
+@indicator-color-about: rgb(250,72,46);
+@indicator-color-date: rgb(135,135,135);
+@indicator-color-place: rgb(204,238,0);
+
+.color-indicator {
+    background-color: @indicator-bgcolor;
+    border-radius: 4px;
+    display: none;
+    position: absolute;
+    left: 14px;
+    bottom: 50px;
+    padding: 15px;
+    div {
+        display: block;
+        height: 1em;
+        color: #eee;
+    }
+    span.label {
+        padding: 0 0 1em 0;
+        text-align: center;
+        font-size: @indicator-fontsize;
+    }
+    label {
+        display: inline-block;
+        font-size: @indicator-fontsize;
+        font-weight: normal;
+    }
+    span {
+        width: 1em;
+        height: .5em;
+        display: inline-block;
+        margin-right: .5em;
+    }
+    .person {
+        span {
+            background-color: @indicator-color-person;
+        }
+    }
+    .about {
+        span {
+            background-color: @indicator-color-about;
+        }
+    }
+    .date {
+        span {
+            background-color: @indicator-color-date;
+        }
+    }
+    .place {
+        span {
+            background-color: @indicator-color-place;
+        }
+    }
+}
+.color-indicator.show {
+    display: block;
+}

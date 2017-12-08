@@ -1,0 +1,11 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.getDefault = getDefault;
+/** Get the default value from either a commonjs module or es6 module. */
+function getDefault(module) {
+    return module && module.__esModule ? module.default : module;
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3NyYy9lczZtb2R1bGVzLmpzIl0sIm5hbWVzIjpbImdldERlZmF1bHQiLCJtb2R1bGUiLCJfX2VzTW9kdWxlIiwiZGVmYXVsdCJdLCJtYXBwaW5ncyI6Ijs7Ozs7UUFDZ0JBLFUsR0FBQUEsVTtBQURoQjtBQUNPLFNBQVNBLFVBQVQsQ0FBb0JDLE1BQXBCLEVBQTRCO0FBQy9CLFdBQVFBLFVBQVVBLE9BQU9DLFVBQWxCLEdBQWdDRCxPQUFPRSxPQUF2QyxHQUFpREYsTUFBeEQ7QUFDSCIsImZpbGUiOiJlczZtb2R1bGVzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyoqIEdldCB0aGUgZGVmYXVsdCB2YWx1ZSBmcm9tIGVpdGhlciBhIGNvbW1vbmpzIG1vZHVsZSBvciBlczYgbW9kdWxlLiAqL1xuZXhwb3J0IGZ1bmN0aW9uIGdldERlZmF1bHQobW9kdWxlKSB7XG4gICAgcmV0dXJuIChtb2R1bGUgJiYgbW9kdWxlLl9fZXNNb2R1bGUpID8gbW9kdWxlLmRlZmF1bHQgOiBtb2R1bGU7XG59XG4iXX0=

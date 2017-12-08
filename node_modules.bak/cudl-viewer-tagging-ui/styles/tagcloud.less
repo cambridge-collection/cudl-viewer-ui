@@ -1,0 +1,59 @@
+.cloud {
+    & > div {
+        position: relative;
+    }
+    .status {
+        position: absolute;
+        right: 7px;
+        top: 7px;
+        font-size: 10px;
+        line-height: 28px;
+    }
+    #wordCloud {
+        height: 500px;
+        display: block;
+        width: auto;
+        background-color: #fff;
+        position: relative;
+        label {
+            position: absolute;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #bbb;
+            top: 50%;
+            height: auto;
+        }
+    }
+    #refreshCloud {
+        background-color: rgb(245,245,245);
+        border: 0;
+        border-bottom: 1px solid #ddd;
+        border-bottom-left-radius: 3px;
+        border-left: 1px solid #ddd;
+        color: #aaa;
+        font-size: 12px;
+        padding: 5px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 2;
+    }
+    .panel-footer > div {
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+    }
+    .panel-footer h6 {
+        margin: 0;
+        color: #888;
+        display: table-cell;
+        padding-left: 10px;
+    }
+    .panel-footer i {
+        color: #aaa;
+        display: table-cell;
+        width: 16px;
+        vertical-align: middle;
+    }
+}
