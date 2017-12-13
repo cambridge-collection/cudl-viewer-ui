@@ -5,7 +5,4 @@ node/
 target/
 .idea
 *.iml
-
-# Maven release plugin generated files
-/release.properties
-/pom.xml.releaseBackup
+/bin/
