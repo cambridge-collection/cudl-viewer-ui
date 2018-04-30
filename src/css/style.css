@@ -13,6 +13,10 @@
     height: 32px;
 }
 
+.campl-page-header {
+	background: #6b2c91;
+}
+
 @media screen and (min-width: 1177px) {
     .carousel-panel {
         background: url("../img/grey.png") repeat scroll 0px 0px
