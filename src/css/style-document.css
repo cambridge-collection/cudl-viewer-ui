@@ -334,6 +334,22 @@ body {
     list-style: none;
 }
 
+.usebutton {
+    float:left;
+    padding:2px;
+}
+
+.usebutton a {
+    width:110px;
+    color: #fff;
+    background-color: #75a8b3;
+    border-color: #31708f;
+}
+
+.usebutton a:hover, .usebutton a:active {
+    background-color: #31708f;
+}
+
 /* transcriptions */
 
 #transcriptionnorm, #transcriptiondiplo, #translation {

@@ -42,6 +42,9 @@ import { registerCsrfPrefilter } from '../ajax-csrf';
     parentCollectionURL
     parentCollectionTitle
     itemTitle
+    iiifEnabled
+    iiifManifestURL
+    iiifMiradorURL
     itemAuthors - not used
     itemAuthorsFullForm - not used
  */
@@ -882,6 +885,24 @@ function setupViewMoreOptions() {
         return false;
     });
     setupDownloadMetadataConfirmation();
+
+    if (!context.iiifEnabled==true) {
+        $('#iiifOption').hide();
+    } else {
+        $('#iiifOption a').on('click', e => {
+            window.open(context.iiifManifestURL);
+            return false;
+        });
+    }
+
+    if (!context.iiifEnabled==true) {
+        $('#miradorOption').hide();
+    } else {
+        $('#miradorOption a').on('click', e => {
+            window.open(context.iiifMiradorURL);
+            return false;
+        });
+    }
 }
 
 function setupConfirmation(confirmation) {
