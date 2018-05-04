@@ -1,6 +1,6 @@
 {
   "name": "cudl-viewer-ui",
-  "version": "1.4.3-SNAPSHOT",
+  "version": "1.4.4",
   "dependencies": {
     "bootstrap": "^3",
     "bootstrap-slider": "^9",
