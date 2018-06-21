@@ -1,8 +1,19 @@
-built/
-node_modules/
-bower_components/
-node/
 target/
-.idea
-*.iml
 /bin/
+
+# IntelliJ
+.idea/
+*.iml
+
+# NodeJS
+/node/
+/node_modules/
+package-lock.json
+
+# Webpack
+/built/
+/bower_components/
+webpack-assets*.json
+
+# Maven release plugin
+*.releaseBackup
