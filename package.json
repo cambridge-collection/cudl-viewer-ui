@@ -47,6 +47,7 @@
     "style-loader": "^0",
     "val-loader": "^0",
     "webpack": "^1",
+    "webpack-dev-server": "^1",
     "webpack-config": "^6",
     "wrap-loader": "^0.1.0"
   },
