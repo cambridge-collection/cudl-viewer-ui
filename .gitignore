@@ -17,3 +17,4 @@ webpack-assets*.json
 
 # Maven release plugin
 *.releaseBackup
+release.properties
