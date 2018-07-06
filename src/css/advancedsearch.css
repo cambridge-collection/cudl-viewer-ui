@@ -3,6 +3,7 @@
 
 /* Extend the normal CUDL style */
 @import './style.css';
+@import 'manchester.css';
 
 .campl-main-content {
     min-height: 350px;

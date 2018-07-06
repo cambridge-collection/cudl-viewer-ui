@@ -10,6 +10,7 @@ import '../../less/bootstrap/cudl-bootstrap.less';
 
 // Use the normal CUDL style
 import '../../css/style.css';
+import '../../css/manchester.css';
 import '../base.js';
 import { possiblyEnableEditing } from '../admin/edit';
 

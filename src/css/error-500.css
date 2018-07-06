@@ -1,5 +1,6 @@
 /* Extend the normal CUDL style */
 @import './style.css';
+@import 'manchester.css';
 
 pre.stacktrace {
     white-space: pre;

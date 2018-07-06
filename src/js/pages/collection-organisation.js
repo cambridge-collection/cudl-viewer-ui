@@ -3,6 +3,7 @@ import '../../less/bootstrap/cudl-bootstrap.less';
 
 // Use the normal CUDL style
 import '../../css/style.css';
+import '../../css/manchester.css';
 
 import $ from 'jquery';
 import 'jquery-paging';
