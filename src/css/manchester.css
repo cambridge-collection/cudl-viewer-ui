@@ -1,11 +1,11 @@
+/* Manchester Digital Library Styles */
 
-/* Colour Purple  */
+/* Change Project Light styles to Purple */
 .campl-page-header,
 .campl-local-footer{background:#ececed;}
 .campl-local-footer, .campl-local-footer h3 a{color: #8434ad;}
 .campl-page-sub-title,
 .campl-banner-content{background:#6b2c91}
-.campl-tertiary-navigation{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAM0lEQVQYV2NkQAM3P3/7r87LxYgsDBLDEMCmCCQGV4jLJJhGsEJCikBqGIlRBFY4nDwDAIeHT431w+WIAAAAAElFTkSuQmCC);min-height:100%}
 
 .campl-carousel-control-btn{background:#A268C1}
 .campl-carousel-control-btn:hover{background:#660099}
@@ -127,11 +127,10 @@ th.campl-alt{background:#fff;color:#A268C1}
 
 }
 
-    /* non-purple elements */
+/* Text colours */
 
 .campl-page-header h1, .campl-page-title {
     color: #000;
-    font-family: 'Open Sans', sans-serif;
 }
 
 .campl-breadcrumb, .campl-breadcrumb a {
@@ -146,12 +145,8 @@ th.campl-alt{background:#fff;color:#A268C1}
     background: #1d1d1d;
 }
 
-.campl-breadcrumb .campl-home{background: url(../img/project-light-local-icons/icon-breadcrumb-home-dark.png) 0 0 no-repeat;width:17px; height:17px;padding:0}
-.campl-breadcrumb li{padding:0 2px 0 17px;background: url(../img/project-light-local-icons/bg-breadcrumb-link-dark.png) 5px 50% no-repeat;white-space:nowrap;}
-
 .campl-page-sub-title h1, .campl-sub-title {
     color: #fff;
-    font-family: 'Open Sans', sans-serif;
 }
 
 .campl-footer-navigation {
@@ -162,6 +157,27 @@ th.campl-alt{background:#fff;color:#A268C1}
     color:#000;
 }
 
+.campl-footer-navigation li a {
+    color:#000;
+}
+
+/* Update the header padding */
+.campl-page-title {
+    margin-left: -20px;
+}
+
+.campl-breadcrumb {
+    margin-left: -20px;
+}
+
+.campl-side-padding {
+    padding: 0;
+}
+
+/* Breadcrumb Icons */
+.campl-breadcrumb .campl-home{background: url(../img/project-light-local-icons/icon-breadcrumb-home-dark.png) 0 0 no-repeat;width:17px; height:17px;padding:0}
+.campl-breadcrumb li{padding:0 2px 0 17px;background: url(../img/project-light-local-icons/bg-breadcrumb-link-dark.png) 5px 50% no-repeat;white-space:nowrap;}
+
 /* Always hide the project light menu - usually displayed on low resolutions. */
 .js .campl-open-menu {
     display: none;
@@ -171,11 +187,50 @@ th.campl-alt{background:#fff;color:#A268C1}
     display: none;
 }
 
-.campl-footer-navigation li a {
-    color:#000;
+/* Additional Manchester Footer Styles */
+.manchesterInlineList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Open Sans',sans-serif;
+    font-weight: 400;
+}
+
+.manchesterInlineList li {
+    line-height: 2;
+    display: inline-block;
+    margin: 0;
+    padding: 0 5px 0 0;
+    font-size: 1.2em !important;
+    color: #aaa;
+    font-weight: 400;
+}
+
+.manchesterInlineList li a {
+    display: inline-block;
+    padding: 5px;
+}
+.manchesterfooterContainer li a {
+    color: #aaa;
+    text-decoration: none;
+}
+.manchesterfooterContainer li a:hover {
+    text-decoration: underline;
+}
+.manchesterfootertwelvecol {
+    width: 100%;
+    float: left;
+    line-height: 1.5;
+    position: relative;
+    padding: 10px 0px 10px 20px;
 }
 
 /* Fonts */
+.campl-page-sub-title h1, .campl-sub-title {
+    font-family: 'Open Sans', sans-serif;
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
 }
@@ -189,7 +244,7 @@ body {
 }
 
 .campl-carousel-content p, .campl-highlight-date, .campl-homepage-content h2, .campl-light-heading, .campl-main-content-sub-column h2, .campl-page-header h1, .campl-page-sub-title h2, .campl-page-title, .campl-primary-cta, .campl-secondary-content h2, .campl-slide-caption-txt, .campl-sub-title, h1, legend {
-    font-family: 'Open Sans', sans-serif;'Open Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif;
 }
 
 button, html, input, select, textarea {
