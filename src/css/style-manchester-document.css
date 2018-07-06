@@ -1,0 +1,58 @@
+/* Update the colours */
+
+.breadcrumb {
+    background-color: #660099;
+}
+
+.usebutton a {
+    color: #fff;
+    background-color: #A268C1;
+    border-color: #660099;
+}
+
+.usebutton a:hover, .usebutton a:active {
+    background-color: #8434AD;
+}
+
+.btn-info.active, .btn-info:active, .btn-info:hover, .open > .dropdown-toggle.btn-info {
+    color: #fff;
+    background-color: #8434AD;
+    border-color: #660099;
+}
+
+.panel-info > .panel-heading {
+    color: #8434AD;
+    background-color: #DED0E9;
+    border-color: #C09CD5;
+}
+
+.panel-info > .panel-heading + .panel-collapse > .panel-body {
+    border-top-color: #C09CD5;
+}
+
+.panel-info {
+    border-color: #C09CD5;
+}
+
+/* Update the logo and header layout */
+.navbar #cam-logo, .navbar #ul-logo {
+    padding-top: 4px;
+}
+
+.navbar {
+    height: 80px;
+}
+
+.navbar .navbar-header {
+    height: 80px;
+}
+#doc {
+    top: 68px;
+}
+.right-panel {
+    top: 80px;
+}
+
+.cudl-viewer-buttons-pagination {
+    top:25px;
+}

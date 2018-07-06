@@ -2,8 +2,8 @@ import $ from 'jquery';
 
 // Bootstrap styles
 import '../../less/bootstrap/cudl-bootstrap.less';
-import '../../css/manchester.css';
 import '../../css/style.css';
+import '../../css/manchester.css';
 import '../base.js';
 
 

@@ -8,6 +8,7 @@ import '../../less/bootstrap/cudl-bootstrap.less';
 
 // Page styles
 import '../../css/style-document.css';
+import '../../css/style-manchester-document.css';
 import '../polyfill';
 
 import $ from 'jquery';
@@ -276,7 +277,7 @@ function setupSeaDragon(data) {
             $(".cudl-viewer-buttons-pagination").appendTo(".navbar-header");
             setTranscriptionPage(data, pageNum);
             updatePageMetadata(data, pageNum);
-            $('#doc').css("top", "68px");
+            $('#doc').css("top", "80px");
         }
     });
 
