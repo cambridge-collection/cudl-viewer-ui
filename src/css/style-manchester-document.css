@@ -34,6 +34,12 @@
     border-color: #C09CD5;
 }
 
+.alert-info {
+    background-color: #DED0E9;
+    border-color: #C09CD5;
+    color: #660099;
+}
+
 /* Update the logo and header layout */
 .navbar #cam-logo, .navbar #ul-logo {
     padding-top: 4px;
