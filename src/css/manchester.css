@@ -58,6 +58,11 @@ th.campl-alt{background:#fff;color:#A268C1}
 
 .campl-breadcrumb, .campl-breadcrumb a {
     color: #000;
+    text-decoration: none;
+}
+
+.campl-breadcrumb a:hover {
+    text-decoration: underline;
 }
 
 .campl-global-header {
@@ -165,6 +170,14 @@ th.campl-alt{background:#fff;color:#A268C1}
     position: absolute;
     bottom: 0;
     right: 0;
+}
+
+/* Additional Footer style */
+.campl-footer-navigation a:hover {
+    text-decoration: underline;
+}
+.campl-footer-navigation a {
+    text-decoration: none;
 }
 
 /* Fonts */
