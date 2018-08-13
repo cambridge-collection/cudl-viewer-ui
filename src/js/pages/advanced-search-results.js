@@ -112,11 +112,14 @@ function noBreak(text) {
 
 function renderResult(result) {
     var item = result.item;
+    var width_height = ",178";
     var imageStyle = {};
     if (item.thumbnailOrientation == "portrait") {
         imageStyle["height"] = "100%";
+        width_height = ",178";
     } else if (item.thumbnailOrientation == "landscape") {
         imageStyle["width"] = "100%";
+        width_height = "178,";
     }
     var title = item.title.join(", ");
     if (result.itemType == "essay") {
@@ -138,7 +141,7 @@ function renderResult(result) {
                                 .append(
                                     $("<img>")
                                         .attr({
-                                            src: result.pageThumbnailURL,
+                                            src: result.pageThumbnailURL+"/full/"+width_height+"/0/default.jpg",
                                             alt: item.id
                                         }).css(imageStyle)
                                 )

@@ -52,12 +52,19 @@ $(function() {
                         // add in the results
                         for(var i=0; i<data.items.length; i++) {
                             var item = data.items[i];
+                            var thumbnailURL = item.thumbnailURL;
                             var imageDimensions = "";
                             if(item.thumbnailOrientation=="portrait") {
                                 imageDimensions = " style='height:100%' ";
+                                if (String(thumbnailURL).endsWith(".jp2")) {
+                                    thumbnailURL = String(thumbnailURL)+"/full/178,/0/default.jpg";
+                                }
                             }
                             else if(item.thumbnailOrientation=="landscape") {
                                 imageDimensions = " style='width:100%' ";
+                                if (String(thumbnailURL).endsWith(".jp2")) {
+                                    thumbnailURL = String(thumbnailURL)+"/full/,178/0/default.jpg";
+                                }
                             }
                             var shelfLocator = "";
                             if(item.shelfLocator != "") {
@@ -65,10 +72,11 @@ $(function() {
                             }
 
                             var itemDiv = document.createElement('div');
+
                             itemDiv.setAttribute("class", "collections_carousel_item");
                             itemDiv.innerHTML = "<div class='collections_carousel_image_box'>" +
                                 "<div class='collections_carousel_image'>" +
-                                "<a href='/view/" + item.id + "'><img src='" + item.thumbnailURL + "' alt='" + item.id + "' " +
+                                "<a href='/view/" + item.id + "'><img src='" + thumbnailURL + "' alt='" + item.id + "' " +
                                 imageDimensions + " > </a></div></div> " +
                                 "<div class='collections_carousel_text word-wrap-200'><h5>" + item.title + shelfLocator + "</h5> " + item.abstractShort +
                                 " ... <a href='/view/" + item.id + "'>more</a></div><div class='clear'></div>";
