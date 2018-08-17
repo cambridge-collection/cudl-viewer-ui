@@ -18,22 +18,30 @@ $(function() {
 
     forEach(context.editableAreas, ({id, filename}) => {
 
+        // Note we are looking for multiple items with the same
+        // id within a page as Project Light carousel for example clones
+        // elements and so fails if we only look for one match to each id.
         let el = $('#' + id);
+        $('*[id*='+id+']').each(function() {
+            el=$(this);
+
+            // Mark the element as editable otherwise CKEDITOR will be in read only
+            // mode.
+            el.attr('contenteditable', 'true');
+
+            CKEDITOR.inline(el[0], assign({}, require('../ckeditor/config'), {
+                on: {
+                    save: function(event) {
+                        openConfirmation(filename, event.editor.getData());
+                    }
+                }
+            }));
+        });
+
         if(!el.length) {
             throw new Error(`No element exists with id: ${id}`);
         }
 
-        // Mark the element as editable otherwise CKEDITOR will be in read only
-        // mode.
-        el.attr('contenteditable', 'true');
-
-        CKEDITOR.inline(el[0], assign({}, require('../ckeditor/config'), {
-            on: {
-                save: function(event) {
-                    openConfirmation(filename, event.editor.getData());
-                }
-             }
-         }));
     });
 
     var saveData = function (filename, data, callback) {
