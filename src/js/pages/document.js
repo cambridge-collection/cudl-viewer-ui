@@ -427,9 +427,10 @@ function addBookmark() {
         data = viewerModel.getMetadata();
 
     // Generate bookmarkPath
-    // TODO Remove the need to record a Thumbnail URL for bookmarks and fix IIIF bookmarks.
-    var thumbnailURL = "";
-    var bookmarkPath = "/mylibrary/addbookmark/?itemId="+context.docId+"&page="+pageNum+"&thumbnailURL="+encodeURIComponent(thumbnailURL);
+    // thumbnailImage should be e.g."MS-ADD-03996-000-00001.jp2" as we
+    // cannot always generate this from the itemid and pagenum.
+    var thumbnailImage = data.pages[pageNum-1].IIIFImageURL;
+    var bookmarkPath = "/mylibrary/addbookmark/?itemId="+context.docId+"&page="+pageNum+"&thumbnailImage="+encodeURIComponent(thumbnailImage);
 
     // ajax call to make the bookmark:
     $.post(bookmarkPath).done(function(xml) {
