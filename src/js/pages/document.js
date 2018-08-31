@@ -35,7 +35,6 @@ import { registerCsrfPrefilter } from '../ajax-csrf';
     docId
     docURL - not used
     imageServer
-    iiifImageServer
     services
 
     // Read in Attributes
@@ -92,7 +91,7 @@ function loadPage(pagenumber) {
     }
 
     function openIIIF(iiifPath) {
-        viewer.open(context.iiifImageServer + iiifPath +"/info.json");
+        viewer.open(context.imageServer + iiifPath +"/info.json");
     }
 
     // open Image
