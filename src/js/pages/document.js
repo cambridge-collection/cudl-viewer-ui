@@ -555,7 +555,7 @@ function showThumbnailPage(pagenum) {
                                 + data.pages[i].label + "</div></a></div>");
             } else {
                 thumbnailhtml = thumbnailhtml
-                        .concat("full/150,/0/default.jpg' style='width:130px;'><div class='caption'>"
+                        .concat("/full/150,/0/default.jpg' style='width:130px;'><div class='caption'>"
                                 + data.pages[i].label + "</div></a></div>");
             }
 
