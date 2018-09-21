@@ -208,9 +208,6 @@ in `package.json`, e.g:
 }
 ```
 
-Update the version in `package.json` to the version to be released. (It'd be
-nice to automate this.)
-
 ## Step 2
 
 Run the prepare mojo of the Maven release plugin (but via our script as we have
