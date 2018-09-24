@@ -139,15 +139,15 @@ function updatePageMetadata(data, pagenumber) {
        $('#embedOption').css("display", "none");
    }
 
-   $('#currentURL').text("http://cudl.lib.cam.ac.uk"+newURL);
-   $('#embedCode').text("<div style='position: relative; width: 100%; padding-bottom: 80%;'><iframe type='text/html' width='600' height='410' style='position: absolute; width: 100%; height: 100%;' src='https://cudl.lib.cam.ac.uk/embed/#item=" + encodeURIComponent(context.docId) + "&page=" + encodeURIComponent(pagenumber) + "&hide-info=true' frameborder='0' allowfullscreen='' onmousewheel=''></iframe></div>")
+   $('#currentURL').text("https://www.digitalviewer.manchester.ac.uk"+newURL);
+   $('#embedCode').text("<div style='position: relative; width: 100%; padding-bottom: 80%;'><iframe type='text/html' width='600' height='410' style='position: absolute; width: 100%; height: 100%;' src='https://www.digitalviewer.manchester.ac.uk/embed/#item=" + encodeURIComponent(context.docId) + "&page=" + encodeURIComponent(pagenumber) + "&hide-info=true' frameborder='0' allowfullscreen='' onmousewheel=''></iframe></div>")
    $('#about-metadata').empty();
    highlightMetadataForPageViewed(pagenumber, data.logicalStructures);
    $('#pageLabel').html("Page: "+data.pages[pagenumber-1].label);
    updateCanonicalUrl();
 
    // update URL bar, does not work in ie9.
-   window.history.replaceState(context.docId + " page:"+ pagenumber, "Cambridge Digital Library",newURL);
+   window.history.replaceState(context.docId + " page:"+ pagenumber, "Manchester Digital Library",newURL);
 };
 
 function getCanonicalUrl(model = viewerModel) {
