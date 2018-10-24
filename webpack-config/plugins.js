@@ -34,7 +34,10 @@ export default new Config()
                 filename: env('cudl-viewer-ui.assetJsonFilename'),
                 path: env('cudl-viewer-ui.assetJsonPath'),
                 prettyPrint: true,
-                fullPath: false
+                fullPath: false,
+                // Only include CSS and JS files (we don't load anything else
+                // manually, so don't need every png listed in the assets file).
+                includeAllFileTypes: false
             }),
             new webpack.DefinePlugin({
                 // Relative to the public path
