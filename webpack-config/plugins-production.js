@@ -26,12 +26,10 @@ function compressZopfliGzip(buf, options, callback) {
 export default new Config().merge({
     plugins: [
         new CompressionPlugin({
-            asset: "[file].gz",
             // Use Zopfli to gzip compress if it's available, otherwise zlib.
             // Zopfli compresses slightly better (0-10%) than zlib, but is much
             // slower to perform the compression.
-            algorithm: zopfli ? compressZopfliGzip : compressZlibGzip,
-            minRatio: 0.8
+            algorithm: zopfli ? compressZopfliGzip : compressZlibGzip
         })
     ]
 });

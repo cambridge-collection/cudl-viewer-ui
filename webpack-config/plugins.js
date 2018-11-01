@@ -12,7 +12,7 @@ let pwd = resolver(__dirname);
 
 export default new Config()
     .merge({
-        plugins: [
+        optimization: {
             // Every page apart from document and transcription share a fair
             // amount of stuff, so break out that stuff into a shared chunk.
             // There's scope to create a additional shared chunks if necessary.
@@ -23,13 +23,13 @@ export default new Config()
             //       the common chunks config if you change it. The java code
             //       replies on deps.json to know which entry chunks to load in
             //       what order.
-            new webpack.optimize.CommonsChunkPlugin({
+            splitChunks: {
                 name: 'common',
                 filename: env('cudl-viewer-ui.filenameTemplateJsChunk'),
-                chunks: without(
-                    Object.keys(entryConfig.entry),
-                    'page-document', 'page-transcription')
-            }),
+                chunks: without(Object.keys(entryConfig.entry), 'page-document', 'page-transcription')
+            }
+        },
+        plugins: [
             new AssetsPlugin({
                 filename: env('cudl-viewer-ui.assetJsonFilename'),
                 path: env('cudl-viewer-ui.assetJsonPath'),
