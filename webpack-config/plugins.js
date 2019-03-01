@@ -25,8 +25,7 @@ export default new Config()
             //       what order.
             splitChunks: {
                 name: 'common',
-                filename: env('cudl-viewer-ui.filenameTemplateJsChunk'),
-                chunks: without(Object.keys(entryConfig.entry), 'page-document', 'page-transcription')
+                chunks: 'all'
             }
         },
         plugins: [
