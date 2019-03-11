@@ -37,7 +37,7 @@ export default new Config().merge({
                 use: {
                     loader: 'file-loader',
                     options: {
-                        name: encodeURIComponent(env('cudl-viewer-ui.filenameTemplateAsset'))
+                        name: env('cudl-viewer-ui.filenameTemplateAsset')
                     }
                 }
             }

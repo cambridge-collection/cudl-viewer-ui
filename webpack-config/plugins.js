@@ -23,9 +23,14 @@ export default new Config()
             //       the common chunks config if you change it. The java code
             //       replies on deps.json to know which entry chunks to load in
             //       what order.
+
             splitChunks: {
-                name: 'common',
-                chunks: 'all'
+                chunks (chunk) {
+                    if ((chunk.name !== 'page-document') && (chunk.name !== 'page-transcription')) {
+                      return true;
+                    }
+                 },
+                name: 'common'
             }
         },
         plugins: [

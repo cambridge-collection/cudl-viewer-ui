@@ -1,6 +1,7 @@
 import { Config } from 'webpack-config';
 
 import { rootPath, resolver } from '../paths';
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
 
 let pwd = resolver(__dirname);

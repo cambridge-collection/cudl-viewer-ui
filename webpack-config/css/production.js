@@ -60,7 +60,8 @@ export default new Config()
         },
         plugins: [
             new MiniCssExtractPlugin({
-                filename: 'css/[name]-[chunkhash].css'
+                filename: 'css/[name]-[chunkhash].css',
+                chunkFilename: 'css/[name]-[chunkhash].css'
             })
         ]
     });
