@@ -38,9 +38,8 @@ While actively making changes to the source you'll want to use the webpack
 dev server, which supports Hot Module Replacement (HMO) to live update the page
 being viewed as you update source files.
 
-**NB**: Until Webpack can be updated from v1 to v2 or v3, trying to run Webpack dev server from the latest versions of 
-Webpack dev server, node and bower installed globally (as described below) may result in unmet peer dependency issues. A simple temporary workaround 
-can be found on the Wiki [Setting Up Webpack Dev Server](https://wiki.cam.ac.uk/cudl-docs/Setting_up_a_Local_Development_Environment_for_CUDL#Setting_Up_Webpack_Dev_Server_.28Optional.29).
+ Instructions on how to setup the webpack-dev-server can be found on
+ the Wiki [Setting Up Webpack Dev Server](https://wiki.cam.ac.uk/cudl-docs/Setting_up_a_Local_Development_Environment_for_CUDL#Setting_Up_Webpack_Dev_Server_.28Optional.29).
 
 ## Prerequisites
 
