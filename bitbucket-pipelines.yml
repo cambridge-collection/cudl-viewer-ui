@@ -12,8 +12,13 @@ pipelines:
           - node
         script: # Modify the commands below to build your repository.
           - apt-get update
-          - apt-get install -y maven 
-          - npm install -g webpack@4.29.5 webpack-dev-server@3.2.1 bower@1.8.8 babel-core@^7
+          - apt-get install -y maven
+          - npm install -g webpack@^4.29.5 webpack-cli@^3.1.2 webpack-dev-server@^3.2.1 bower@^1.8.8 @babel/core@^7.3.4
+          - bower install --allow-root
           - npm install
           - webpack
+          - apt install -y openjdk-8-jdk
+          - apt-get install -y tree
+          - tree /usr/lib/jvm
+          - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
           - mvn install

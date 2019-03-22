@@ -51,7 +51,7 @@ so that they're available as shell commands:
 
 ```
 # You'll need to run with sudo if node is installed systemwide.
-$ npm install -g webpack webpack-dev-server bower babel-core@^5
+$ npm install -g webpack@^4.29.5 webpack-cli@^3.1.2 webpack-dev-server@^3.2.1 bower@^1.8.8 @babel/core@^7.3.4
 ```
 
 ## Install project dependencies
