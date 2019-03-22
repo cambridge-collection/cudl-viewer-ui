@@ -18,7 +18,5 @@ pipelines:
           - npm install
           - webpack
           - apt install -y openjdk-8-jdk
-          - apt-get install -y tree
-          - tree /usr/lib/jvm
           - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
           - mvn install
