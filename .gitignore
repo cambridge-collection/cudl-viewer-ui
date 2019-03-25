@@ -7,7 +7,6 @@ target/
 # NodeJS
 /node/
 /node_modules/
-package-lock.json
 
 # Webpack
 /built/
