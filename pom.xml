@@ -49,9 +49,6 @@
                     <execution>
                         <id>Install Bower packages</id>
                         <goals><goal>bower</goal></goals>
-                        <configuration>
-                            <arguments>--allow-root</arguments>
-                        </configuration>
                     </execution>
 
                     <execution>
