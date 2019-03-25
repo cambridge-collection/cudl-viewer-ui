@@ -62,6 +62,6 @@
   "private": true,
   "optionalDependencies": {},
   "scripts": {
-    "show-config": "babel-node ./bin/show-config"
+    "show-config": "babel-node ./bin/show-config.js"
   }
 }
