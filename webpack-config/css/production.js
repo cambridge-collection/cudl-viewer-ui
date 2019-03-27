@@ -2,7 +2,7 @@
  * The production loaders extract CSS into separate CSS files.
  */
 import { Config } from 'webpack-config';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import MiniCssExtractPlugin  from 'mini-css-extract-plugin';
 
 import { rootPath, resolver } from '../paths';
 
@@ -18,41 +18,50 @@ export default new Config()
     .extend(pwd('./base.js'))
     .merge({
         module: {
-            loaders: [
+            rules: [
                 {
                     test: /\.css$/,
                     include: rootPath('./src/css'),
-                    loader: ExtractTextPlugin.extract(
-                        'style-loader',
-                        'css-loader?sourceMap!postcss-loader?sourceMap', {
-                            publicPath: publicPath
-                        })
+                    use: [
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                            options: { publicPath: publicPath }
+                        },
+                        'css-loader',
+                        'postcss-loader'
+                    ]
                 },
                 // Plain library CSS
                 {
                     test: /\.css(\?.*)?$/,
                     exclude: rootPath('./src/css'),
-                    loader: ExtractTextPlugin.extract(
-                        'style-loader',
-                        'css-loader?sourceMap', {
-                            publicPath: publicPath
-                        })
+                    use: [
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                            options: { publicPath: publicPath }
+                        },
+                        'css-loader'
+                    ]
                 },
                 // Bootstrap less - don't want to apply postcss
                 {
                     include: rootPath('./src/less/bootstrap'),
                     test: /\.less$/,
-                    loader: ExtractTextPlugin.extract(
-                        'style-loader',
-                        'css-loader?sourceMap!less-loader?sourceMap', {
-                            publicPath: publicPath
-                        })
+                    use: [
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                            options: { publicPath: publicPath }
+                        },
+                        'css-loader',
+                        'less-loader'
+                    ]
                 }
             ]
         },
         plugins: [
-            new ExtractTextPlugin('css/[name]-[chunkhash].css', {
-                allChunks: true
+            new MiniCssExtractPlugin({
+                filename: 'css/[name]-[chunkhash].css',
+                chunkFilename: 'css/[name]-[chunkhash].css'
             })
         ]
     });

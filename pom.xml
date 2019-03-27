@@ -36,41 +36,26 @@
                         <id>Install Node and NPM</id>
                         <goals><goal>install-node-and-npm</goal></goals>
                         <configuration>
-                            <nodeVersion>v4.1.0</nodeVersion>
-                            <npmVersion>3.8.2</npmVersion>
+                            <nodeVersion>v10.15.2</nodeVersion>
+                            <npmVersion>6.4.1</npmVersion>
                         </configuration>
                     </execution>
 
                     <execution>
                         <id>Install NPM packages</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-
-                        <configuration>
-                            <arguments>install</arguments>
-                        </configuration>
+                        <goals><goal>npm</goal></goals>
                     </execution>
 
                     <execution>
                         <id>Install Bower packages</id>
-                        <goals>
-                            <goal>bower</goal>
-                        </goals>
-
-                        <configuration>
-                            <arguments>install</arguments>
-                        </configuration>
+                        <goals><goal>bower</goal></goals>
                     </execution>
 
                     <execution>
                         <id>Run Webpack build</id>
-                        <goals>
-                            <goal>webpack</goal>
-                        </goals>
-
+                        <goals><goal>webpack</goal></goals>
                         <configuration>
-                            <arguments>-p --output-path ${cudl.webpack-output-dir}</arguments>
+                            <arguments>--mode production --output-path ${cudl.webpack-output-dir}</arguments>
                         </configuration>
                     </execution>
                 </executions>

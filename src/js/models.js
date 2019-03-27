@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 
-import IllegalStateException from './exceptions';
+import { IllegalStateException } from './exceptions';
 
 
 export class Model {
