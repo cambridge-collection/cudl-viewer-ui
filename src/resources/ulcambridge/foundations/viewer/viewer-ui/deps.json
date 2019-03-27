@@ -9,5 +9,6 @@
     "page-error-500": ["common"],
     "page-admin": ["common"],
     "page-feedback": ["common"],
-    "page-admin-file-browse": ["common"]
+    "page-admin-file-browse": ["common"],
+    "page-document": []
 }

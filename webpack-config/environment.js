@@ -154,7 +154,7 @@ export function populateEnvironment(environ) {
             // In production the public path provided at runtime by the viewer.
             publicPath: ifEnv({
                 dev:        defaultDevPublicPath(args),
-                production: null
+                production: ''
             }),
 
             // The location of the ckeditor assets, relative to the webpack public path

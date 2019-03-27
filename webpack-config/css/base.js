@@ -1,6 +1,4 @@
 import { Config } from 'webpack-config';
+import webpack from 'webpack';
 
-
-export default new Config().merge({
-    postcss: [require('autoprefixer')]
-});
+export default new Config();
