@@ -1,5 +1,5 @@
 {
-  "name": "cudl-viewer-ui",
+  "name": "mudl-viewer-ui",
   "version": "1.4.6-SNAPSHOT",
   "dependencies": {
     "acorn": "^6.1.1",
@@ -17,7 +17,7 @@
     "jquery-ui": "^1.12.1",
     "jquery.easing": "^1.4.1",
     "lodash": "^4.17.11",
-    "npm-font-open-sans": "^1.1.0"
+    "npm-font-open-sans": "^1.1.0",
     "openseadragon": "^2.2.1",
     "recursive-iterator": "^2.0.3",
     "spin.js": "^2.3.2"
