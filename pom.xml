@@ -3,7 +3,7 @@
 
     <groupId>ulcambridge.foundations.viewer</groupId>
     <artifactId>mudl-viewer-ui</artifactId>
-    <version>mudl-1.5.0</version>
+    <version>mudl-1.5.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>CUDL Viewer UI</name>
@@ -21,7 +21,7 @@
         <connection>scm:git:ssh://git@bitbucket.org/CUDL/cudl-viewer-ui.git</connection>
         <developerConnection>scm:git:ssh://git@bitbucket.org/CUDL/cudl-viewer-ui.git</developerConnection>
         <url>https://bitbucket.org/CUDL/cudl-viewer-ui/branch/mudl-viewer-ui</url>
-        <tag>mudl-1.5.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <build>
