@@ -170,9 +170,10 @@ function updateCanonicalUrl(url = getCanonicalUrl()) {
 }
 
 function updateAddThisShareUrl(url = getCanonicalUrl()) {
-    if(addthis) {
-        addthis.update('share', 'url', url);
-    }
+    // FIXME addthis not defined.
+    //if(addthis) {
+    //    addthis.update('share', 'url', url);
+    // }
 }
 
 function setupSeaDragon(data) {
