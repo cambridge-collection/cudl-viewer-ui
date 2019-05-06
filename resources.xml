@@ -24,7 +24,6 @@
                 <!-- Pre-loaded via webpack -->
                 <exclude>lang/**/*</exclude>
                 <exclude>ckeditor.js</exclude>
-                <exclude>config.js</exclude>
                 <exclude>style.js</exclude>
             </excludes>
             <outputDirectory>${cudl.outputAssetPath}/vendor/ckeditor</outputDirectory>
