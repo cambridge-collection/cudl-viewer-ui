@@ -18,7 +18,6 @@ import { setupSimilarityTab } from 'cudl-viewer-bubbles';
 import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
 
 import '../cudl';
-import { msgBus } from '../cudl';
 import { getPageContext } from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
 import { ViewerModel } from '../viewer/models';
@@ -33,7 +32,7 @@ import { registerCsrfPrefilter } from '../ajax-csrf';
     pageNum
     docId
     docURL - not used
-    imageServer
+    imageServers
     services
 
     // Read in Attributes
@@ -90,7 +89,10 @@ function loadPage(pagenumber) {
     }
 
     function openIIIF(iiifPath) {
-        viewer.open(context.imageServer + iiifPath +"/info.json");
+
+        const imageServer = getRandomImageServer(context.imageServers);
+        viewer.open(imageServer+ iiifPath +"/info.json");
+
     }
 
     // open Image
@@ -466,7 +468,8 @@ function downloadImage() {
         width_height = "1000,";
     }
     if (typeof downloadImageURL != "undefined") {
-        window.open(context.imageServer+downloadImageURL+"/full/"+width_height+"/0/default.jpg");
+        const imageServer = getRandomImageServer(context.imageServers);
+        window.open(imageServer+downloadImageURL+"/full/"+width_height+"/0/default.jpg");
 
     } else {
         alert ("No image available to download.");
@@ -541,11 +544,12 @@ function showThumbnailPage(pagenum) {
                 thumbnailhtml = thumbnailhtml.concat("<div class='row'>");
             }
 
+            const imageServer = getRandomImageServer(context.imageServers);
             thumbnailhtml = thumbnailhtml
                     .concat("<div class='col-md-4'><a href='' onclick='store.loadPage("
                             + (data.pages[i].sequence)
                             + ");return false;' class='thumbnail'><img src='"
-                            + context.imageServer
+                            + imageServer
                             + data.pages[i].IIIFImageURL
                             );
 
@@ -935,6 +939,12 @@ function setupKnowMoreLinks() {
     });
 }
 
+function getRandomImageServer(imageServersCsv) {
+    const imageServers = imageServersCsv.split(',');
+    const random = Math.floor(Math.random() * imageServers.length);
+    return imageServers[random];
+}
+
 $(document).ready(function() {
     registerCsrfPrefilter();
 
@@ -967,7 +977,7 @@ $(document).ready(function() {
             viewerModel: viewerModel,
             docId: context.docId,
             servicesBaseUrl: context.services,
-            imageServerBaseUrl: context.imageServer
+            imageServerBaseUrl: getRandomImageServer(context.imageServers)
         });
 
         // FIXME: load on demand if tagging is enabled.
