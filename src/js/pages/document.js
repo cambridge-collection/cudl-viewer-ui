@@ -210,7 +210,7 @@ function updateAddThisShareUrl(url = getCanonicalUrl()) {
 }
 
 function setupSeaDragon(data) {
-    OpenSeadragon.setString("Tooltips.Home", "Reset View");
+    OpenSeadragon.setString("Tooltips.Home", "Reset zoom");
     viewer = new OpenSeadragon.Viewer({
         id : "doc",
         debugMode : false,
@@ -218,6 +218,7 @@ function setupSeaDragon(data) {
         showRotationControl : true,
         zoomInButton : "zoomIn",
         zoomOutButton : "zoomOut",
+        homeButton : "zoomHome",
         rotateLeftButton : "rotateLeft",
         rotateRightButton : "rotateRight",
         fullPageButton: "fullscreen"
