@@ -218,7 +218,7 @@ function setupSeaDragon(data) {
         showRotationControl : true,
         zoomInButton : "zoomIn",
         zoomOutButton : "zoomOut",
-        homeButton : "zoomHome",
+        homeButton : "zoomHome", // Optional button set in viewer properties
         rotateLeftButton : "rotateLeft",
         rotateRightButton : "rotateRight",
         fullPageButton: "fullscreen"
