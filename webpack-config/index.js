@@ -16,4 +16,5 @@ export default new Config()
     .extend(pwd('./loaders.js'))
     .extend(pwd('./css/[env].js'))
     .extend(pwd('./plugins.js'))
-    .extend(pwd('./shims.js'));
+    .extend(pwd('./shims.js'))
+    .extend(pwd('./devserver.js'));
