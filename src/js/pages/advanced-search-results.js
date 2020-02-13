@@ -113,13 +113,13 @@ function noBreak(text) {
 function renderResult(result) {
     var item = result.item;
     var imageStyle = {};
-    if (item.thumbnailOrientation == "portrait") {
+    if (item.thumbnailOrientation === "portrait") {
         imageStyle["height"] = "100%";
-    } else if (item.thumbnailOrientation == "landscape") {
+    } else if (item.thumbnailOrientation === "landscape") {
         imageStyle["width"] = "100%";
     }
-    var title = item.title.join(", ");
-    if (result.itemType == "essay") {
+    var title = item.title;
+    if (result.itemType === "essay") {
         title = "Essay: "
                 + title;
     }
@@ -162,7 +162,7 @@ function renderResult(result) {
                                     " (",
                                     $("<span>")
                                         .attr("title", "Shelf locator")
-                                        .text(item.shelfLocator.map(noBreak).join(", ")),
+                                        .text(noBreak(item.shelfLocator || '')),
                                     String(item.shelfLocator) ? " " : "",
                                     "Page: ", document.createTextNode(result.startPageLabel), ")"
                                 )
