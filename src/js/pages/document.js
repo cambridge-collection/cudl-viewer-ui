@@ -221,7 +221,9 @@ function setupSeaDragon(data) {
         homeButton : "zoomHome", // Optional button set in viewer properties
         rotateLeftButton : "rotateLeft",
         rotateRightButton : "rotateRight",
-        fullPageButton: "fullscreen"
+        fullPageButton: "fullscreen",
+        maxZoomPixelRatio: 1,
+
     });
     viewer.clearControls(); // hides controls.
 
@@ -279,6 +281,16 @@ function setupSeaDragon(data) {
             updatePageMetadata(data, pageNum);
             $('#doc').css("top", "68px");
         }
+    });
+    // Show the image zoom percentage
+    viewer.addHandler('viewport-change', function(event) {
+        let viewPort = viewer.viewport.getZoom(false);
+
+        let imageZoom = viewer.viewport.viewportToImageZoom(viewPort);
+        let imageZoomPercentage = (imageZoom * 100).toFixed(0)
+
+        // Show the results.
+        $("#zoomFactor").html('Zoom: ' + imageZoomPercentage.toString() + ' %');
     });
 
     // setup keyboard shortcuts.  Same as the embedded viewer.
