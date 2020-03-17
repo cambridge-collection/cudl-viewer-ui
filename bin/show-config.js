@@ -15,7 +15,7 @@ import { resolve } from 'path';
 const DEFAULT_DEPTH = 3;
 
 let args = process.argv.slice(2),
-    env = args[0] === 'dev' ? '.dev' : 'production',
+    env = args[0] === 'dev' ? 'dev' : 'production',
     depth = parseInt(args[1]) || DEFAULT_DEPTH,
     path = resolve(__dirname, `../webpack-config`);
 
