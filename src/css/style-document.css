@@ -352,6 +352,17 @@ body {
     list-style: none;
 }
 
+#use {
+    width: 100%;
+    display: block;
+    background-color: #fff;
+    border: #ddd 1px solid;
+}
+
+#use .panel-body {
+    padding: 10px;
+}
+
 .usebutton {
     float:left;
     padding:2px;
@@ -366,6 +377,10 @@ body {
 
 .usebutton a:hover, .usebutton a:active {
     background-color: #31708f;
+}
+
+.usebutton i, .usebutton img {
+    float: left;
 }
 
 /* transcriptions */
@@ -428,6 +443,23 @@ body {
 }
 
 /** Responsive Design Stuff **/
+@media (max-width: 1200px) {
+    #use .usebutton a {
+        width: 55px;
+        height: 40px;
+    }
+
+    #use .usebutton i, #use .usebutton img {
+        height: 24px;
+        float: none;
+    }
+
+    #use .usebutton span {
+        display: none;
+    }
+
+}
+
 @media (max-width: 760px) {
     #cam-logo {
         margin-left: 20px;
