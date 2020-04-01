@@ -412,6 +412,11 @@ body {
     color: #000;
 }
 
+#downloadConfirmation select {
+    height: 28px;
+    border: 1px solid #bbb;
+}
+
 #bookmarkConfirmation.close,
 #downloadConfirmation .close,
 #downloadMetadataConfirmation .close {
