@@ -313,6 +313,10 @@ function setupSeaDragon(data) {
         let newSliderPosition = currentRotation > 180 ? currentRotation - 360 : currentRotation;
         $( "#rotationSlider" ).slider( "value", newSliderPosition );
     });
+    // Reset rotation when home button is pressed
+    viewer.addHandler('home', function(event) {
+        viewer.viewport.setRotation( 0 );
+    });
 
     // setup keyboard shortcuts.  Same as the embedded viewer.
     /*$(window).keypress(function(e) {
