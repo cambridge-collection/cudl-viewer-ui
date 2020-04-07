@@ -225,6 +225,9 @@ function setupSeaDragon(data) {
         rotateRightButton : "rotateRight",
         fullPageButton: "fullscreen",
         maxZoomPixelRatio: 1,
+        gestureSettingsTouch: {
+            pinchRotate: true
+        }
 
     });
     viewer.clearControls(); // hides controls.
