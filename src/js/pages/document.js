@@ -8,9 +8,11 @@ import '../../less/bootstrap/cudl-bootstrap.less';
 
 // Page styles
 import '../../css/style-document.css';
+import 'jquery-ui/themes/base/slider.css';
 import '../polyfill';
 
 import $ from 'jquery';
+import 'jquery-ui/ui/widgets/slider';
 import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
 import range from 'lodash/range';
@@ -227,6 +229,19 @@ function setupSeaDragon(data) {
     });
     viewer.clearControls(); // hides controls.
 
+    // Rotation slider using jQuery UI slider
+    $("#rotationSlider").slider({
+        min: -180,
+        max: 180,
+        classes: {
+            "ui-slider": "cudl-btn",
+            "ui-slider-handle": "cudl-btn"
+        },
+        slide: function(event, ui) {
+            viewer.viewport.setRotation(ui.value);
+        },
+    });
+
     // Setup forward and backward buttons
     function nextPage() {
 
@@ -291,6 +306,12 @@ function setupSeaDragon(data) {
 
         // Show the results.
         $("#zoomFactor").html('Zoom: ' + imageZoomPercentage.toString() + ' %');
+    });
+    // Keep rotation slider in sync with the image rotation
+    viewer.addHandler('rotate', function(event) {
+        let currentRotation = viewer.viewport.getRotation();
+        let newSliderPosition = currentRotation > 180 ? currentRotation - 360 : currentRotation;
+        $( "#rotationSlider" ).slider( "value", newSliderPosition );
     });
 
     // setup keyboard shortcuts.  Same as the embedded viewer.
