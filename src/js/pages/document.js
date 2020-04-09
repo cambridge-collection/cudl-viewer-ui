@@ -204,7 +204,7 @@ function updateCanonicalUrl(url = getCanonicalUrl()) {
 }
 
 function updateAddThisShareUrl(url = getCanonicalUrl()) {
-    if(addthis) {
+    if(typeof addthis !== 'undefined') {
         addthis.update('share', 'url', url);
     }
 }
