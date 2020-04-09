@@ -576,7 +576,13 @@ function showThumbnailPage(pagenum) {
             }
             if (i == startIndex || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) == 0) {
 
-                thumbnailhtml = thumbnailhtml.concat("<div class='row'>");
+                if (typeof data.textDirection !== 'undefined' && data.textDirection === 'R'){
+
+                    thumbnailhtml = thumbnailhtml.concat("<div class='row row-right-to-left'>");
+
+                } else {
+                    thumbnailhtml = thumbnailhtml.concat("<div class='row'>");
+                }
             }
 
             thumbnailhtml = thumbnailhtml

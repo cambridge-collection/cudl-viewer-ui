@@ -310,6 +310,12 @@ body {
     margin-left: 0px;
 }
 
+.thumbnail-pane .row-right-to-left {
+    /*Reverses direction of thumbnails for items with right-to-left text direction*/
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 #zoomRights {
     color: #999;
     font-size: 0.8em;
@@ -428,6 +434,13 @@ body {
 }
 
 /** Responsive Design Stuff **/
+@media ( max-width :991px) {
+    .thumbnail-pane .row-right-to-left {
+        /*Remove row reversal when thumbnails become single column*/
+        display: block;
+    }
+}
+
 @media (max-width: 760px) {
     #cam-logo {
         margin-left: 20px;
