@@ -48,6 +48,8 @@ import { registerCsrfPrefilter } from '../ajax-csrf';
     iiifMiradorURL
     itemAuthors - not used
     itemAuthorsFullForm - not used
+
+    viewportNavigatorEnabled
  */
 
 let context;
@@ -210,8 +212,14 @@ function updateAddThisShareUrl(url = getCanonicalUrl()) {
     }
 }
 
+// Viewport navigator is a mini viewer that appears inside the main OpenSeadragon viewer
+function showViewportNavigator() {
+    return !!context.viewportNavigatorEnabled;
+}
+
 function setupSeaDragon(data) {
     OpenSeadragon.setString("Tooltips.Home", "Reset zoom");
+    let showNav = showViewportNavigator();
     viewer = new OpenSeadragon.Viewer({
         id : "doc",
         debugMode : false,
@@ -224,9 +232,9 @@ function setupSeaDragon(data) {
         rotateRightButton : "rotateRight",
         fullPageButton: "fullscreen",
         maxZoomPixelRatio: 1,
-
+        showNavigator: showNav,
+        navigatorPosition: "TOP_LEFT",
     });
-    viewer.clearControls(); // hides controls.
 
     // Setup forward and backward buttons
     function nextPage() {
