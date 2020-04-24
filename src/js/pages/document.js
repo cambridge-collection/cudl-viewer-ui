@@ -34,6 +34,7 @@ import { registerCsrfPrefilter } from '../ajax-csrf';
     docId
     docURL - not used
     imageServer
+    iiifImageServer
     services
 
     // Read in Attributes
@@ -499,17 +500,28 @@ function addBookmark() {
 
 }
 
-function downloadImage() {
+function downloadImage(size) {
     let pageNum = viewerModel.getPageNumber(),
-        data = viewerModel.getMetadata();
+        data = viewerModel.getMetadata(),
+        iiifImageServer = context.iiifImageServer;
 
-    var downloadImageURL = data.pages[pageNum-1].downloadImageURL;
-    if (typeof downloadImageURL != "undefined") {
-        window.open(context.imageServer+downloadImageURL);
-    } else {
-        alert ("No image available to download.");
+    if(!context.iiifEnabled==true)
+        alert ("No IIIF image available to download.");
+
+    else {
+        let downloadImagePath = data.pages[pageNum-1].IIIFImageURL;
+
+        if (typeof downloadImagePath != "undefined") {
+            let downloadImageUrl = iiifImageServer+downloadImagePath+'/full/!'+size+','+size+'/0/default.jpg';
+
+            window.open(downloadImageUrl);
+        } else {
+            alert ("No image available to download.");
+        }
     }
+
 }
+
 
 function downloadMetadata() {
     let downloadMetadataURL = viewerModel.getMetadata().sourceData;
@@ -932,7 +944,8 @@ function setupDownloadConfirmation() {
 
     confirmation.find('button.btn-success').on('click', () => {
         confirmation.hide();
-        downloadImage();
+        let imageSize = confirmation.find('#downloadSizes option:selected' ).val();
+        downloadImage(imageSize);
         return false;
     });
 }
