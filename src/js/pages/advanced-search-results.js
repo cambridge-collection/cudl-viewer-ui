@@ -254,67 +254,13 @@ function renderFacetTree(state, facets) {
                         $('<span>').html('&#9662 '),
                         document.createTextNode(facetGroup.label)
                     ),
-                $('<div>')
-                    .addClass('search-facet-expansion')
-                    .append(
-                        renderLessFacetLink(state, facetGroup)
-                    ),
                 $('<ul>')
                     .addClass('campl-unstyled-list')
                     .append(
                         facetGroup.facets.map(renderFacet.bind(undefined, state, facetGroup))
-                    ),
-                $('<div>')
-                    .addClass('search-facet-expansion')
-                    .append(
-                        renderMoreFacetLink(state, facetGroup),
-                        renderLessFacetLink(state, facetGroup)
-                    ),
+                    )
             )[0];
     }));
-}
-
-/**
- * Display a "more" link for the facet group that will expand to
- * display all the facets if some of them are hidden.
- */
-function renderMoreFacetLink(state, facetGroup) {
-    let facetName = facetGroup.field;
-    let facetTotal = facetGroup.totalFacets;
-
-    if (facetGroup.facets.length < facetTotal) {
-
-        let expandState = Object.assign({}, state);
-        expandState.expandFacet = facetName;
-        let url = serialiseQuery(expandState);
-
-        return $('<a>')
-            .attr('href', url)
-            .text('more')
-            .prop('title', 'More ' + facetName + ' facets')
-    }
-}
-
-/**
- * Display a "less" link for the facet group that will hide facets.
- * The number of facets to display is configured in XTF.
- */
-function renderLessFacetLink(state, facetGroup) {
-    let expandedFacet = state.expandFacet;
-    let facetName = facetGroup.field;
-
-    if (expandedFacet === facetName) {
-
-        let expandState = Object.assign({}, state);
-        expandState.expandFacet = "";
-        let url = serialiseQuery(expandState);
-
-        return $('<a>')
-            .attr('href', url)
-            .text('less')
-            .prop('title', 'Fewer ' + facetName + ' facets')
-
-    }
 }
 
 function renderSelectedFacet(state, selectedFacet) {
