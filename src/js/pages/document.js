@@ -540,6 +540,11 @@ function downloadMetadata() {
         alert("No metadata available to download.");
 }
 
+function fullDocumentPdf() {
+    let fullDocumentPdfURL = "/pdf/"+viewerModel.getDocId();
+    window.open(fullDocumentPdfURL);
+}
+
 function setupThumbnails(data) {
 
     var props = thumbnailProps;
@@ -936,6 +941,12 @@ function setupViewMoreOptions() {
             return false;
         });
     }
+
+    $('#pdfFullDocument a').on('click', e => {
+        $('#fullDocumentPdfConfirmation').show();
+        return false;
+    });
+    setupFullDocumentPdfConfirmation();
 }
 
 function setupConfirmation(confirmation) {
@@ -954,6 +965,18 @@ function setupDownloadConfirmation() {
         confirmation.hide();
         let imageSize = confirmation.find('#downloadSizes option:selected' ).val();
         downloadImage(imageSize);
+        return false;
+    });
+}
+
+function setupFullDocumentPdfConfirmation() {
+    let confirmation = $('#fullDocumentPdfConfirmation');
+
+    setupConfirmation(confirmation);
+
+    confirmation.find('button.btn-success').on('click', () => {
+        confirmation.hide();
+        fullDocumentPdf();
         return false;
     });
 }

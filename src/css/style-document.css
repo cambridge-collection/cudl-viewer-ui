@@ -400,6 +400,7 @@ body {
 /* pop up confirmations */
 #bookmarkConfirmation,
 #downloadConfirmation,
+#fullDocumentPdfConfirmation,
 #downloadMetadataConfirmation {
     width: 350px;
     position: absolute;
@@ -419,6 +420,7 @@ body {
 
 #bookmarkConfirmation.close,
 #downloadConfirmation .close,
+#fullDocumentPdfConfirmation .close,
 #downloadMetadataConfirmation .close {
     margin-top: -15px;
     margin-right: -10px;
