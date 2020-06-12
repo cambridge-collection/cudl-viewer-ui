@@ -1,9 +1,9 @@
 {
-  "page-error-500": {
-    "js": "js/page-error-500.js"
-  },
   "common": {
     "js": "js/chunks/common.js"
+  },
+  "page-admin": {
+    "js": "js/page-admin.js"
   },
   "page-admin-file-browse": {
     "js": "js/page-admin-file-browse.js"
@@ -20,8 +20,8 @@
   "page-document": {
     "js": "js/page-document.js"
   },
-  "page-admin": {
-    "js": "js/page-admin.js"
+  "page-error-500": {
+    "js": "js/page-error-500.js"
   },
   "page-feedback": {
     "js": "js/page-feedback.js"

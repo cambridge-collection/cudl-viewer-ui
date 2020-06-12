@@ -181,6 +181,8 @@ function updatePageMetadata(data, pagenumber) {
    $('#about-metadata').empty();
    highlightMetadataForPageViewed(pagenumber, data.logicalStructures);
    $('#pageLabel').html("Page: "+data.pages[pagenumber-1].label);
+   $('#pdfSinglePage a').attr("href", "/pdf/"+context.docId+"/"+pagenumber);
+   $('#pdfSinglePage a').attr("download", context.docId+"-"+pagenumber+".pdf");
    updateCanonicalUrl();
 
    // update URL bar, does not work in ie9.
