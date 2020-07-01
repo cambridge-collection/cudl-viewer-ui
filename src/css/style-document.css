@@ -369,20 +369,47 @@ body {
     list-style: none;
 }
 
+#use {
+    width: 100%;
+    display: block;
+    background-color: #fff;
+    border: #ddd 1px solid;
+}
+
+#use .panel-body {
+    padding: 10px;
+}
+
+.usebutton a.btn {
+    padding: 3px 6px;
+}
+
 .usebutton {
     float:left;
     padding:2px;
+    vertical-align: middle;
 }
 
 .usebutton a {
-    width:110px;
+    width: 90px;
     color: #fff;
     background-color: #75a8b3;
     border-color: #31708f;
+    font-size: 11px;
 }
 
 .usebutton a:hover, .usebutton a:active {
     background-color: #31708f;
+}
+
+.usebutton i, .usebutton img {
+    height: 24px;
+    float: left;
+    margin-top: 3px;
+}
+
+.usebutton i {
+    margin-top: 5px;
 }
 
 /* transcriptions */
@@ -452,11 +479,23 @@ body {
 }
 
 /** Responsive Design Stuff **/
-@media ( max-width :991px) {
-    .thumbnail-pane .row-right-to-left {
-        /*Remove row reversal when thumbnails become single column*/
-        display: block;
+@media (max-width: 1400px) {
+    #use .usebutton a {
+        width: 55px;
+        height: 40px;
+        padding-top: 6px;
     }
+
+    #use .usebutton i, #use .usebutton img {
+        height: 24px;
+        float: none;
+        margin-top: 1px;
+    }
+
+    #use .usebutton span {
+        display: none;
+    }
+
 }
 
 @media (max-width: 760px) {

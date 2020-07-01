@@ -491,7 +491,8 @@ function setupInfoPanel(data) {
             let height = $(window).height() -
                 $('.navbar-header').outerHeight() -
                 $('#doc-breadcrumb').outerHeight() -
-                $('#rightTabs .nav-tabs').outerHeight();
+                $('#rightTabs .nav-tabs').outerHeight() -
+                $('#use').outerHeight();
             $('#tab-content').height(height);
         }
     };
