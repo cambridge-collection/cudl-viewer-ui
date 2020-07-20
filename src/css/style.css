@@ -13,6 +13,8 @@
     height: 32px;
 }
 
+
+
 @media screen and (min-width: 1177px) {
     .carousel-panel {
         background: url("../img/grey.png") repeat scroll 0px 0px
@@ -86,6 +88,10 @@
     .library-logo {
         background-position: center;
         margin: 20px 10px;
+    }
+
+    .campl-global-header {
+        height:100px;
     }
 }
 
@@ -550,6 +556,7 @@ ol#virtual_collections_carousel li {
 .word-wrap-200 {
     word-wrap: break-word;
     width: 200px;
+    padding:5px;
 }
 @media screen and (max-width: 767px) {
     .word-wrap-200 {
