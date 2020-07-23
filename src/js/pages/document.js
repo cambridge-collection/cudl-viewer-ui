@@ -11,6 +11,8 @@ import '../../css/style-document.css';
 import 'jquery-ui/themes/base/slider.css';
 import '../polyfill';
 
+import assert from "assert";
+
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/slider';
 import 'bootstrap';
@@ -20,12 +22,13 @@ import { setupSimilarityTab } from 'cudl-viewer-bubbles';
 import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
 
 import '../cudl';
-import { msgBus } from '../cudl';
-import { getPageContext } from '../context';
+import {getPageContext} from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
 import { ViewerModel } from '../viewer/models';
 import { ga } from '../analytics';
 import { registerCsrfPrefilter } from '../ajax-csrf';
+import {getImageUrlProvider} from "../images";
+import {ValueError} from "../exceptions";
 
 /*
     We have the following attributes set by the Java in the context JSON.
@@ -56,6 +59,7 @@ import { registerCsrfPrefilter } from '../ajax-csrf';
 
 let context;
 let viewerModel;
+let imageUrlProvider;
 
 // The OpenSeadragon viewer
 let viewer;
@@ -77,6 +81,60 @@ function isLoggedIn() {
     return !!context.isUser;
 }
 
+function openZoomableImage(zoomableImage) {
+    assert(typeof zoomableImage === "object");
+    if(zoomableImage.type === "dzi") {
+        openDzi(zoomableImage.url);
+    }
+    else if(zoomableImage.type === "iiif") {
+        openIIIF(zoomableImage.url);
+    }
+    throw new ValueError(`Unsupported zoomable image type: ${zoomableImage.type}`);
+}
+
+function openIIIF(infoJsonUrl) {
+    viewer.open(infoJsonUrl);
+}
+
+function openDzi(dziUrl) {
+
+    // ajax call to fetch .dzi
+    $.ajax({
+        url: dziUrl,
+        'type': 'GET',
+        // Handle data conversion ourselves
+        dataType: 'text'
+    }).done(function(xml) {
+        // Seadragon AJAX supported being given a DZI as a string
+        // and rewriting the tilesource to an external URL
+        // openseadragon won't accept an external DZI so we build an
+        // inline tilesource with a modified URL
+
+        let $xml = $($.parseXML(xml));
+        let $image = $xml.find('Image');
+        let $size = $xml.find('Size');
+        var path = dziUrl.substring(0, dziUrl.length - 4);
+
+        var dzi = {
+            Image : {
+                xmlns : $image.attr('xmlns'),
+                Url : path + '_files/',
+                Format : $image.attr('Format'),
+                Overlap : $image.attr('Overlap'),
+                TileSize : $image.attr('TileSize'),
+                Size : {
+                    Height : $size.attr('Height'),
+                    Width : $size.attr('Width')
+                }
+            }
+        };
+
+        viewer.open(dzi);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        viewer._showMessage("Image server temporarily unavailable");
+    });
+}
+
 function loadPage(pagenumber) {
     let data = viewerModel.getMetadata();
 
@@ -87,54 +145,15 @@ function loadPage(pagenumber) {
         pagenumber = data.numberOfPages;
     }
 
-    // test for images
-    var imageavailable = true;
-    if (typeof(data.pages[pagenumber-1].displayImageURL) == "undefined") {
+    // Display the image via a DZI or IIIF image depending on which is
+    // available.
+    try {
+        openZoomableImage(imageUrlProvider.getZoomableImage(data.pages[pagenumber-1]));
+    }
+    catch(e) {
+        console.error(e);
         viewer._showMessage("No image available for page: "+data.pages[pagenumber-1].label);
-        imageavailable = false;
     }
-
-    function openDzi(dziPath) {
-
-        // ajax call to fetch .dzi
-        $.ajax({
-            url: context.imageServer + dziPath,
-            'type': 'GET',
-            // Handle data conversion ourselves
-            dataType: 'text'
-        }).done(function(xml) {
-            // Seadragon AJAX supported being given a DZI as a string
-            // and rewriting the tilesource to an external URL
-            // openseadragon won't accept an external DZI so we build an
-            // inline tilesource with a modified URL
-
-            let $xml = $($.parseXML(xml));
-            let $image = $xml.find('Image');
-            let $size = $xml.find('Size');
-            var path = dziPath.substring(0, dziPath.length - 4);
-
-            var dzi = {
-                Image : {
-                    xmlns : $image.attr('xmlns'),
-                    Url : context.imageServer + path + '_files/',
-                    Format : $image.attr('Format'),
-                    Overlap : $image.attr('Overlap'),
-                    TileSize : $image.attr('TileSize'),
-                    Size : {
-                        Height : $size.attr('Height'),
-                        Width : $size.attr('Width')
-                    }
-                }
-            };
-
-            viewer.open(dzi);
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            viewer._showMessage("Image server temporarily unavailable");
-        });
-    }
-
-    // open Image
-    if (imageavailable) { openDzi(data.pages[pagenumber - 1].displayImageURL); }
 
     // update current page
     viewerModel.setPageNumber(pagenumber);
@@ -211,7 +230,7 @@ function updateCanonicalUrl(url = getCanonicalUrl()) {
 }
 
 function updateAddThisShareUrl(url = getCanonicalUrl()) {
-    if(typeof addthis !== 'undefined') {
+    if(addthis) {
         addthis.update('share', 'url', url);
     }
 }
@@ -463,7 +482,8 @@ function setupInfoPanel(data) {
 
     // NB: This will disable thumbnails if the first page has no image. This assumes that
     // the there are documents either with a complete set of thumbnails or no thumbnails.
-    if (typeof data.pages[0].thumbnailImageURL == 'undefined') {
+    try { imageUrlProvider.getThumbnailImage({page: data.pages[0]}); }
+    catch (e) {
         $('#rightTabs a[href="#thumbnailstab"]').parent().addClass("disabled");
         $('#rightTabs a[href="#thumbnailstab"]').click(function(e){return false;}); // disable link;
     }
@@ -542,24 +562,21 @@ function addBookmark() {
 
 function downloadImage(size) {
     let pageNum = viewerModel.getPageNumber(),
-        data = viewerModel.getMetadata(),
-        iiifImageServer = context.iiifImageServer;
+        data = viewerModel.getMetadata();
 
-    if(!context.iiifEnabled==true)
-        alert ("No IIIF image available to download.");
-
-    else {
-        let downloadImagePath = data.pages[pageNum-1].IIIFImageURL;
-
-        if (typeof downloadImagePath != "undefined") {
-            let downloadImageUrl = iiifImageServer+downloadImagePath+'/full/!'+size+','+size+'/0/default.jpg';
-
-            window.open(downloadImageUrl);
-        } else {
-            alert ("No image available to download.");
-        }
+    let downloadImageUrl = undefined;
+    try {
+         downloadImageUrl = imageUrlProvider.getDownloadImage({
+            page: data.pages[pageNum-1],
+            maxDimensions: size
+        });
     }
+    catch (e) {
+        alert ("No image available to download.");
+    }
+    window.open(downloadImageUrl);
 }
+
 
 function downloadMetadata() {
     let downloadMetadataURL = viewerModel.getMetadata().sourceData;
@@ -644,8 +661,12 @@ function showThumbnailPage(pagenum) {
                     .concat("<div class='col-md-4'><a href='' onclick='store.loadPage("
                             + (data.pages[i].sequence)
                             + ");return false;' class='thumbnail'><img src='"
-                            + context.imageServer
-                            + data.pages[i].thumbnailImageURL
+                            + imageUrlProvider.getThumbnailImage({
+                                page: data.pages[i],
+                                maxDisplayedDimensions: {
+                                    width: 130, height: 150
+                                }
+                            })
                             + "' ");
 
             if (data.pages[i].thumbnailImageOrientation == "portrait") {
@@ -1057,6 +1078,7 @@ $(document).ready(function() {
     registerCsrfPrefilter();
 
     context = getPageContext();
+    imageUrlProvider = getImageUrlProvider(context);
     let pageNum = context.pageNum;
 
     // Read in the JSON

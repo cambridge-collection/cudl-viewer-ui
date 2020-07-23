@@ -87,6 +87,10 @@
         background-position: center;
         margin: 20px 10px;
     }
+
+    .campl-global-header {
+        height:100px;
+    }
 }
 
 .content {
@@ -550,6 +554,7 @@ ol#virtual_collections_carousel li {
 .word-wrap-200 {
     word-wrap: break-word;
     width: 200px;
+    padding:5px;
 }
 @media screen and (max-width: 767px) {
     .word-wrap-200 {
