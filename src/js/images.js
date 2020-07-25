@@ -87,10 +87,10 @@ class DefaultImageUrlProvider {
     getZoomableImage(options) {
         assert(typeof options === "object");
         if(typeof options.displayImageURL === "string") {
-            return {type: "dzi", url: `${this.imageServer}/${options.displayImageURL}`};
+            return {type: "dzi", url: `${this.imageServer}${options.displayImageURL}`};
         }
         else if(typeof options.IIIFImageURL === "string") {
-            return {type: "iiif", url: `${this.imageServer}/${options.IIIFImageURL}/info.json`};
+            return {type: "iiif", url: `${this.imageServer}${options.IIIFImageURL}/info.json`};
         }
         throw new ValueError("No zoomable image available for page");
     }
