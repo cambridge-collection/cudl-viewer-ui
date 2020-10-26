@@ -1,3 +1,10 @@
+**/.*
+!.babelrc
+!.editorconfig
+!.gitignore
+!.jsonhintrc
+!.stylelintrc
+
 target/
 
 # IntelliJ

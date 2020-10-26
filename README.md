@@ -35,44 +35,27 @@ updates to UI assets in your viewer.
 # Developing
 
 While actively making changes to the source you'll want to use the webpack
-dev server, which supports Hot Module Replacement (HMO) to live update the page
-being viewed as you update source files.
+dev server, which supports Hot Module Replacement (HMR) to live update web pages
+as you modify UI source files.
 
- Instructions on how to setup the webpack-dev-server can be found on
- the Wiki [Setting Up Webpack Dev Server](https://wiki.cam.ac.uk/cudl-docs/Setting_up_a_Local_Development_Environment_for_CUDL#Setting_Up_Webpack_Dev_Server_.28Optional.29).
-
-## Prerequisites
+## Local development environment setup
 
 Install [node.js](https://nodejs.org/en/download/) which should come with
 [npm](https://www.npmjs.com/).
 
-Install webpack, the webpack dev server and the bower package manager globally
-so that they're available as shell commands:
-
-```
-# You'll need to run with sudo if node is installed systemwide.
-$ npm install -g webpack@^4.29.5 webpack-cli@^3.1.2 webpack-dev-server@^3.2.1 bower@^1.8.8 @babel/core@^7.3.4
-```
-
-## Install project dependencies
+### Install project dependencies
 
 Most dependencies are npm/node modules, but some are only available via bower.
 Change directory to your `cudl-viewer-ui` checkout and proceed as follows:
 
 ```
-$ bower install
-[lots of output...]
 $ npm install
+[lots of output...]
+$ npx bower install
 [lots of output...]
 ```
 
-## Webpack usage
-
-Running `$ webpack` by itself builds everything to the `./built/` directory.
-The only reason to do this is to inspect the build output by hand, or check
-that the build is actually working without using Maven.
-
-## Real-time updates with the webpack dev server
+## Webpack dev server usage
 
 The webpack dev server will watch your files and incrementally recompile what's
 changed, making the result available immediately. The `cudl-viewer` has a mode
@@ -85,15 +68,28 @@ viewer without doing a Maven build.
 > in the `cudl-global.properties` file.*
 
 Once you've got the viewer pointed at your dev server you'll need to run the
-server as follows:
+server. It can be run via Docker:
 
+```commandline
+$ make  # Build the Docker image used by docker-compose
+        # (re-run if you change package.json or bower.json dependencies)
+$ docker-compose up
 ```
-$ webpack serve --mode=development --inline --hot
+
+Or directly:
+```
+$ npx webpack serve --mode=development --inline --hot
 ```
 
 > *You can omit `--inline` and `--hot` if you don't want HMR.*
 
-## Development/Production mode
+## One-off webpack builds
+
+Running `$ npx webpack` by itself builds everything to the `./built/` directory.
+The only reason to do this is to inspect the build output by hand, or check
+that the build is actually working without using Maven.
+
+# Webpack development/production mode
 
 The config file varies slightly with the webpack `--mode`. The main difference
 is that entrypoint filenames don't contain content hashes in development mode.

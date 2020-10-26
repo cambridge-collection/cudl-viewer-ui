@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  viewer-ui-devserver:
+    # Note: build image via Makefile
+    image: viewer-ui-devserver
+    volumes:
+      - ./src:/opt/devserver/src
+      - ./vendor:/opt/devserver/vendor
+      - ./webpack-config:/opt/devserver/webpack-config
+      - ./.babelrc:/opt/devserver/.babelrc
+      - ./postcss.config.js:/opt/devserver/postcss.config.js
+      - ./webpack.config.babel.js:/opt/devserver/webpack.config.babel.js
+    ports:
+      - "8080:8080"
