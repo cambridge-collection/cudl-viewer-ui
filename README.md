@@ -68,23 +68,6 @@ $ npm install
 
 ## Webpack usage
 
-There are two config files:
-
-* `./webpack.config.babel.js` — The production config and the default config if
-  you don't specify which to use.
-* `./webpack.config.dev.babel.js` — The development config. Intended for use
-  with the devserver.
-
-> *You can use bin/show-config to show the resolved config for the dev or
-> production configs. Alternatively, run a `babel-node` repl and `require()` the
-> appropriate file to inspect the output.
-
-Specify them on the command line using the `--config` argument to `webpack` or
-`webpack-dev-server`.
-
-> *Note that the value you specify is a `require()` path, so unless your value
-> starts with `./` or `/` it'll be resolved via `node_modules`*.
-
 Running `$ webpack` by itself builds everything to the `./built/` directory.
 The only reason to do this is to inspect the build output by hand, or check
 that the build is actually working without using Maven.
@@ -105,10 +88,22 @@ Once you've got the viewer pointed at your dev server you'll need to run the
 server as follows:
 
 ```
-$ webpack-dev-server --config ./webpack.config.dev.babel.js --inline --hot
+$ webpack serve --mode=development --inline --hot
 ```
 
 > *You can omit `--inline` and `--hot` if you don't want HMR.*
+
+## Development/Production mode
+
+The config file varies slightly with the webpack `--mode`. The main difference
+is that entrypoint filenames don't contain content hashes in development mode.
+This is necessary to use the devserver (as the viewer can't know the content
+hash of files which are being changed and re-compiled).
+
+> *You can use bin/show-config to show the resolved config for the dev or
+> production configs. Alternatively, run a `babel-node` repl and `require()` the
+> config file with the `NODE_ENV` envar set to `development` or `production` to
+> inspect the output.
 
 # Linking CUDL UI dependencies
 

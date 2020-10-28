@@ -11,7 +11,7 @@ import { env } from 'cudl-webpack-config/lib/util';
 import { rootPath } from './paths';
 
 
-const DEFAULT_ENV = 'production';
+const DEFAULT_MODE = 'production';
 
 const DEVSERVER_DEFAULT_HOST = 'localhost';
 const DEVSERVER_DEFAULT_PORT = 8080;
@@ -89,6 +89,23 @@ function setAll(env, pairs) {
     }
 }
 
+function getSelectedEnvironment(parsedProcessArgs) {
+    let webpackMode = (parsedProcessArgs['mode'] || DEFAULT_MODE);
+    if(!(webpackMode === 'development' || webpackMode === 'production')) {
+        throw new Error(`invalid --mode option: ${util.inspect(webpackMode)}`);
+    }
+
+    let env = {
+        production: 'production',
+        dev: 'dev',
+        development: 'dev'
+    }[process.env.NODE_ENV || webpackMode];
+    if(env === undefined) {
+        throw new Error(`invalid environment variable NODE_ENV: ${util.inspect(process.env.NODE_ENV)}`);
+    }
+    return env;
+}
+
 export function populateEnvironment(environ) {
     // Webpack doesn't expose its command line args, so have have to peek at
     // them in a hackish way.
@@ -102,9 +119,11 @@ export function populateEnvironment(environ) {
         return envDependant(environ, 'cudl-viewer-ui.env', values, defaultFunc);
     }
 
+    let selectedEnvName = getSelectedEnvironment(args);
+
     setAll(environ, flatten({
         // TODO: flatten
-        env: () => process.env.WEBPACK_ENV || DEFAULT_ENV,
+        env: () => selectedEnvName,
         'cudl-viewer-ui': {
             env: () => env('env', environ),
 

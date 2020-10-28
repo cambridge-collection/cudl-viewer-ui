@@ -2,24 +2,27 @@
 // Show the webpack config object generated from the dev or production config
 // files.
 //
-// Usage: show-config [(dev|prod) [<depth>]]
+// Usage: show-config [--mode=(dev|prod)] [--depth=<depth>]
 //
 // For example:
 //    $ export PATH=$PATH:$(pwd)/node_modules/.bin
-//    $ show-config dev
+//    $ show-config --mode development --depth 4
+//    $ NODE_ENV=development show-config
 require('source-map-support').install();
 
 import { inspect } from 'util';
 import { resolve } from 'path';
 
+import parseArgs from 'minimist';
+
 const DEFAULT_DEPTH = 3;
 
-let args = process.argv.slice(2),
-    env = args[0] === 'dev' ? 'dev' : 'production',
-    depth = parseInt(args[1]) || DEFAULT_DEPTH,
-    path = resolve(__dirname, `../webpack-config`);
+let args = parseArgs(process.argv, {
+    default: {depth: DEFAULT_DEPTH}
+});
 
-process.env.WEBPACK_ENV = env;
+let depth = args.depth,
+    path = resolve(__dirname, `../webpack-config`);
 
 let configModule = require(path),
     config = configModule && configModule.default;
