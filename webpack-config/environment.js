@@ -126,7 +126,10 @@ export function populateEnvironment(environ) {
         env: () => selectedEnvName,
         'cudl-viewer-ui': {
             env: () => env('env', environ),
-
+            mode: ifEnv({
+                dev: 'development',
+                production: 'production'
+            }),
             // Use ./built as the output path unless it's overridden on the
             // command line.
             outDir: rootPath(args['output-path'] ?
