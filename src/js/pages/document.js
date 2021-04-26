@@ -8,9 +8,11 @@ import '../../less/bootstrap/cudl-bootstrap.less';
 
 // Page styles
 import '../../css/style-document.css';
+import 'jquery-ui/themes/base/slider.css';
 import '../polyfill';
 
 import $ from 'jquery';
+import 'jquery-ui/ui/widgets/slider';
 import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
 import range from 'lodash/range';
@@ -162,8 +164,10 @@ function updatePageMetadata(data, pagenumber) {
    if (data.descriptiveMetadata[0].downloadImageRights==null || data.descriptiveMetadata[0].downloadImageRights.trim()=="") {
        $('#downloadOption').css("display", "none");
    } else {
-       $('#downloadCopyright').html(data.descriptiveMetadata[0].downloadImageRights);
-       $('#downloadCopyright2').html(data.descriptiveMetadata[0].downloadImageRights);
+       let downloadRightsStatement = data.descriptiveMetadata[0].downloadImageRights;
+       $('#downloadCopyright').html(downloadRightsStatement);
+       $('#pdfFullDocumentDownloadCopyright').html(downloadRightsStatement);
+       $('#pdfSinglePageDownloadCopyright').html(downloadRightsStatement);
    }
 
    if(data.descriptiveMetadata[0].metadataRights==null || data.descriptiveMetadata[0].metadataRights.trim()=="") {
@@ -234,8 +238,24 @@ function setupSeaDragon(data) {
         rotateRightButton : "rotateRight",
         fullPageButton: "fullscreen",
         maxZoomPixelRatio: 1,
+        gestureSettingsTouch: {
+            pinchRotate: true
+        },
         showNavigator: showNav,
-        navigatorPosition: "TOP_LEFT",
+        navigatorPosition: "TOP_LEFT"
+    });
+
+    // Rotation slider using jQuery UI slider
+    $("#rotationSlider").slider({
+        min: -180,
+        max: 180,
+        classes: {
+            "ui-slider": "cudl-btn",
+            "ui-slider-handle": "cudl-btn"
+        },
+        slide: function(event, ui) {
+            viewer.viewport.setRotation(ui.value);
+        },
     });
 
     // Setup forward and backward buttons
@@ -302,6 +322,16 @@ function setupSeaDragon(data) {
 
         // Show the results.
         $("#zoomFactor").html('Zoom: ' + imageZoomPercentage.toString() + ' %');
+    });
+    // Keep rotation slider in sync with the image rotation
+    viewer.addHandler('rotate', function(event) {
+        let currentRotation = viewer.viewport.getRotation();
+        let newSliderPosition = currentRotation > 180 ? currentRotation - 360 : currentRotation;
+        $( "#rotationSlider" ).slider( "value", newSliderPosition );
+    });
+    // Reset rotation when home button is pressed
+    viewer.addHandler('home', function(event) {
+        viewer.viewport.setRotation( 0 );
     });
 
     // setup keyboard shortcuts.  Same as the embedded viewer.
@@ -462,7 +492,8 @@ function setupInfoPanel(data) {
             let height = $(window).height() -
                 $('.navbar-header').outerHeight() -
                 $('#doc-breadcrumb').outerHeight() -
-                $('#rightTabs .nav-tabs').outerHeight();
+                $('#rightTabs .nav-tabs').outerHeight() -
+                $('#use').outerHeight();
             $('#tab-content').height(height);
         }
     };
@@ -910,6 +941,19 @@ function setupViewMoreOptions() {
     });
     setupDownloadConfirmation();
 
+    $('#singlePagePdfDownloadOption a').on('click', e => {
+        $('#singlePagePdfConfirmation').show();
+        return false;
+    });
+    setupSinglePagePdfDownloadConfirmation();
+
+
+    $('#fullDocumentPdfDownloadOption a').on('click', e => {
+        $('#fullDocumentPdfConfirmation').show();
+        return false;
+    });
+    setupFullDocumentPdfDownloadConfirmation();
+
     if(!isLoggedIn()) {
         $('#bookmarkOption').hide();
     }
@@ -974,6 +1018,20 @@ function setupDownloadConfirmation() {
 function setupFullDocumentPdfConfirmation() {
     let confirmation = $('#fullDocumentPdfConfirmation');
 
+=======
+function setupSinglePagePdfDownloadConfirmation() {
+    let confirmation = $('#singlePagePdfConfirmation');
+    setupConfirmation(confirmation);
+
+    confirmation.find('button.btn-success').on('click', () => {
+        confirmation.hide();
+        let singlePagePdfURL = "/pdf/"+this.docId+"/"+this.page;
+        window.open(singlePagePdfURL);
+    });
+}
+
+function setupFullDocumentPdfDownloadConfirmation() {
+    let confirmation = $('#fullDocumentPdfConfirmation');
     setupConfirmation(confirmation);
 
     confirmation.find('button.btn-success').on('click', () => {

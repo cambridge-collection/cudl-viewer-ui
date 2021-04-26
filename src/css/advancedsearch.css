@@ -177,6 +177,20 @@ ol#tree > li > strong {
     font-style: italic;
 }
 
+.search-facet-expansion {
+    margin-top: 3px;
+    margin-bottom: -2px;
+}
+
+.search-facet-expansion a {
+    padding-left: 10px;
+    font-style: italic;
+}
+
+.search-facet-expansion a:visited {
+    color: rgb(0, 114, 207);
+}
+
 /* search examples */
 .searchform .search {
     padding: 5px 37px 5px 5px;
