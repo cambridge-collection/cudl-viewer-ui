@@ -479,6 +479,13 @@ body {
 }
 
 /** Responsive Design Stuff **/
+
+@media ( max-width :991px) {
+    .thumbnail-pane .row-right-to-left {
+        /*Remove row reversal when thumbnails become single column*/
+        display: block;
+    }
+
 @media (max-width: 1400px) {
     #use .usebutton a {
         width: 55px;
@@ -495,7 +502,6 @@ body {
     #use .usebutton span {
         display: none;
     }
-
 }
 
 @media (max-width: 760px) {
