@@ -36,6 +36,7 @@ import { registerCsrfPrefilter } from '../ajax-csrf';
     docId
     docURL - not used
     imageServer
+    iiifImageServer
     services
 
     // Read in Attributes
@@ -49,6 +50,8 @@ import { registerCsrfPrefilter } from '../ajax-csrf';
     iiifMiradorURL
     itemAuthors - not used
     itemAuthorsFullForm - not used
+
+    viewportNavigatorEnabled
  */
 
 let context;
@@ -161,8 +164,10 @@ function updatePageMetadata(data, pagenumber) {
    if (data.descriptiveMetadata[0].downloadImageRights==null || data.descriptiveMetadata[0].downloadImageRights.trim()=="") {
        $('#downloadOption').css("display", "none");
    } else {
-       $('#downloadCopyright').html(data.descriptiveMetadata[0].downloadImageRights);
-       $('#downloadCopyright2').html(data.descriptiveMetadata[0].downloadImageRights);
+       let downloadRightsStatement = data.descriptiveMetadata[0].downloadImageRights;
+       $('#downloadCopyright').html(downloadRightsStatement);
+       $('#pdfFullDocumentDownloadCopyright').html(downloadRightsStatement);
+       $('#pdfSinglePageDownloadCopyright').html(downloadRightsStatement);
    }
 
    if(data.descriptiveMetadata[0].metadataRights==null || data.descriptiveMetadata[0].metadataRights.trim()=="") {
@@ -211,8 +216,14 @@ function updateAddThisShareUrl(url = getCanonicalUrl()) {
     }
 }
 
+// Viewport navigator is a mini viewer that appears inside the main OpenSeadragon viewer
+function showViewportNavigator() {
+    return !!context.viewportNavigatorEnabled;
+}
+
 function setupSeaDragon(data) {
     OpenSeadragon.setString("Tooltips.Home", "Reset zoom");
+    let showNav = showViewportNavigator();
     viewer = new OpenSeadragon.Viewer({
         id : "doc",
         debugMode : false,
@@ -227,10 +238,10 @@ function setupSeaDragon(data) {
         maxZoomPixelRatio: 1,
         gestureSettingsTouch: {
             pinchRotate: true
-        }
-
+        },
+        showNavigator: showNav,
+        navigatorPosition: "TOP_LEFT"
     });
-    viewer.clearControls(); // hides controls.
 
     // Rotation slider using jQuery UI slider
     $("#rotationSlider").slider({
@@ -479,7 +490,8 @@ function setupInfoPanel(data) {
             let height = $(window).height() -
                 $('.navbar-header').outerHeight() -
                 $('#doc-breadcrumb').outerHeight() -
-                $('#rightTabs .nav-tabs').outerHeight();
+                $('#rightTabs .nav-tabs').outerHeight() -
+                $('#use').outerHeight();
             $('#tab-content').height(height);
         }
     };
@@ -527,17 +539,28 @@ function addBookmark() {
 
 }
 
-function downloadImage() {
+function downloadImage(size) {
     let pageNum = viewerModel.getPageNumber(),
-        data = viewerModel.getMetadata();
+        data = viewerModel.getMetadata(),
+        iiifImageServer = context.iiifImageServer;
 
-    var downloadImageURL = data.pages[pageNum-1].downloadImageURL;
-    if (typeof downloadImageURL != "undefined") {
-        window.open(context.imageServer+downloadImageURL);
-    } else {
-        alert ("No image available to download.");
+    if(!context.iiifEnabled==true)
+        alert ("No IIIF image available to download.");
+
+    else {
+        let downloadImagePath = data.pages[pageNum-1].IIIFImageURL;
+
+        if (typeof downloadImagePath != "undefined") {
+            let downloadImageUrl = iiifImageServer+downloadImagePath+'/full/!'+size+','+size+'/0/default.jpg';
+
+            window.open(downloadImageUrl);
+        } else {
+            alert ("No image available to download.");
+        }
     }
+
 }
+
 
 function downloadMetadata() {
     let downloadMetadataURL = viewerModel.getMetadata().sourceData;
@@ -911,6 +934,19 @@ function setupViewMoreOptions() {
     });
     setupDownloadConfirmation();
 
+    $('#singlePagePdfDownloadOption a').on('click', e => {
+        $('#singlePagePdfConfirmation').show();
+        return false;
+    });
+    setupSinglePagePdfDownloadConfirmation();
+
+
+    $('#fullDocumentPdfDownloadOption a').on('click', e => {
+        $('#fullDocumentPdfConfirmation').show();
+        return false;
+    });
+    setupFullDocumentPdfDownloadConfirmation();
+
     if(!isLoggedIn()) {
         $('#bookmarkOption').hide();
     }
@@ -960,8 +996,31 @@ function setupDownloadConfirmation() {
 
     confirmation.find('button.btn-success').on('click', () => {
         confirmation.hide();
-        downloadImage();
+        let imageSize = confirmation.find('#downloadSizes option:selected' ).val();
+        downloadImage(imageSize);
         return false;
+    });
+}
+
+function setupSinglePagePdfDownloadConfirmation() {
+    let confirmation = $('#singlePagePdfConfirmation');
+    setupConfirmation(confirmation);
+
+    confirmation.find('button.btn-success').on('click', () => {
+        confirmation.hide();
+        let singlePagePdfURL = "/pdf/"+this.docId+"/"+this.page;
+        window.open(singlePagePdfURL);
+    });
+}
+
+function setupFullDocumentPdfDownloadConfirmation() {
+    let confirmation = $('#fullDocumentPdfConfirmation');
+    setupConfirmation(confirmation);
+
+    confirmation.find('button.btn-success').on('click', () => {
+        confirmation.hide();
+        let fullDocumentPdfURL = "/pdf/"+this.docId;
+        window.open(fullDocumentPdfURL);
     });
 }
 
