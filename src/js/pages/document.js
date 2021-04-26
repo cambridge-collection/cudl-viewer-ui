@@ -185,6 +185,8 @@ function updatePageMetadata(data, pagenumber) {
    $('#about-metadata').empty();
    highlightMetadataForPageViewed(pagenumber, data.logicalStructures);
    $('#pageLabel').html("Page: "+data.pages[pagenumber-1].label);
+   $('#pdfSinglePage a').attr("href", "/pdf/"+context.docId+"/"+pagenumber);
+   $('#pdfSinglePage a').attr("download", context.docId+"-"+pagenumber+".pdf");
    updateCanonicalUrl();
 
    // update URL bar, does not work in ie9.
@@ -569,6 +571,11 @@ function downloadMetadata() {
         window.open(context.services + downloadMetadataURL);
     else
         alert("No metadata available to download.");
+}
+
+function fullDocumentPdf() {
+    let fullDocumentPdfURL = "/pdf/"+viewerModel.getDocId();
+    window.open(fullDocumentPdfURL);
 }
 
 function setupThumbnails(data) {
@@ -980,6 +987,12 @@ function setupViewMoreOptions() {
             return false;
         });
     }
+
+    $('#pdfFullDocument a').on('click', e => {
+        $('#fullDocumentPdfConfirmation').show();
+        return false;
+    });
+    setupFullDocumentPdfConfirmation();
 }
 
 function setupConfirmation(confirmation) {
@@ -1002,6 +1015,10 @@ function setupDownloadConfirmation() {
     });
 }
 
+function setupFullDocumentPdfConfirmation() {
+    let confirmation = $('#fullDocumentPdfConfirmation');
+
+=======
 function setupSinglePagePdfDownloadConfirmation() {
     let confirmation = $('#singlePagePdfConfirmation');
     setupConfirmation(confirmation);
@@ -1019,8 +1036,8 @@ function setupFullDocumentPdfDownloadConfirmation() {
 
     confirmation.find('button.btn-success').on('click', () => {
         confirmation.hide();
-        let fullDocumentPdfURL = "/pdf/"+this.docId;
-        window.open(fullDocumentPdfURL);
+        fullDocumentPdf();
+        return false;
     });
 }
 
