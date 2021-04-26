@@ -162,8 +162,10 @@ function updatePageMetadata(data, pagenumber) {
    if (data.descriptiveMetadata[0].downloadImageRights==null || data.descriptiveMetadata[0].downloadImageRights.trim()=="") {
        $('#downloadOption').css("display", "none");
    } else {
-       $('#downloadCopyright').html(data.descriptiveMetadata[0].downloadImageRights);
-       $('#downloadCopyright2').html(data.descriptiveMetadata[0].downloadImageRights);
+       let downloadRightsStatement = data.descriptiveMetadata[0].downloadImageRights;
+       $('#downloadCopyright').html(downloadRightsStatement);
+       $('#pdfFullDocumentDownloadCopyright').html(downloadRightsStatement);
+       $('#pdfSinglePageDownloadCopyright').html(downloadRightsStatement);
    }
 
    if(data.descriptiveMetadata[0].metadataRights==null || data.descriptiveMetadata[0].metadataRights.trim()=="") {
@@ -460,7 +462,8 @@ function setupInfoPanel(data) {
             let height = $(window).height() -
                 $('.navbar-header').outerHeight() -
                 $('#doc-breadcrumb').outerHeight() -
-                $('#rightTabs .nav-tabs').outerHeight();
+                $('#rightTabs .nav-tabs').outerHeight() -
+                $('#use').outerHeight();
             $('#tab-content').height(height);
         }
     };
@@ -903,6 +906,19 @@ function setupViewMoreOptions() {
     });
     setupDownloadConfirmation();
 
+    $('#singlePagePdfDownloadOption a').on('click', e => {
+        $('#singlePagePdfConfirmation').show();
+        return false;
+    });
+    setupSinglePagePdfDownloadConfirmation();
+
+
+    $('#fullDocumentPdfDownloadOption a').on('click', e => {
+        $('#fullDocumentPdfConfirmation').show();
+        return false;
+    });
+    setupFullDocumentPdfDownloadConfirmation();
+
     if(!isLoggedIn()) {
         $('#bookmarkOption').hide();
     }
@@ -955,6 +971,28 @@ function setupDownloadConfirmation() {
         let imageSize = confirmation.find('#downloadSizes option:selected' ).val();
         downloadImage(imageSize);
         return false;
+    });
+}
+
+function setupSinglePagePdfDownloadConfirmation() {
+    let confirmation = $('#singlePagePdfConfirmation');
+    setupConfirmation(confirmation);
+
+    confirmation.find('button.btn-success').on('click', () => {
+        confirmation.hide();
+        let singlePagePdfURL = "/pdf/"+this.docId+"/"+this.page;
+        window.open(singlePagePdfURL);
+    });
+}
+
+function setupFullDocumentPdfDownloadConfirmation() {
+    let confirmation = $('#fullDocumentPdfConfirmation');
+    setupConfirmation(confirmation);
+
+    confirmation.find('button.btn-success').on('click', () => {
+        confirmation.hide();
+        let fullDocumentPdfURL = "/pdf/"+this.docId;
+        window.open(fullDocumentPdfURL);
     });
 }
 
