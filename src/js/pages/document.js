@@ -953,7 +953,6 @@ function setupViewMoreOptions() {
     });
     setupSinglePagePdfDownloadConfirmation();
 
-
     $('#fullDocumentPdfDownloadOption a').on('click', e => {
         $('#fullDocumentPdfConfirmation').show();
         return false;
@@ -993,12 +992,6 @@ function setupViewMoreOptions() {
             return false;
         });
     }
-
-    $('#pdfFullDocument a').on('click', e => {
-        $('#fullDocumentPdfConfirmation').show();
-        return false;
-    });
-    setupFullDocumentPdfConfirmation();
 }
 
 function setupConfirmation(confirmation) {
@@ -1021,17 +1014,13 @@ function setupDownloadConfirmation() {
     });
 }
 
-function setupFullDocumentPdfConfirmation() {
-    let confirmation = $('#fullDocumentPdfConfirmation');
-
-=======
 function setupSinglePagePdfDownloadConfirmation() {
     let confirmation = $('#singlePagePdfConfirmation');
     setupConfirmation(confirmation);
 
     confirmation.find('button.btn-success').on('click', () => {
         confirmation.hide();
-        let singlePagePdfURL = "/pdf/"+this.docId+"/"+this.page;
+        let singlePagePdfURL = "/pdf/"+viewerModel.docId+"/"+viewerModel.getPageNumber();
         window.open(singlePagePdfURL);
     });
 }
@@ -1093,7 +1082,7 @@ $(document).ready(function() {
     $.getJSON(context.jsonURL).done(function(data) {
 
         // set seadragon options and load in dzi.
-        if(pageNum == 0) { pageNum = 1; } // page 0 returns item level metadata.
+        if(pageNum === 0) { pageNum = 1; } // page 0 returns item level metadata.
 
         viewerModel = new ViewerModel({
             rootURL: context.rootURL,

@@ -445,6 +445,7 @@ body {
 #bookmarkConfirmation,
 #downloadConfirmation,
 #fullDocumentPdfConfirmation,
+#singlePagePdfConfirmation,
 #downloadMetadataConfirmation {
     width: 350px;
     position: absolute;
@@ -465,6 +466,7 @@ body {
 #bookmarkConfirmation.close,
 #downloadConfirmation .close,
 #fullDocumentPdfConfirmation .close,
+#singlePagePdfConfirmation .close,
 #downloadMetadataConfirmation .close {
     margin-top: -15px;
     margin-right: -10px;
@@ -485,6 +487,7 @@ body {
         /*Remove row reversal when thumbnails become single column*/
         display: block;
     }
+}
 
 @media (max-width: 1400px) {
     #use .usebutton a {
