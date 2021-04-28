@@ -1,6 +1,6 @@
 {
   "name": "cudl-viewer-ui",
-  "version": "1.4.7-SNAPSHOT",
+  "version": "2.0.2",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
