@@ -161,22 +161,33 @@ function loadPage(pagenumber) {
 function updatePageMetadata(data, pagenumber) {
    var newURL = "/view/" + context.docId + "/" + pagenumber;
 
-   if (data.descriptiveMetadata[0].downloadImageRights==null || data.descriptiveMetadata[0].downloadImageRights.trim()=="") {
+   // Set download image statement
+   if (data.descriptiveMetadata[0].downloadImageRights==null || data.descriptiveMetadata[0].downloadImageRights.trim()==="") {
        $('#downloadOption').css("display", "none");
    } else {
        let downloadRightsStatement = data.descriptiveMetadata[0].downloadImageRights;
        $('#downloadCopyright').html(downloadRightsStatement);
-       $('#pdfFullDocumentDownloadCopyright').html(downloadRightsStatement);
-       $('#pdfSinglePageDownloadCopyright').html(downloadRightsStatement);
    }
 
-   if(data.descriptiveMetadata[0].metadataRights==null || data.descriptiveMetadata[0].metadataRights.trim()=="") {
+   // Set pdf statement
+   if (data.descriptiveMetadata[0].pdfRights==null || data.descriptiveMetadata[0].pdfRights.trim()==="") {
+       $('#fullDocumentPdfDownloadOption').css("display", "none");
+       $('#singlePagePdfDownloadOption').css("display", "none");
+   } else {
+       let pdfRights = data.descriptiveMetadata[0].pdfRights;
+       $('#pdfFullDocumentDownloadCopyright').html(pdfRights);
+       $('#pdfSinglePageDownloadCopyright').html(pdfRights);
+   }
+
+   // Set download metadata option
+   if(data.descriptiveMetadata[0].metadataRights==null || data.descriptiveMetadata[0].metadataRights.trim()==="") {
        $('#downloadMetadataOption').css("display", "none");
    } else {
        $('#downloadMetadataCopyright').html(data.descriptiveMetadata[0].metadataRights);
    }
 
-   if (data.embeddable==null || data.embeddable==false) {
+   // Set embeddable option
+   if (data.embeddable==null || data.embeddable===false) {
        $('#embedOption').css("display", "none");
    }
 
