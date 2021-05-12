@@ -552,6 +552,18 @@ function addBookmark() {
 
 }
 
+function downloadPregeneratedImage() {
+    let pageNum = viewerModel.getPageNumber(),
+        data = viewerModel.getMetadata();
+
+    var downloadImageURL = data.pages[pageNum-1].downloadImageURL;
+    if (typeof downloadImageURL != "undefined") {
+        window.open(context.imageServer+downloadImageURL);
+    } else {
+        alert ("No image available to download.");
+    }
+}
+
 function downloadImage(size) {
     let pageNum = viewerModel.getPageNumber(),
         data = viewerModel.getMetadata(),
@@ -1019,8 +1031,10 @@ function setupDownloadConfirmation() {
 
     confirmation.find('button.btn-success').on('click', () => {
         confirmation.hide();
-        let imageSize = confirmation.find('#downloadSizes option:selected' ).val();
-        downloadImage(imageSize);
+        // TODO switch back to sized download for images when watermarking/rights sorted.
+        //let imageSize = confirmation.find('#downloadSizes option:selected' ).val();
+        //downloadImage(imageSize);
+        downloadPregeneratedImage();
         return false;
     });
 }
