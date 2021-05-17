@@ -8,9 +8,11 @@ import '../../less/bootstrap/cudl-bootstrap.less';
 
 // Page styles
 import '../../css/style-document.css';
+import 'jquery-ui/themes/base/slider.css';
 import '../polyfill';
 
 import $ from 'jquery';
+import 'jquery-ui/ui/widgets/slider';
 import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
 import range from 'lodash/range';
@@ -159,20 +161,33 @@ function loadPage(pagenumber) {
 function updatePageMetadata(data, pagenumber) {
    var newURL = "/view/" + context.docId + "/" + pagenumber;
 
-   if (data.descriptiveMetadata[0].downloadImageRights==null || data.descriptiveMetadata[0].downloadImageRights.trim()=="") {
+   // Set download image statement
+   if (data.descriptiveMetadata[0].downloadImageRights==null || data.descriptiveMetadata[0].downloadImageRights.trim()==="") {
        $('#downloadOption').css("display", "none");
    } else {
-       $('#downloadCopyright').html(data.descriptiveMetadata[0].downloadImageRights);
-       $('#downloadCopyright2').html(data.descriptiveMetadata[0].downloadImageRights);
+       let downloadRightsStatement = data.descriptiveMetadata[0].downloadImageRights;
+       $('#downloadCopyright').html(downloadRightsStatement);
    }
 
-   if(data.descriptiveMetadata[0].metadataRights==null || data.descriptiveMetadata[0].metadataRights.trim()=="") {
+   // Set pdf statement
+   if (data.descriptiveMetadata[0].pdfRights==null || data.descriptiveMetadata[0].pdfRights.trim()==="") {
+       $('#fullDocumentPdfDownloadOption').css("display", "none");
+       $('#singlePagePdfDownloadOption').css("display", "none");
+   } else {
+       let pdfRights = data.descriptiveMetadata[0].pdfRights;
+       $('#pdfFullDocumentDownloadCopyright').html(pdfRights);
+       $('#pdfSinglePageDownloadCopyright').html(pdfRights);
+   }
+
+   // Set download metadata option
+   if(data.descriptiveMetadata[0].metadataRights==null || data.descriptiveMetadata[0].metadataRights.trim()==="") {
        $('#downloadMetadataOption').css("display", "none");
    } else {
        $('#downloadMetadataCopyright').html(data.descriptiveMetadata[0].metadataRights);
    }
 
-   if (data.embeddable==null || data.embeddable==false) {
+   // Set embeddable option
+   if (data.embeddable==null || data.embeddable===false) {
        $('#embedOption').css("display", "none");
    }
 
@@ -181,6 +196,8 @@ function updatePageMetadata(data, pagenumber) {
    $('#about-metadata').empty();
    highlightMetadataForPageViewed(pagenumber, data.logicalStructures);
    $('#pageLabel').html("Page: "+data.pages[pagenumber-1].label);
+   $('#pdfSinglePage a').attr("href", "/pdf/"+context.docId+"/"+pagenumber);
+   $('#pdfSinglePage a').attr("download", context.docId+"-"+pagenumber+".pdf");
    updateCanonicalUrl();
 
    // update URL bar, does not work in ie9.
@@ -207,7 +224,7 @@ function updateCanonicalUrl(url = getCanonicalUrl()) {
 }
 
 function updateAddThisShareUrl(url = getCanonicalUrl()) {
-    if(addthis) {
+    if(typeof addthis !== 'undefined') {
         addthis.update('share', 'url', url);
     }
 }
@@ -232,8 +249,24 @@ function setupSeaDragon(data) {
         rotateRightButton : "rotateRight",
         fullPageButton: "fullscreen",
         maxZoomPixelRatio: 1,
+        gestureSettingsTouch: {
+            pinchRotate: true
+        },
         showNavigator: showNav,
-        navigatorPosition: "TOP_LEFT",
+        navigatorPosition: "TOP_LEFT"
+    });
+
+    // Rotation slider using jQuery UI slider
+    $("#rotationSlider").slider({
+        min: -180,
+        max: 180,
+        classes: {
+            "ui-slider": "cudl-btn",
+            "ui-slider-handle": "cudl-btn"
+        },
+        slide: function(event, ui) {
+            viewer.viewport.setRotation(ui.value);
+        },
     });
 
     // Setup forward and backward buttons
@@ -300,6 +333,16 @@ function setupSeaDragon(data) {
 
         // Show the results.
         $("#zoomFactor").html('Zoom: ' + imageZoomPercentage.toString() + ' %');
+    });
+    // Keep rotation slider in sync with the image rotation
+    viewer.addHandler('rotate', function(event) {
+        let currentRotation = viewer.viewport.getRotation();
+        let newSliderPosition = currentRotation > 180 ? currentRotation - 360 : currentRotation;
+        $( "#rotationSlider" ).slider( "value", newSliderPosition );
+    });
+    // Reset rotation when home button is pressed
+    viewer.addHandler('home', function(event) {
+        viewer.viewport.setRotation( 0 );
     });
 
     // setup keyboard shortcuts.  Same as the embedded viewer.
@@ -460,7 +503,8 @@ function setupInfoPanel(data) {
             let height = $(window).height() -
                 $('.navbar-header').outerHeight() -
                 $('#doc-breadcrumb').outerHeight() -
-                $('#rightTabs .nav-tabs').outerHeight();
+                $('#rightTabs .nav-tabs').outerHeight() -
+                $('#use').outerHeight();
             $('#tab-content').height(height);
         }
     };
@@ -508,6 +552,18 @@ function addBookmark() {
 
 }
 
+function downloadPregeneratedImage() {
+    let pageNum = viewerModel.getPageNumber(),
+        data = viewerModel.getMetadata();
+
+    var downloadImageURL = data.pages[pageNum-1].downloadImageURL;
+    if (typeof downloadImageURL != "undefined") {
+        window.open(context.imageServer+downloadImageURL);
+    } else {
+        alert ("No image available to download.");
+    }
+}
+
 function downloadImage(size) {
     let pageNum = viewerModel.getPageNumber(),
         data = viewerModel.getMetadata(),
@@ -538,6 +594,11 @@ function downloadMetadata() {
         window.open(context.services + downloadMetadataURL);
     else
         alert("No metadata available to download.");
+}
+
+function fullDocumentPdf() {
+    let fullDocumentPdfURL = "/pdf/"+viewerModel.getDocId();
+    window.open(fullDocumentPdfURL);
 }
 
 function setupThumbnails(data) {
@@ -596,7 +657,13 @@ function showThumbnailPage(pagenum) {
             }
             if (i == startIndex || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) == 0) {
 
-                thumbnailhtml = thumbnailhtml.concat("<div class='row'>");
+                if (typeof data.textDirection !== 'undefined' && data.textDirection === 'R'){
+
+                    thumbnailhtml = thumbnailhtml.concat("<div class='row row-right-to-left'>");
+
+                } else {
+                    thumbnailhtml = thumbnailhtml.concat("<div class='row'>");
+                }
             }
 
             thumbnailhtml = thumbnailhtml
@@ -903,6 +970,18 @@ function setupViewMoreOptions() {
     });
     setupDownloadConfirmation();
 
+    $('#singlePagePdfDownloadOption a').on('click', e => {
+        $('#singlePagePdfConfirmation').show();
+        return false;
+    });
+    setupSinglePagePdfDownloadConfirmation();
+
+    $('#fullDocumentPdfDownloadOption a').on('click', e => {
+        $('#fullDocumentPdfConfirmation').show();
+        return false;
+    });
+    setupFullDocumentPdfDownloadConfirmation();
+
     if(!isLoggedIn()) {
         $('#bookmarkOption').hide();
     }
@@ -952,8 +1031,32 @@ function setupDownloadConfirmation() {
 
     confirmation.find('button.btn-success').on('click', () => {
         confirmation.hide();
-        let imageSize = confirmation.find('#downloadSizes option:selected' ).val();
-        downloadImage(imageSize);
+        // TODO switch back to sized download for images when watermarking/rights sorted.
+        //let imageSize = confirmation.find('#downloadSizes option:selected' ).val();
+        //downloadImage(imageSize);
+        downloadPregeneratedImage();
+        return false;
+    });
+}
+
+function setupSinglePagePdfDownloadConfirmation() {
+    let confirmation = $('#singlePagePdfConfirmation');
+    setupConfirmation(confirmation);
+
+    confirmation.find('button.btn-success').on('click', () => {
+        confirmation.hide();
+        let singlePagePdfURL = "/pdf/"+viewerModel.docId+"/"+viewerModel.getPageNumber();
+        window.open(singlePagePdfURL);
+    });
+}
+
+function setupFullDocumentPdfDownloadConfirmation() {
+    let confirmation = $('#fullDocumentPdfConfirmation');
+    setupConfirmation(confirmation);
+
+    confirmation.find('button.btn-success').on('click', () => {
+        confirmation.hide();
+        fullDocumentPdf();
         return false;
     });
 }
@@ -1004,7 +1107,7 @@ $(document).ready(function() {
     $.getJSON(context.jsonURL).done(function(data) {
 
         // set seadragon options and load in dzi.
-        if(pageNum == 0) { pageNum = 1; } // page 0 returns item level metadata.
+        if(pageNum === 0) { pageNum = 1; } // page 0 returns item level metadata.
 
         viewerModel = new ViewerModel({
             rootURL: context.rootURL,
