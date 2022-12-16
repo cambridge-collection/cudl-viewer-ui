@@ -414,14 +414,14 @@ body {
 
 /* transcriptions */
 
-#transcriptionnorm, #transcriptiondiplo, #translation {
+#transcriptiondiplo, #translation {
     height: 100%;
     width: 100%;
     background-color: #fff;
     position:relative;
 }
 
-#transcriptionnorm .framediv, #transcriptiondiplo .framediv, #translation .framediv {
+#transcriptiondiplo .framediv, #translation .framediv {
     position:absolute;
     top:42px;
     bottom:0px;
@@ -434,7 +434,7 @@ body {
     margin-right:0px;
 }
 
-#transcriptionnormframe, #transcriptiondiploframe, #translationframe {
+#transcriptiondiploframe, #translationframe {
     height: 98%;
     width: 100%;
     border: 0px;
