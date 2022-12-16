@@ -454,10 +454,6 @@ function setupInfoPanel(data) {
     // Note not all pages may have a transcription/translation however
     // We are enabling the menu if any are available.
 
-    if (typeof data.useNormalisedTranscriptions == 'undefined' || !data.useNormalisedTranscriptions) {
-        $('#transcriptionnormtab').parent().addClass("disabled");
-        $('#transcriptionnormtab').click(function(e){return false;}); // disable link;
-    }
     if (typeof data.useDiplomaticTranscriptions == 'undefined' || !data.useDiplomaticTranscriptions) {
         $('#transcriptiondiplotab').parent().addClass("disabled");
         $('#transcriptiondiplotab').click(function(e){return false;}); // disable link;
@@ -921,16 +917,8 @@ function setTranscriptionPage(data, pagenum) {
 
     // check for existance of transcription frame, if not,
     // then in fullscreen mode so do nothing.
-    if (!document.getElementById('transcriptionnormframe')) {
+    if (!document.getElementById('transcriptiondiploframe')) {
         return;
-    }
-
-    // normalised transcriptions
-    var url = data.pages[pagenum-1].transcriptionNormalisedURL;
-    if (typeof url != 'undefined' && typeof data.allTranscriptionNormalisedURL == 'undefined') {
-        document.getElementById('transcriptionnormframe').src = context.services + url;
-    } else {
-        document.getElementById('transcriptionnormframe').src = 'data:text/html;charset=utf-8,%3Chtml%3E%3Chead%3E%3Clink href%3D%22styles%2Fstyle-transcription.css%22 rel%3D%22stylesheet%22 type%3D%22text%2Fcss%22%2F%3E%0A%3C%2Fhead%3E%3Cbody%3E%3Cdiv class%3D%22transcription%22%3ENo transcription available for this image.%3C%2Fdiv%3E%3C%2Fbody%3E%3C%2Fhtml%3E';
     }
 
     // diplomatic transcriptions
@@ -947,12 +935,6 @@ function setTranscriptionPage(data, pagenum) {
         document.getElementById('translationframe').src = context.services + url;
     } else {
         document.getElementById('translationframe').src = 'data:text/html;charset=utf-8,%3Chtml%3E%3Chead%3E%3Clink href%3D%22styles%2Fstyle-transcription.css%22 rel%3D%22stylesheet%22 type%3D%22text%2Fcss%22%2F%3E%0A%3C%2Fhead%3E%3Cbody%3E%3Cdiv class%3D%22transcription%22%3ENo translation available for this image.%3C%2Fdiv%3E%3C%2Fbody%3E%3C%2Fhtml%3E';
-    }
-
-    // set all normalised transcriptions (all transcriptions on one page)
-    var url = data.allTranscriptionNormalisedURL;
-    if (typeof url != 'undefined') {
-        document.getElementById('transcriptionnormframe').src = context.services + url;
     }
 
     // set all diplomatic transcriptions (all transcriptions on one page)
