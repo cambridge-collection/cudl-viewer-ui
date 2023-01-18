@@ -1,4 +1,4 @@
-import '../../../less/bootstrap/cudl-bootstrap.less';
+// import '../../../less/bootstrap/cudl-bootstrap.less';
 import '../../../css/admin-file-browse.css';
 
 import path from 'path';

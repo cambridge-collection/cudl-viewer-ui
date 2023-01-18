@@ -1,8 +1,11 @@
 /* 3rd party CSS libs */
-@import "~project-light/stylesheets/full-stylesheet.css";
+/*@import "~project-light/stylesheets/full-stylesheet.css";*/
+
+@import "./cudl.css";
 
 @import "./cudl-editor.css";
 @import "./recall-slider.css";
+@import "./column-layouts.css";
 
 /* homepage style */
 .carousel-panel {
@@ -42,6 +45,42 @@
 #header-search input[type="text"] {
     height: 32px;
 }
+.cudl-header-search {
+    position: absolute;
+    right: -20px;
+    bottom: 0;
+    width: 40%;
+}
+.campl-search-input {
+    height: 32px;
+    min-height: 32px;
+}
+.cudl-header-search input[type=text] {
+    height: 32px;
+    width: calc(100% - 31px);
+}
+form.campl-search-input input.campl-search-submit {
+    height: 32px;
+    width: 32px;
+}
+div.campl-site-search {
+    display: none;
+}
+@media screen and (max-width: 767px) {
+    div.campl-site-search {
+        display: block;
+    }
+    .cudl-header-search {
+        display: none;
+    }
+    #site-search-container input[type=text] {
+        margin: 0;
+        padding: 0;
+        height: 32px;
+        line-height: 32px;
+    }
+}
+
 /* end of homepage style */
 #noscript-warning {
     position: fixed;

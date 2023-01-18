@@ -4,7 +4,7 @@ import $ from 'jquery';
 
 import './dynamic-public-path';
 import './configure-jquery-migrate';
-import { patchProjectLight, loadProjectLight } from './projectlight';
+//import { patchProjectLight, loadProjectLight } from './projectlight';
 import { ga } from './analytics';
 import { enableLightboxes } from './lightbox';
 import { setup as setupQuickSearch } from './quicksearch';
@@ -17,11 +17,11 @@ function init() {
     // 3rd party libs included for their side-effects
     require('bootstrap');
 
-    patchProjectLight();
+    //patchProjectLight();
 
     $(() => {
         registerCsrfPrefilter();
-        loadProjectLight();
+        //loadProjectLight();
 
         ga('send', 'pageview');
 

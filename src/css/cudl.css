@@ -1,0 +1,542 @@
+/* Classes related to the whole page */
+
+@font-face {
+    font-family: "Lato";
+    src: url(Lato/Lato-Regular.ttf) format("truetype");
+  }
+
+.clearfix:after {
+    content: " "; /* Older browser do not support empty content */
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
+ }
+
+.container {
+    max-width: 1280px;
+}
+
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.element{
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.more-link-container{
+
+        bottom: 40px;
+        margin-left: auto;
+        margin-right: 0;
+        width: 25rem;
+
+}
+
+.more-link a{
+    background-color: #000;
+    color: #fff;
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+    text-align: center;
+    font-size: 1rem;
+    text-decoration: none;
+    float:right;
+
+
+
+}
+
+a {
+    text-decoration: none;
+    background-color: transparent;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+.more-link a:hover{
+    background-color: #106470;
+    text-decoration: none;
+}
+
+
+
+body {
+    font-family: 'Lato', sans-serif;
+}
+
+h1{
+    font-family: 'Lato', sans-serif;
+}
+
+h2{
+    font-family: 'Lato', sans-serif;
+}
+
+a{
+    font-family: 'Lato', sans-serif;
+}
+
+/* Classes related to the uoc navigation bar */
+.main-nav .cam-logo {
+    height: 48px;
+}
+.main-nav .cam-logo .nav-right-items{
+    height: 32px;
+    margin-top: 8px;
+}
+.main-nav .icon {
+    padding: 0 0 0 40px;
+}
+.main-nav .icon .nav-right-items{
+    padding: 0 0 0 40px;
+    background-size: 35.2px 35.2px !important;
+}
+.icon.icon-menu {
+    background-image: url(/img/interface/noun_menu_black.svg);
+}
+
+.icon.icon-search {
+    background-image: url(/img/interface/noun_search_black.svg);
+}
+
+.icon.icon-cudl-menu {
+    background-image: url(/img/interface/noun_menu_white.png);
+}
+
+.icon.icon-cudl-search {
+    background-image: url(/img/interface/noun_search_white.png);
+}
+
+.icon {
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: 2.2rem 2.2rem !important;
+    padding: 0 0 0 5rem;
+}
+.text-white {
+    color: #fff !important;
+}
+.main-nav .nav-right-items {
+    font-size: 32px;
+    float:right;
+}
+
+.bg-white {
+    background-color: #fff !important;
+}
+
+button {
+    border: 0;
+    text-align: inherit;
+    font-size: inherit;
+}
+
+/* Hidden menu */
+
+.dropbtn {
+  background-color: #fff;
+  background-image: url(/img/interface/noun_menu_black.svg);
+  background-position: left;
+    background-repeat: no-repeat;
+    background-size: 2.2rem 2.2rem !important;
+    padding: 16px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .closebtn {
+    background-image: url(/img/interface/icon-close.png);
+    background-color: #106470;
+    background-position: left;
+    float:right;
+      background-repeat: no-repeat;
+      background-size: 2.2rem 2.2rem !important;
+      padding: 16px;
+      margin-right: 12px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+
+
+  .dropdown {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    display: inline-block;
+
+  }
+
+  .dropdown-content {
+    width: 50%;
+    display: none;
+    position: absolute;
+    background-color: #106470;
+    opacity: 0.95;
+    border: 1px white solid;
+      height: 100vh;
+      overflow-x: hidden;
+      padding-top: 20px;
+      right: 0;
+      top: 0;
+    overflow: auto;
+    transition: .5s;
+    z-index: 1;
+  }
+
+@media screen and (max-width: 600px) {
+    .dropdown-content {
+      width: 100%;
+    }
+  }
+
+  .dropdown-content li{
+      list-style: none;
+  }
+
+  .dropdown-content a {
+    color: #fff;
+    font-size: 1.25em;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown-content a:hover {background-color: #E5007D;}
+
+  .show {display: block;}
+
+
+
+/* Classes related to the CUDL banner */
+
+
+.cudl-banner{
+    background-color: #106470;
+    color:#fff;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-left: 12px;
+    padding-bottom: 1px;
+    padding-top: 1px;
+    display: flex;
+}
+
+
+
+/* Carousel Classes */
+
+
+* {box-sizing: border-box;}
+.mySlides {display: none;}
+img {vertical-align: middle;}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 100%;
+  position: relative;
+  margin: auto;
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  background-color: #000;
+  font-size: 2em;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 100px;
+  font-family: 'Lato', sans-serif;
+  text-align: left;
+}
+.sub-text {
+    color: #f2f2f2;
+    background-color: #000;
+    font-size: 1em;
+    padding: 8px 12px;
+    position: absolute;
+    bottom: 40px;
+    font-family: 'Lato', sans-serif;
+    text-align: left;
+  }
+
+/* The dots/bullets/indicators */
+.dot {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .text {font-size: 11px}
+}
+
+/* end carousel */
+
+/* Tiles classes*/
+/* Container needed to position the overlay. Adjust the width as needed */
+
+.tile-container{
+    display: flex;
+  flex-wrap: wrap;
+    padding-bottom: 10px;
+}
+.tile {
+    position: relative;
+    flex: 33.3%;
+    max-width: 33.3%;
+    float: left;
+  }
+  @media screen and (max-width: 800px) {
+    .tile {
+      flex: 50%;
+      max-width: 50%;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .tile {
+      flex: 100%;
+      max-width: 100%;
+    }
+  }
+
+  /* Make the image to responsive */
+  .image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .tile-caption-container{
+
+        position: absolute;
+        bottom: 80px;
+        left: 0;
+        right: 0;
+        margin-left: 0;
+        width: 25rem;
+
+
+  }
+
+  .tile-caption a {
+    background-color: #000;
+    color: #fff;
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+    text-align: center;
+    font-size: 1.25rem;
+    text-decoration: none;
+
+  }
+
+  .tile-caption a:hover{
+      background-color: #E5007D;
+  }
+
+  /* Watch classes */
+  .watch-container{
+    display: flex;
+  flex-wrap: wrap;
+
+}
+
+  .watch-feature{
+      flex: 66%;
+      max-width: 66%;
+      float: left;
+  }
+
+  .watch-list{
+      flex: 34%;
+      max-width: 34%;
+      float:right;
+  }
+
+  @media screen and (max-width: 800px) {
+    .watch-feature{
+        flex: 100%;
+        max-width: 100%;
+    }
+
+    .watch-list{
+        flex: 100%;
+        max-width: 100%;
+
+    }
+  }
+
+  .watch-list-ul{
+    list-style: none;
+  }
+
+
+  .watch-list-ul a{
+      color:#000;
+  }
+
+
+
+  .watch-list-item {
+      padding-bottom: 50px;
+  }
+/* Mini article classes */
+
+.article {
+    position: relative;
+    flex: 33.3%;
+    max-width: 33.3%;
+    float: left;
+    padding: 10px;
+  }
+  @media screen and (max-width: 800px) {
+    .article {
+      flex: 50%;
+      max-width: 50%;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .article {
+      flex: 100%;
+      max-width: 100%;
+    }
+  }
+
+/* Social media icons */
+
+.social{
+    padding-bottom: 20px;
+}
+
+.icon {
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: 2.2rem 2.2rem !important;
+    padding: 0 0 0 5rem;
+}
+
+.icon-facebook {
+    background-image: url(https://www.cam.ac.uk/sites/www.cam.ac.uk/themes/fresh/images/interface/icons/facebook_black.svg);
+    padding: 1.5rem;
+}
+
+.icon-instagram {
+    background-image: url(https://www.cam.ac.uk/sites/www.cam.ac.uk/themes/fresh/images/interface/icons/instagram_black.svg);
+    padding: 1.5rem;
+
+}
+
+.icon-twitter {
+    background-image: url(https://www.cam.ac.uk/sites/www.cam.ac.uk/themes/fresh/images/interface/icons/twitter_blue.svg);
+    padding: 1.5rem;
+
+}
+
+.icon-youtube {
+    background-image: url(https://www.cam.ac.uk/sites/www.cam.ac.uk/themes/fresh/images/interface/icons/youtube_black.svg);
+    padding: 1.5rem;
+
+}
+
+
+
+/*Footer classes */
+
+.global-footer{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.footer-region{
+    flex: 25%;
+    max-width: 25%;
+}
+
+@media screen and (max-width: 800px) {
+    .footer-region {
+      flex: 50%;
+      max-width: 50%;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .footer-region {
+      flex: 100%;
+      max-width: 100%;
+    }
+  }
+
+
+  .region-global-footer {
+    background-color: #000000;
+    margin-top: 32px;
+    padding-top: 15px;
+    padding-left:15px;
+}
+
+.region-global-footer h3 a {
+    color: white !important;
+}
+
+.region-global-footer li a, .region-global-footer p {
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+    color: white;
+}
+.region-global-footer .cam-logo {
+    max-width: 12rem;
+    padding-bottom: 1rem;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+}
+
