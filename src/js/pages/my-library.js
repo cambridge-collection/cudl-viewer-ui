@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 // Bootstrap styles
-import '../../less/bootstrap/cudl-bootstrap.less';
+// import '../../less/bootstrap/cudl-bootstrap.less';
 import '../../css/style.css';
 import '../base.js';
 

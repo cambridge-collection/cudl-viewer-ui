@@ -1,0 +1,67 @@
+/**
+These styles are inherited from old project light table styles, used for layout.
+*/
+
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.lt-ie8 .clearfix {zoom: 1; }
+
+.campl-row{clear:both;width:100%;}
+.lt-ie9 .campl-row, .lt-ie8 .campl-row{min-width:auto}
+
+.campl-wrap{margin:0 auto;position:relative;clear:both;width:1177px}
+.campl-fixed-container{width:1024px}/*to remove fluid container from browsers without media queries */
+
+.campl-column, .campl-column1, .campl-column2, .campl-column3, .campl-column4, .campl-column5, .campl-column6, .campl-column7, .campl-column8, .campl-column9,
+.campl-column10, .campl-column11, .campl-column12{float: left;margin-right: 0;padding:0 0 0 0;}
+
+.campl-column1 {width: 8.333333333333334%;}
+.campl-column2 {width: 16.666666666666668%;}
+.campl-column3 {width: 25%;}
+.campl-column4 {width: 33.333333333333336%;}
+.campl-column5 {width: 41.66666666666667%;}
+.campl-column6 {width: 50%;}
+.campl-column7 {width: 58.333333333333336%;}
+.campl-column8 {width: 66.66666666666667%;}
+.campl-column9 {width: 75%;}
+.campl-column10 {width: 83.33333333333334%;}
+.campl-column11 {width: 91.66666666666667%;}
+.campl-column12 {width: 100%;}
+
+/* IE fluid widths */
+
+.lt-ie8 .campl-column1 {width: 8.133333333333335%;}
+.lt-ie8 .campl-column2 {width: 16.46666666666667%;}
+.lt-ie8 .campl-column3 {width: 24.8%;}
+.lt-ie8 .campl-column4 {width: 33.13333333333333%;}
+.lt-ie8 .campl-column5 {width: 41.46666666666667%;}
+.lt-ie8 .campl-column6 {width: 49.8%;}
+.lt-ie8 .campl-column7 {width: 58.13333333333333%; }
+.lt-ie8 .campl-column8 {width: 66.46666666666667%; }
+.lt-ie8 .campl-column9 {width: 74.8%;}
+.lt-ie8 .campl-column10 {width: 83.13333333333334%}
+.lt-ie8 .campl-column11 {width: 91.46666666666667%;}
+.lt-ie8 .campl-column12 {width: 99.8%;}
+
+
+
+/* larger screens */
+@media only screen and (min-width: 1200px){
+    .campl-wrap{width:1177px}
+}
+
+/* larger screens */
+@media only screen and (max-width: 1199px){
+
+    .campl-wrap{width:100%; }
+}
+
+@media (max-width: 767px) {
+    .campl-wrap{width:100%}
+}
+
+@media print {
+    /* remove recessed margin issues and add mobile container classes to reduce visual padding*/
+    .campl-wrap{width:100%}
+}
+
