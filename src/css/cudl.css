@@ -249,7 +249,7 @@ img {vertical-align: middle;}
 }
 
 /* Caption text */
-.text {
+.text a {
   color: #f2f2f2;
   background-color: #000;
   font-size: 2em;
@@ -259,6 +259,12 @@ img {vertical-align: middle;}
   font-family: 'Lato', sans-serif;
   text-align: left;
 }
+
+.text a:hover {
+    background-color: #E5007D;
+    text-decoration: none;
+}
+
 .sub-text {
     color: #f2f2f2;
     background-color: #000;
