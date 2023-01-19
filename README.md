@@ -1,36 +1,42 @@
-# CUDL Viewer front-end UI assets
+# CUDL Viewer Front-end UI Assets
 
-This project contains the front-end UI assets (Javascript, CSS etc) for the
-cudl-viewer.
+This project contains the front-end UI assets (JavaScript, CSS etc.) for the
+[CUDL-Viewer](https://github.com/cambridge-collection/cudl-viewer).
 
-See the
-[CUDL Viewer UI wiki page](https://wiki.cam.ac.uk/cudl-docs/CUDL_Viewer_UI)
-for more background information.
+It is exported as `ulcambridge.foundations.viewer:viewer-ui` in the
+CUDL Maven repository for use in cudl-viewer.
 
-It's exported as `ulcambridge.foundations.viewer:viewer-ui` in the
-[CUDL Maven repository](https://wiki.cam.ac.uk/cudl-docs/CUDL_Maven_Repository)
-for use in cudl-viewer.
-
-[Webpack](http://webpack.github.io/) is used to compile the various js and css
+[Webpack](https://webpack.js.org/) is used to compile the various js and css
 files into bundles.
 
-# Maven version
+## Requirements: Maven 3.6+
 
-This project requires at least maven 3.1, which isn't available in Ubuntu
-14.04 LTS (but is on newer versions). On 14.04 either [install it manually](https://maven.apache.org/download.cgi),
-or add a 3rd party apt repo such as [this PPA](https://launchpad.net/~andrei-pozolotin/+archive/ubuntu/maven3).
+This project requires Maven 3.6+, which is available on Ubuntu 16.04 LTS and above.
 
 # Quickstart
 
-Simply edit a file and then run `$ mvn install`.
+Clone this repo and then run:
 
-Maven will download node.js, install all dependencies, run a full build and
+```
+$ mvn install
+```
+
+Maven will download `node.js`, install all dependencies, run a full build and
 install the result in your local Maven repository so that it can be resolved by
-your copy of `cudl-viewer`.
+your copy of CUDL-Viewer.
 
 Running a full build takes several minutes, so if you're making non-trivial
-changes you'll want to follow the developing instructions below to get real-time
-updates to UI assets in your viewer.
+changes you'll want to follow the [Developing](https://github.com/cambridge-collection/cudl-viewer-ui/blob/main/README.md#developing) 
+instructions, below, to get real-time updates to UI assets in your viewer.
+
+In order for your local CUDL-Viewer app to depend on your local artifact of 
+CUDL-Viewer-UI, you need to alter the CUDL-Viewer `pom.xml` file. 
+
+First, find the *CUDL-Viewer-UI* `pom.xml` and find the project version, for example:
+`<version>2.0.9-SNAPSHOT</version>`
+
+Then, go to the *CUDL-Viewer* `pom.xml` and change the `cudl.viewer-ui-version` to match, for example:
+`<cudl-viewer-ui.version>2.0.9-SNAPSHOT</cudl-viewer-ui.version>`.
 
 # Developing
 
@@ -38,26 +44,39 @@ While actively making changes to the source you'll want to use the webpack
 dev server, which supports Hot Module Replacement (HMO) to live update the page
 being viewed as you update source files.
 
- Instructions on how to setup the webpack-dev-server can be found on
- the Wiki [Setting Up Webpack Dev Server](https://wiki.cam.ac.uk/cudl-docs/Setting_up_a_Local_Development_Environment_for_CUDL#Setting_Up_Webpack_Dev_Server_.28Optional.29).
-
 ## Prerequisites
 
-Install [node.js](https://nodejs.org/en/download/) which should come with
-[npm](https://www.npmjs.com/).
+Optional: Node Version Manager (nvm) is recommended as a convenient way to managed multiple versions of node 
+on your local machine. Check the official [nvm Installing and Updating](https://github.com/nvm-sh/nvm#install--update-script) 
+instructions for the latest version.
 
-Install webpack, the webpack dev server and the bower package manager globally
-so that they're available as shell commands:
+Install the compatible version of [node.js](https://nodejs.org/en/download/) which should come with
+[npm](https://www.npmjs.com/). Inspect the CUDL-Viewer-UI `pom.xml` for the correct version 
+e.g. `<nodeVersion>v12.16.0</nodeVersion>`
+
+If you have installed `node` with `nvm`, ensure you are switched to use the correct version:
 
 ```
-# You'll need to run with sudo if node is installed systemwide.
-$ npm install -g webpack@^4.29.5 webpack-cli@^3.1.2 webpack-dev-server@^3.2.1 bower@^1.8.8 @babel/core@^7.3.4
+$ nvm use 12.16.0
 ```
+
+Install the compatible version of webpack and the other relevant dependencies globally 
+so that they're available as shell commands. Inspect the `package.json` for the correct versions, 
+rather than just copy-pasting the command below:
+
+```
+$ npm install -g webpack@^4.41.6 webpack-cli@^3.3.11 webpack-dev-server@^3.10.3 bower@^1.8.8 @babel/core@^7.8.6
+```
+
+Note that this will install these packages globally for this version of `node`.
 
 ## Install project dependencies
 
-Most dependencies are npm/node modules, but some are only available via bower.
-Change directory to your `cudl-viewer-ui` checkout and proceed as follows:
+Make sure you are in the `cudl-viewer-ui` directory.
+
+If you don’t already have the dependencies downloaded from a previous Maven build (see
+[Quickstart](https://github.com/cambridge-collection/cudl-viewer-ui/blob/main/README.md#quickstart), above), 
+you need to run the install manually. Most dependencies are npm/node modules, but some are only available via `bower`:
 
 ```
 $ bower install
@@ -66,30 +85,7 @@ $ npm install
 [lots of output...]
 ```
 
-## Webpack usage
-
-There are two config files:
-
-* `./webpack.config.babel.js` — The production config and the default config if
-  you don't specify which to use.
-* `./webpack.config.dev.babel.js` — The development config. Intended for use
-  with the devserver.
-
-> *You can use bin/show-config to show the resolved config for the dev or
-> production configs. Alternatively, run a `babel-node` repl and `require()` the
-> appropriate file to inspect the output.
-
-Specify them on the command line using the `--config` argument to `webpack` or
-`webpack-dev-server`.
-
-> *Note that the value you specify is a `require()` path, so unless your value
-> starts with `./` or `/` it'll be resolved via `node_modules`*.
-
-Running `$ webpack` by itself builds everything to the `./built/` directory.
-The only reason to do this is to inspect the build output by hand, or check
-that the build is actually working without using Maven.
-
-## Real-time updates with the webpack dev server
+## Run Webpack Dev Server
 
 The webpack dev server will watch your files and incrementally recompile what's
 changed, making the result available immediately. The `cudl-viewer` has a mode
@@ -97,7 +93,8 @@ of operation which delegates serving of UI assets to the dev server instead of
 serving the pre-built versions from Maven. This allows you to see changes in the
 viewer without doing a Maven build.
 
-> *See the `cudl-viewer` README for full details on enabling this mode of
+> *See the [`cudl-viewer` README](https://github.com/cambridge-collection/cudl-viewer#development) 
+> for details on enabling this mode of
 > operation, but essentially you need to set `cudl.ui.dev` property to `true`
 > in the `cudl-global.properties` file.*
 
@@ -110,7 +107,22 @@ $ webpack-dev-server --config ./webpack.config.dev.babel.js --inline --hot
 
 > *You can omit `--inline` and `--hot` if you don't want HMR.*
 
-# Linking CUDL UI dependencies
+If this is successful, you should now see a directory structure at: http://localhost:8080/
+
+You can check that it recompiles the assets on the fly by editing and saving a file in 
+CUDL-Viewer-UI. The output should log a new hash each time, e.g.
+
+```
+ ｢wdm｣: Compiling...
+ℹ ｢wdm｣: Hash: a6ebf3943a5d5fa551ed
+Version: webpack 4.46.0
+Time: 224ms
+Built at: 01/17/2023 12:31:08
+[...lots of output...]
+ℹ ｢wdm｣: Compiled successfully.
+```
+
+# Linking CUDL UI dependencies -- not required for basic functionality
 
 The UI currently has two sub projects — the similarity bubbles and tagging
 functionality. These are installed in `node_modules` directly from git
@@ -169,7 +181,7 @@ enter `cudl-viewer-ui-tagging` and run `$ npm link jquery`. Now both `ui` and
 `ui-tagging` will be pointing at exactly the same jQuery, so there'll be no
 duplicate.
 
-# Building
+# Package CUDL-Viewer-UI for use in CUDL-Viewer
 
 Use Maven to build the UI for use in CUDL-Viewer. `$ mvn package` will run
 webpack in production mode (minifying) and package up the result in the
