@@ -342,7 +342,7 @@ body {
 #download .copyright {
     color: #999;
     font-size: 0.8em;
-    align:left;
+    text-align:left;
     padding-top: 10px;
     padding-bottom: 10px;
     max-width:400px;
@@ -356,6 +356,11 @@ body {
 .downloadpanel .button {
     width:160px;
     height:54px;
+}
+
+#download div.addthis_sharing_toolbox {
+    margin-top: 1rem;
+    margin-bottom: 1.75rem;
 }
 
 #metadatacontent {
