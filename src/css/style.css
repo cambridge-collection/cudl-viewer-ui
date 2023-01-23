@@ -2,10 +2,10 @@
 /*@import "~project-light/stylesheets/full-stylesheet.css";*/
 
 @import "./cudl.css";
-
 @import "./cudl-editor.css";
 @import "./recall-slider.css";
 @import "./column-layouts.css";
+@import "./project-light-legacy.css";
 
 /* homepage style */
 .carousel-panel {
