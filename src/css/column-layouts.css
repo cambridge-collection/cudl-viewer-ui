@@ -57,6 +57,12 @@ These styles are inherited from old project light table styles, used for layout.
 }
 
 @media (max-width: 767px) {
+    [class*="campl-column"], .campl-column {
+        float: none;
+        display: block;
+        width: auto;
+        margin-left: 0;
+    }
     .campl-wrap{width:100%}
 }
 
