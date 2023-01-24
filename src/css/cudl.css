@@ -1,7 +1,24 @@
 /* Classes related to the whole page */
 
-/* Core Lato font declarations for regular, bold, bold italic and italic variants */
+/* Lato font declarations
+   This Lato fontstack includes *all* the available font-weights available - from hairline to black
+   font-weight value    font style
+   100                  hairline
+   200                  thin
+   300                  light
+   400                  regular (DEFAULT normal weight. Used when font-weight is not specified or set to normal)
+   500                  medium
+   600                  semibold
+   700                  bold (DEFAULT bold weight. Used when font-weight is set to bold)
+   800                  heavy
+   900                  black
 
+   Any CSS class using weights other than (400/normal or 700/bold) should set the font-weight directive with !important
+   and care must be taken to ensure that any element using that class do not have (or inherit) other font-weights set
+   with !important. Otherwise, the output will be unpredictable
+ */
+
+/* Core Lato font declarations for regular, bold, bold italic and italic variants */
 @font-face {
     font-family: 'Lato';
     src: url('Lato/Lato-Regular.eot'); /* IE9 Compat Modes */
@@ -50,10 +67,7 @@
     text-rendering: optimizeLegibility;
 }
 
-/*  Supplementary declarations for specialised font weights (100, 200, 300, 500, 600, 800, 900)
-    Any CSS class using these weights must be set with !important and care must be taken to ensure that any element
-    using that class do not have (or inherit) other font-weights set with !important. Otherwise, the output will be
-    unpredictable */
+/*  Supplementary font weights (100, 200, 300, 500, 600, 800, 900) */
 
 @font-face {
     font-family: 'Lato';
