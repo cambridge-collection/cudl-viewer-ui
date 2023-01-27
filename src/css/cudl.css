@@ -459,6 +459,15 @@ button {
     display: flex;
 }
 
+.cudl-banner h1 a,
+.cudl-banner h1 a:link,
+.cudl-banner h1 a:hover,
+.cudl-banner h1 a:focus,
+.cudl-banner h1 a:hover,
+.cudl-banner h1 a:active {
+    color: inherit;
+    text-decoration: none;
+}
 
 
 /* Carousel Classes */
