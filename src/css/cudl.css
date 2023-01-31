@@ -526,6 +526,21 @@ li.campl-selected {font-weight: bold;}
     }
 }
 
+/* Page title classes */
+
+.pagetitle.campl-wrap.clearfix {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.pagetitle {
+    padding: 0 20px 0 20px;
+}
+
+.pagetitle h1 {
+    font-weight:500;
+}
+
 
 /* Carousel Classes */
 
