@@ -469,6 +469,67 @@ button {
     text-decoration: none;
 }
 
+/* Crumbtrail classes */
+.crumbtrail {
+    font-size: 0.9rem;
+    margin-bottom:1.25rem;
+}
+
+.crumbtrail .fa-home {font-size: 1.25rem;}
+.campl-unstyled-list {list-style:none;margin:0}
+.campl-tertiary-navigation {font-size:14px;line-height: 20px;}
+.campl-vertical-breadcrumb , .campl-vertical-breadcrumb-navigation, .campl-vertical-breadcrumb-children a{ color: #0072cf; text-decoration:none;border-bottom:0;outline: none;}
+.campl-recessed-content .campl-tertiary-navigation {margin-top:40px;padding-bottom:0px}
+.campl-tertiary-navigation {position:relative;z-index:11}
+.campl-tertiary-navigation-structure {background:#fff;border-bottom:1px solid #e4e4e4;}
+.campl-vertical-breadcrumb li {line-height:16px;position:relative;word-wrap:break-word}
+.campl-vertical-breadcrumb a {padding:16px 30px 16px 20px;background:#fafafa url(/img/interface/bg-vertical-breadcrumb-up-arrow.png) no-repeat 95% 50% ;border-bottom:1px solid #e4e4e4;display:block;position:relative;}
+.campl-vertical-breadcrumb-indicator {z-index:9;display:block;width:19px;height:10px;background:url(/img/interface/bg-vertical-breadcrumb-indicator-arrow.png) no-repeat 0 0;position:absolute;bottom:-10px;left:20px;}
+.campl-vertical-breadcrumb a:focus, .campl-vertical-breadcrumb a:hover, .campl-vertical-breadcrumb a:active {background:#efefef url(/img/interface/bg-vertical-breadcrumb-up-arrow.png) no-repeat 95% 50%;text-decoration:none}
+.campl-vertical-breadcrumb a:focus .campl-vertical-breadcrumb-indicator,
+.campl-vertical-breadcrumb a:hover .campl-vertical-breadcrumb-indicator,
+.campl-vertical-breadcrumb a:active .campl-vertical-breadcrumb-indicator {background:url(/img/interface/bg-vertical-breadcrumb-indicator-arrow-over.png) no-repeat 0 0;}
+.campl-vertical-breadcrumb-navigation {display:block;padding:5px 20px;font-weight:bold }
+.campl-vertical-breadcrumb-navigation .campl-selected > a,
+.campl-vertical-breadcrumb-navigation .campl-selected > a:focus,
+.campl-vertical-breadcrumb-navigation .campl-selected > a:hover,
+.campl-vertical-breadcrumb-navigation .campl-selected > a:visited {color:#171717;}
+.campl-vertical-breadcrumb-navigation li {padding:10px 0;border-bottom:1px solid #e4e4e4}
+.campl-vertical-breadcrumb-navigation li:last-child {border-bottom:0}
+.campl-vertical-breadcrumb-children {border-bottom:0;margin:10px 0 0; }
+.campl-vertical-breadcrumb-children li {padding:5px 5px 5px 0;border-bottom:0;font-weight:normal}
+.campl-vertical-breadcrumb-children a {border-bottom:0;background:#fff url(/img/interface/bg-vertical-breadcrumb-right-arrow.png) no-repeat 0 50% ;font-weight:normal;padding:0 0 0 15px}
+.campl-vertical-breadcrumb-children a:focus, .campl-vertical-breadcrumb-children a:hover, .campl-vertical-breadcrumb-children a:active {background:#fff url(/img/interface/bg-vertical-breadcrumb-right-arrow.png) no-repeat 0 50%; text-decoration:underline}
+.campl-vertical-breadcrumb-children .campl-selected a {cursor:default}
+.campl-vertical-breadcrumb-children .campl-selected a:focus, .campl-vertical-breadcrumb-children .campl-selected a:hover {text-decoration:none}
+.campl-tertiary-navigation {border:1px solid #e4e4e4;border-width:1px 1px 0 1px }
+.campl-vertical-breadcrumb {font-family:"Lato", sans-serif;font-weight:600;font-style:normal}
+.campl-vertical-breadcrumb-navigation {font-family:"Lato", sans-serif;font-weight:400;color:#888888}
+.campl-vertical-breadcrumb , .campl-vertical-breadcrumb-navigation, .campl-vertical-breadcrumb-children a { color: #0072cf; text-decoration:none;border-bottom:0;outline: none;}
+.campl-vertical-breadcrumb a {color:#999999}
+ul.campl-vertical-breadcrumb, ul.campl-vertical-breadcrumb, ul.campl-vertical-breadcrumb-children { padding: 0;}
+li.campl-selected {font-weight: bold;}
+
+.campl-tertiary-navigation li a {
+    display: inline-block;
+    width: 100%;
+}
+
+@media (max-width: 767px) {
+    .campl-vertical-breadcrumb {font-size:18px;line-height: 24px}
+    #crumbtrail li {margin:0 0 15px 0}
+    #crumbtrail ul {padding: 0;margin: 15px 0 9px 15px;}
+    .campl-tertiary-navigation{display:none}
+}
+
+@media print {
+    .campl-tertiary-navigation {
+        display: none !important
+    }
+}
+
+}
+
 
 /* Carousel Classes */
 
