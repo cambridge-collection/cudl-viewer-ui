@@ -452,7 +452,7 @@ button {
     background-color: #106470;
     color:#fff;
     margin-top: 20px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
     padding: 1px 0 1px 12px;
     display: flex;
 }
@@ -470,7 +470,8 @@ button {
 /* Crumbtrail classes */
 .crumbtrail {
     font-size: 0.9rem;
-    margin-bottom:1.25rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1.25rem;
 }
 
 .crumbtrail .fa-home {font-size: 1.25rem;}
