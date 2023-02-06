@@ -28,7 +28,6 @@
     url('Lato/Lato-Regular.ttf') format('truetype');
     font-style: normal;
     font-weight: 400;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -40,7 +39,6 @@
     url('Lato/Lato-Italic.ttf') format('truetype');
     font-style: italic;
     font-weight: 400;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -52,7 +50,6 @@
     url('Lato/Lato-Bold.ttf') format('truetype');
     font-style: normal;
     font-weight: 700;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -64,7 +61,6 @@
     url('Lato/Lato-BoldItalic.ttf') format('truetype');
     font-style: italic;
     font-weight: 700;
-    text-rendering: optimizeLegibility;
 }
 
 /*  Supplementary font weights (100, 200, 300, 500, 600, 800, 900) */
@@ -78,7 +74,6 @@
     url('Lato/Lato-Hairline.ttf') format('truetype');
     font-style: normal;
     font-weight: 100;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -90,7 +85,6 @@
     url('Lato/Lato-HairlineItalic.ttf') format('truetype');
     font-style: italic;
     font-weight: 100;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -102,7 +96,6 @@
     url('Lato/Lato-Thin.ttf') format('truetype');
     font-style: normal;
     font-weight: 200;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -114,7 +107,6 @@
     url('Lato/Lato-ThinItalic.ttf') format('truetype');
     font-style: italic;
     font-weight: 200;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -126,7 +118,6 @@
     url('Lato/Lato-Light.ttf') format('truetype');
     font-style: normal;
     font-weight: 300;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -138,7 +129,6 @@
     url('Lato/Lato-LightItalic.ttf') format('truetype');
     font-style: italic;
     font-weight: 300;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -150,7 +140,6 @@
     url('Lato/Lato-Medium.ttf') format('truetype');
     font-style: normal;
     font-weight: 500;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -162,9 +151,7 @@
     url('Lato/Lato-MediumItalic.ttf') format('truetype');
     font-style: italic;
     font-weight: 500;
-    text-rendering: optimizeLegibility;
 }
-
 
 @font-face {
     font-family: 'Lato';
@@ -175,7 +162,6 @@
     url('Lato/Lato-Semibold.ttf') format('truetype');
     font-style: normal;
     font-weight: 600;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -187,7 +173,6 @@
     url('Lato/Lato-SemiboldItalic.ttf') format('truetype');
     font-style: italic;
     font-weight: 600;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -199,7 +184,6 @@
     url('Lato/Lato-Heavy.ttf') format('truetype');
     font-style: normal;
     font-weight: 800;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -211,7 +195,6 @@
     url('Lato/Lato-HeavyItalic.ttf') format('truetype');
     font-style: italic;
     font-weight: 800;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -223,7 +206,6 @@
     url('Lato/Lato-Black.ttf') format('truetype');
     font-style: normal;
     font-weight: 900;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -235,9 +217,50 @@
     url('Lato/Lato-BlackItalic.ttf') format('truetype');
     font-style: italic;
     font-weight: 900;
-    text-rendering: optimizeLegibility;
 }
 
+/* Univ Defaults */
+
+a, a:link, a:visited, a:hover, a:focus, a:active {
+    color: #E5007D;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+a:hover {
+    text-decoration:underline;
+}
+
+a:focus {
+    outline: 6px solid #E5007D;
+    outline-offset: 0;
+}
+
+body {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+}
+
+body, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lato', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+
+/* Misc */
 
 .clearfix:after {
     content: " "; /* Older browser do not support empty content */
@@ -276,44 +299,35 @@
 .more-link a{
     background-color: #000;
     color: #fff;
-    padding-top: 0.6rem;
-    padding-bottom: 0.6rem;
-    padding-left: 0.6rem;
-    padding-right: 0.6rem;
+    padding: 0.6rem;
     text-align: center;
     font-size: 1rem;
     text-decoration: none;
     float:right;
-
-
-
 }
 
-a {
-    text-decoration: none;
-    background-color: transparent;
-}
-
-a:hover{
-    text-decoration: underline;
-}
 .more-link a:hover{
     background-color: #106470;
     text-decoration: none;
 }
 
-
-
-body, h1, h2, h3, h4, h5, h6 {
-    font-family: 'Lato', sans-serif;
-}
-
-
-a{
-    font-family: 'Lato', sans-serif;
-}
-
 /* Classes related to the uoc navigation bar */
+
+.main-nav {
+    background-color: #fff;
+    padding: 24px 16px;
+}
+
+@media (min-width: 576px) {
+    .main-nav {
+        padding: 32px;
+    }
+}
+
+.main-nav-section > .container  {
+    position:relative;
+}
+
 .main-nav .cam-logo {
     height: 48px;
 }
@@ -368,117 +382,214 @@ button {
     font-size: inherit;
 }
 
+@media only screen and (max-width: 800px) {
+    .cam-logo {
+        transition: zoom 1s, margin 1s;
+        zoom: 50%;
+        margin: 28px 0 0 28px !important;
+    }
+    .main-nav {
+        transition: padding 1s;
+        padding: 0;
+    }
+
+}
+
+
 /* Hidden menu */
 
 .dropbtn {
-  background-color: #fff;
-  background-image: url(/img/interface/noun_menu_black.svg);
-  background-position: left;
+    background-color: #fff;
+    background-image: url(/img/interface/noun_menu_black.svg);
+    background-position: left;
     background-repeat: no-repeat;
     background-size: 2.2rem 2.2rem !important;
     padding: 16px;
     border: none;
     cursor: pointer;
-  }
+}
 
-  .closebtn {
-    background-image: url(/img/interface/icon-close.png);
-    background-color: #106470;
+.closebtn {
+    background-color: #6BBBAE;
+    background-image: url(/img/interface/noun_cross_black.svg);
     background-position: left;
-    float:right;
-      background-repeat: no-repeat;
-      background-size: 2.2rem 2.2rem !important;
-      padding: 16px;
-      margin-right: 12px;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-    }
-
+    float: right;
+    padding: 0;
+    font-size: 16px;
+    height: 20px;
+    border: none;
+    cursor: pointer;
+    color: #000;
+    padding-left: 2.5rem !important;
+}
 
   .dropdown {
-    display: flex;
     flex-wrap: wrap;
     position: relative;
     display: inline-block;
-
   }
 
-  .dropdown-content {
-    width: 50%;
-    display: none;
+.dropdown-content {
     position: absolute;
-    background-color: #106470;
-    opacity: 0.95;
-    border: 1px white solid;
-      height: 100vh;
-      overflow-x: hidden;
-      padding-top: 20px;
-      right: 0;
-      top: 0;
+    background-color: #6BBBAE;
+    height: 100vh;
+    overflow-x: hidden;
+    right: 0;
+    top: 0;
     overflow: auto;
     transition: .5s;
     z-index: 1;
-  }
+    padding-top: 1.5rem;
+    width: 0;
+    border-style: none;
+    padding-left: 0;
+    padding-right: 0
+}
+
+.dropdown-content a {
+    color: #000 !important;
+}
+.dropdown-content ul {
+    line-height: 1.5;
+}
+
+.dropdown-content > ul {
+    display: none;
+}
+
+.dropdown-content.show {
+    display: block;
+    width: 50%;
+    padding-top: 1.5rem;
+}
+
+.dropdown-content.show ul {
+    display: block;
+}
+
+.dropdown-content li {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+#myDropdown>ul {
+    margin: 0 0 0 2rem;
+    padding-left: 1rem;
+    line-height: 1.5;
+}
+
+.dropdown-content li {
+    list-style: none;
+}
+
+.dropdown-content a {
+    color: #fff;
+    font-size: 1.25em;
+    /*padding: 12px 16px;*/
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    text-decoration: underline
+}
+
+.show {
+    display: block;
+}
+#myDropdown .clearfix {
+    height: 3rem;
+}
+#myDropdown .closebtn {
+    position: absolute;
+    right: 12px;
+    top: 24px;
+    margin:0;
+}
 
 @media screen and (max-width: 600px) {
     .dropdown-content {
-      width: 100%;
+        padding: 0;
     }
-  }
 
-  .dropdown-content li{
-      list-style: none;
-  }
+    .dropdown-content ul {
+        line-height: 1.5;
+    }
 
-  .dropdown-content a {
-    color: #fff;
-    font-size: 1.25em;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-  }
+    #myDropdown>ul {
+        margin: 0;
+    }
 
-  .dropdown-content a:hover {background-color: #E5007D;}
+    .dropdown-content li {
+        font-size: 0.75rem !important;
+    }
 
-  .show {display: block;}
-
+    #myDropdown .closebtn {
+        position: absolute;
+        right: 0;
+        top: 16px;
+        padding-left: 2.5rem !important;
+        background-size: 1.75rem 1.75rem !important;
+    }
+}
 
 
 /* Classes related to the CUDL banner */
 
-
 .cudl-banner{
+    display: flex;
     background-color: #106470;
     color:#fff;
     margin-top: 20px;
     margin-bottom: 0;
-    padding: 1px 0 1px 12px;
-    display: flex;
+    padding: 1px 0 1px 12px; /* Padding top needed to ensure it's visible because of fixed header */
+    transition: background-color 0.1s;
 }
 
 .cudl-banner h1 a,
 .cudl-banner h1 a:link,
+.cudl-banner h1 a:visited,
 .cudl-banner h1 a:hover,
 .cudl-banner h1 a:focus,
-.cudl-banner h1 a:hover,
 .cudl-banner h1 a:active {
     color: inherit;
     text-decoration: none;
 }
 
+.cudl-banner:hover {
+    background-color: #E5007D; /* #6BBBAE */
+    transition: background-color 0.1s;
+}
+
+.cudl-banner:hover a, .cudl-banner a:hover {
+    color: #000 !important;
+}
+
+
 /* Crumbtrail classes */
+
 .crumbtrail {
     font-size: 0.9rem;
     margin-top: 0.5rem;
     margin-bottom: 1.25rem;
+    list-style: none;
+}
+
+.crumbtrail li {
+    display: inline-block;
+}
+
+.crumbtrail li + li::before {
+    content: "/";
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
 }
 
 .crumbtrail .fa-home {font-size: 1.25rem;}
 .campl-unstyled-list {list-style:none;margin:0}
 .campl-tertiary-navigation {font-size:14px;line-height: 20px;}
-.campl-vertical-breadcrumb , .campl-vertical-breadcrumb-navigation, .campl-vertical-breadcrumb-children a{ color: #0072cf; text-decoration:none;border-bottom:0;outline: none;}
-.campl-recessed-content .campl-tertiary-navigation {margin-top:40px;padding-bottom:0px}
+.campl-vertical-breadcrumb , .campl-vertical-breadcrumb-navigation, .campl-vertical-breadcrumb-children a{ /*color: #0072cf;*/ text-decoration:none;border-bottom:0;outline: none;}
+.campl-recessed-content .campl-tertiary-navigation {margin-top:40px;padding-bottom:0}
 .campl-tertiary-navigation {position:relative;z-index:11}
 .campl-tertiary-navigation-structure {background:#fff;border-bottom:1px solid #e4e4e4;}
 .campl-vertical-breadcrumb li {line-height:16px;position:relative;word-wrap:break-word}
@@ -489,10 +600,6 @@ button {
 .campl-vertical-breadcrumb a:hover .campl-vertical-breadcrumb-indicator,
 .campl-vertical-breadcrumb a:active .campl-vertical-breadcrumb-indicator {background:url(/img/interface/bg-vertical-breadcrumb-indicator-arrow-over.png) no-repeat 0 0;}
 .campl-vertical-breadcrumb-navigation {display:block;padding:5px 20px;font-weight:bold }
-.campl-vertical-breadcrumb-navigation .campl-selected > a,
-.campl-vertical-breadcrumb-navigation .campl-selected > a:focus,
-.campl-vertical-breadcrumb-navigation .campl-selected > a:hover,
-.campl-vertical-breadcrumb-navigation .campl-selected > a:visited {color:#171717;}
 .campl-vertical-breadcrumb-navigation li {padding:10px 0;border-bottom:1px solid #e4e4e4}
 .campl-vertical-breadcrumb-navigation li:last-child {border-bottom:0}
 .campl-vertical-breadcrumb-children {border-bottom:0;margin:10px 0 0; }
@@ -504,8 +611,7 @@ button {
 .campl-tertiary-navigation {border:1px solid #e4e4e4;border-width:1px 1px 0 1px }
 .campl-vertical-breadcrumb {font-family:"Lato", sans-serif;font-weight:600;font-style:normal}
 .campl-vertical-breadcrumb-navigation {font-family:"Lato", sans-serif;font-weight:400;color:#888888}
-.campl-vertical-breadcrumb , .campl-vertical-breadcrumb-navigation, .campl-vertical-breadcrumb-children a { color: #0072cf; text-decoration:none;border-bottom:0;outline: none;}
-.campl-vertical-breadcrumb a {color:#999999}
+.campl-vertical-breadcrumb , .campl-vertical-breadcrumb-navigation, .campl-vertical-breadcrumb-children a { text-decoration:none;border-bottom:0;outline: none;}
 ul.campl-vertical-breadcrumb, ul.campl-vertical-breadcrumb, ul.campl-vertical-breadcrumb-children { padding: 0;}
 li.campl-selected {font-weight: bold;}
 
@@ -527,6 +633,7 @@ li.campl-selected {font-weight: bold;}
     }
 }
 
+
 /* Page title classes */
 
 .pagetitle.campl-wrap.clearfix {
@@ -538,24 +645,31 @@ li.campl-selected {font-weight: bold;}
     padding: 0 20px 0 20px;
 }
 
-.pagetitle h1 {
+.pagetitle h2 {
     font-weight:500;
+}
+
+.pagetitle.leftCol3 {
+    position: relative;
+    left: 25%
 }
 
 
 /* Carousel Classes */
 
-
 * {box-sizing: border-box;}
 .mySlides {display: none;}
 img {vertical-align: middle;}
 
+
 /* Slideshow container */
+
 .slideshow-container {
   max-width: 100%;
   position: relative;
   margin: auto;
 }
+
 
 /* Caption text */
 .text a {
@@ -675,11 +789,8 @@ img {vertical-align: middle;}
   .tile-caption a {
     background-color: #000;
     color: #fff;
-    padding-top: 0.6rem;
-    padding-bottom: 0.6rem;
-    padding-left: 0.6rem;
-    padding-right: 0.6rem;
-    text-align: center;
+      padding: 0.6rem;
+      text-align: center;
     font-size: 1.25rem;
     text-decoration: none;
 
@@ -855,3 +966,111 @@ img {vertical-align: middle;}
     border: 0;
 }
 
+/* IIIF button */
+
+.usebutton {
+    width: 100%;
+    text-align: center;
+    padding-top: 1.5rem;
+    clear:both
+}
+
+.usebutton a.btn {
+    display: inline-block;
+    color: #000;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-color: #d3eae6;
+    background-image: none;
+    border: 1px solid #6BBBAE;
+    padding: 6px 12px;
+    font-size: 12px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.usebutton a.btn img {
+    text-decoration:none;
+    padding-right: 1rem;
+}
+
+.usebutton a.btn:hover {
+    text-decoration: none;
+    color: #fff;
+    background: #6BBBAE
+}
+
+/* Collections page styling */
+
+.table {
+    display: table;
+    width: 100%
+}
+
+.tr {
+    display: table-row
+}
+
+.td {
+    display: table-cell;
+}
+
+.collection.campl-teaser-img-link {
+    color: #fff;
+}
+
+.collection.campl-teaser-img-link:hover, .collection.campl-teaser-img-link:hover .campl-focus-teaser {
+    background: #6BBBAE;
+    color: #000 !important;
+}
+
+/* Collection page stlying */
+.toppagination {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.collections_carousel {
+    margin-left: 1.2rem;
+}
+
+.collections_carousel_item {
+    margin-top: 2.5rem;
+}
+
+.collection_abstract {
+    font-size: 0.85rem;
+}
+
+
+/* Fixed-top classes */
+
+/*.fixed-top {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    right: 0;*/
+/*    left: 0;*/
+/*    z-index: 1030;*/
+/*}*/
+
+/*.cudl-banner {*/
+/*    padding-top: 120px*/
+/*}*/
+
+
+/**[id]:before {*/
+/*    display: block;*/
+/*    content: " ";*/
+/*    margin-top: -120px;*/
+/*    height: 120px;*/
+/*    visibility: hidden;*/
+/*}*/

@@ -69,8 +69,8 @@ $(function() {
                                 "<div class='collections_carousel_image'>" +
                                 "<a href='/view/" + item.id + "'><img src='" + item.thumbnailURL + "' alt='" + item.id + "' " +
                                 imageDimensions + " > </a></div></div> " +
-                                "<div class='collections_carousel_text word-wrap-200'><h5>" + item.title + shelfLocator + "</h5> " + item.abstractShort +
-                                " ... <a href='/view/" + item.id + "'>more</a></div><div class='clear'></div>";
+                                "<div class=\"collections_carousel_text word-wrap-200\"><h4>" + item.title + shelfLocator + "</h4> <div class=\"collection_abstract\">" + item.abstractShort +
+                                " ... <a href=\"/view/" + item.id + "\">more</a></div><div class=\"clear\"></div></div>";
                             container.appendChild(itemDiv);
                         }
                     }
