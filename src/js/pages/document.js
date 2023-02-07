@@ -921,26 +921,33 @@ function setTranscriptionPage(data, pagenum) {
         return;
     }
 
+    let transCss = "<link href='styles/style-transcription.css' rel='stylesheet' type='text/css'/>"
+
     // diplomatic transcriptions
     var url = data.pages[pagenum-1].transcriptionDiplomaticURL;
     if (typeof url != 'undefined' && typeof data.allTranscriptionDiplomaticURL == 'undefined') {
-        document.getElementById('transcriptiondiploframe').src = context.services + url;
+        $('#transcriptiondiploframe').removeAttr('srcdoc');
+        $('#transcriptiondiploframe').attr('src', new URL(url, context.services));
     } else {
-        document.getElementById('transcriptiondiploframe').src = 'data:text/html;charset=utf-8,%3Chtml%3E%3Chead%3E%3Clink href%3D%22styles%2Fstyle-transcription.css%22 rel%3D%22stylesheet%22 type%3D%22text%2Fcss%22%2F%3E%0A%3C%2Fhead%3E%3Cbody%3E%3Cdiv class%3D%22transcription%22%3ENo transcription available for this image.%3C%2Fdiv%3E%3C%2Fbody%3E%3C%2Fhtml%3E';
+        $('#transcriptiondiploframe').contents().find('head').html(transCss);
+        $('#transcriptiondiploframe').contents().find('body').html("No transcription available for this image.");
     }
 
     // translation
     var url = data.pages[pagenum-1].translationURL;
     if (typeof url != 'undefined') {
-        document.getElementById('translationframe').src = context.services + url;
+        $('#translationframe').removeAttr('srcdoc');
+        $('#translationframe').attr('src', new URL(url, context.services));
     } else {
-        document.getElementById('translationframe').src = 'data:text/html;charset=utf-8,%3Chtml%3E%3Chead%3E%3Clink href%3D%22styles%2Fstyle-transcription.css%22 rel%3D%22stylesheet%22 type%3D%22text%2Fcss%22%2F%3E%0A%3C%2Fhead%3E%3Cbody%3E%3Cdiv class%3D%22transcription%22%3ENo translation available for this image.%3C%2Fdiv%3E%3C%2Fbody%3E%3C%2Fhtml%3E';
+        $('#translationframe').contents().find('head').html(transCss);
+        $('#translationframe').contents().find('body').html("No translation available for this image.");
     }
 
     // set all diplomatic transcriptions (all transcriptions on one page)
     var url = data.allTranscriptionDiplomaticURL;
     if (typeof url != 'undefined') {
-        document.getElementById('transcriptiondiploframe').src = context.services + url;
+        $('#transcriptiondiploframe').removeAttr('srcdoc');
+        $('#transcriptiondiploframe').attr('src', new URL(url, context.services));
     }
 
 }
