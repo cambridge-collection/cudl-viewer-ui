@@ -73,11 +73,17 @@ let thumbnailProps = {
     MAX_THUMBNAIL_ITEMS_ON_ROW: 3
 };
 
+$(window).on("popstate", function (event) {
+    if ((history.state !== null && history.state.hasOwnProperty('pagenumber')) && Number(history.state.pagenumber).toString() === history.state.pagenumber.toString()) {
+        loadPage(history.state.pagenumber, true);
+    }
+});
+
 function isLoggedIn() {
     return !!context.isUser;
 }
 
-function loadPage(pagenumber) {
+function loadPage(pagenumber, isReload = false) {
     let data = viewerModel.getMetadata();
 
     // validation
@@ -151,14 +157,14 @@ function loadPage(pagenumber) {
     setTranscriptionPage(data, pagenumber);
 
     // update metadata
-    updatePageMetadata(data, pagenumber);
+    updatePageMetadata(data, pagenumber, isReload);
 
     // Record each page turn as a page view with Google analytics
     ga('send', 'pageview');
 }
 
 // Update the metadata that changes on page change
-function updatePageMetadata(data, pagenumber) {
+function updatePageMetadata(data, pagenumber, isReload = false) {
    var newURL = "/view/" + context.docId + "/" + pagenumber;
 
    // Set download image statement
@@ -201,7 +207,12 @@ function updatePageMetadata(data, pagenumber) {
    updateCanonicalUrl();
 
    // update URL bar, does not work in ie9.
-   window.history.replaceState(context.docId + " page:"+ pagenumber, "Cambridge Digital Library",newURL);
+    if (isReload !== true) {
+        window.history.pushState({
+            "message": context.docId + " page:" + pagenumber,
+            "pagenumber": pagenumber
+        }, "Cambridge Digital Library", newURL);
+    }
 };
 
 function getCanonicalUrl(model = viewerModel) {
@@ -921,35 +932,54 @@ function setTranscriptionPage(data, pagenum) {
         return;
     }
 
-    let transCss = "<link href='styles/style-transcription.css' rel='stylesheet' type='text/css'/>"
-
+    // Define defaults for pages without transcriptions/text
+    let iframeData = {
+        "transcription": {
+            "id": "transcriptiondiploframe",
+            "src": "data:text/html;charset=utf-8," + encodeURIComponent(writeBlankPage(pagenum, 'No transcription available for this image'))
+        },
+        "translation": {
+            "id": "translationframe",
+            "src": "data:text/html;charset=utf-8," + encodeURIComponent(writeBlankPage(pagenum, 'No translation available for this image'))
+        }
+    };
     // diplomatic transcriptions
-    var url = data.pages[pagenum-1].transcriptionDiplomaticURL;
+    var url = data.pages[pagenum - 1].transcriptionDiplomaticURL;
     if (typeof url != 'undefined' && typeof data.allTranscriptionDiplomaticURL == 'undefined') {
-        $('#transcriptiondiploframe').removeAttr('srcdoc');
-        $('#transcriptiondiploframe').attr('src', new URL(url, context.services));
-    } else {
-        $('#transcriptiondiploframe').contents().find('head').html(transCss);
-        $('#transcriptiondiploframe').contents().find('body').html("No transcription available for this image.");
+        iframeData.transcription.src = new URL(url, context.services)
     }
 
     // translation
-    var url = data.pages[pagenum-1].translationURL;
+    var url = data.pages[pagenum - 1].translationURL;
     if (typeof url != 'undefined') {
-        $('#translationframe').removeAttr('srcdoc');
-        $('#translationframe').attr('src', new URL(url, context.services));
-    } else {
-        $('#translationframe').contents().find('head').html(transCss);
-        $('#translationframe').contents().find('body').html("No translation available for this image.");
+        iframeData.translation.src = new URL(url, context.services)
     }
 
     // set all diplomatic transcriptions (all transcriptions on one page)
     var url = data.allTranscriptionDiplomaticURL;
     if (typeof url != 'undefined') {
-        $('#transcriptiondiploframe').removeAttr('srcdoc');
-        $('#transcriptiondiploframe').attr('src', new URL(url, context.services));
+        iframeData.transcription.src = new URL(url, context.services);
     }
 
+    // Generate iframes using hash
+    for (let key in iframeData) {
+        let targetIframe = $('#' + iframeData[key].id);
+        let newIframe = targetIframe.clone();
+        newIframe.attr('src', iframeData[key].src);
+        newIframe.attr('data-test', iframeData[key].src);
+        targetIframe.replaceWith(newIframe);
+    }
+}
+
+function writeBlankPage(pagenum, message = "") {
+    return '<!DOCTYPE html><html>'
+        + '<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'
+        + '<title>Image #'+pagenum+'</title>'
+        + '<link href="https://services.prod.env.cudl.link/v1/transcription/tei/resources/cudl-resources/stylesheets/texts.css" rel="stylesheet" type="text/css">'
+        + '</head>'
+        + '<body class="junicode"><div class="transcription">'
+        + message
+        + '</div></body></html>'
 }
 
 function setupViewMoreOptions() {
