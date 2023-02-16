@@ -966,7 +966,6 @@ function setTranscriptionPage(data, pagenum) {
         let targetIframe = $('#' + iframeData[key].id);
         let newIframe = targetIframe.clone();
         newIframe.attr('src', iframeData[key].src);
-        newIframe.attr('data-test', iframeData[key].src);
         targetIframe.replaceWith(newIframe);
     }
 }
