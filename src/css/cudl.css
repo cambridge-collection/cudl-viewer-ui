@@ -320,13 +320,12 @@ h2, h3, h4, h5, h6 {
 
 .main-nav {
     background-color: #fff;
-    padding: 24px 16px;
+    padding: 5px 0 18px 0;
 }
 
 @media (min-width: 576px) {
     .main-nav {
-        padding: 32px;
-        padding-left: 0;
+        padding: 5px 0 18px 0;
     }
 }
 
@@ -338,7 +337,7 @@ h2, h3, h4, h5, h6 {
     height: 48px;
 }
 .main-nav .cam-logo .nav-right-items{
-    height: 32px;
+    height: 18px;
     margin-top: 8px;
 }
 .main-nav .icon {
@@ -387,20 +386,6 @@ button {
     text-align: inherit;
     font-size: inherit;
 }
-
-@media only screen and (max-width: 800px) {
-    .cam-logo {
-        transition: zoom 1s, margin 1s;
-        zoom: 50%;
-        margin: 28px 0 0 28px !important;
-    }
-    .main-nav {
-        transition: padding 1s;
-        padding: 0;
-    }
-
-}
-
 
 /* Hidden menu */
 
@@ -547,7 +532,7 @@ button {
     background-color: #106470;
     color:#fff;
     margin-top: 0;
-    margin-bottom: 0.5em;
+    margin-bottom: 1em;
     padding: 1px 0 1px 12px; /* Padding top needed to ensure it's visible because of fixed header */
     transition: background-color 0.1s;
 }
@@ -573,6 +558,7 @@ button {
 .cudl-banner h1 a:active {
     color: inherit;
     text-decoration: none;
+    outline: none;
 }
 
 .cudl-banner:hover {
@@ -583,6 +569,7 @@ button {
 .home .cudl-banner:hover {
     background-color: #106470;
     transition: background-color 0.1s;
+    pointer-events: none;
 }
 
 .cudl-banner:hover a, .cudl-banner a:hover {
@@ -644,6 +631,20 @@ li.campl-selected {font-weight: bold;}
     width: 100%;
 }
 
+@media only screen and (max-width: 800px) {
+    .cam-logo {
+        transition: zoom 1s, margin 1s;
+        zoom: 50%;
+        margin: 5px 0 5px 0 !important
+    }
+    .main-nav {
+        transition: padding 1s;
+        padding: 0;
+    }
+    .cudl-banner {
+        margin-bottom: 0.5em;
+    }
+}
 @media (max-width: 767px) {
     .campl-vertical-breadcrumb {font-size:18px;line-height: 24px}
     #crumbtrail li {margin:0 0 15px 0}
@@ -777,6 +778,9 @@ img {vertical-align: middle;}
     max-width: 33.3%;
     float: left;
   }
+.tile:hover .tile-caption a {
+    background-color: #E5007D;
+}
   @media screen and (max-width: 800px) {
     .tile {
       flex: 50%;
@@ -879,6 +883,13 @@ img {vertical-align: middle;}
     float: left;
     padding: 10px;
   }
+.article h2 a {
+    color: #000000;
+}
+.article:hover h2 a {
+    text-decoration: underline;
+    color: #E5007D;
+}
   @media screen and (max-width: 800px) {
     .article {
       flex: 50%;
