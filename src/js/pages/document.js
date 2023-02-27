@@ -396,13 +396,17 @@ function setupSeaDragon(data) {
 
 function setupInfoPanel(data) {
 
-    let breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li><li><a href=\""
+    let breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li>"
+            + "<li><a href=\"/collections/\">Browse</a></li>"
+            + "<li><a href=\""
             + context.collectionURL
             + "\">"
             + context.collectionTitle
             + "</a></li><li class='active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
     if (context.parentCollectionTitle) {
-        breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li><li><a href=\""
+        breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li>"
+                + "<li><a href=\"/collections/\">Browse</a></li>"
+                + "<li><a href=\""
                 + context.parentCollectionURL
                 + "\">"
                 + context.parentCollectionTitle
