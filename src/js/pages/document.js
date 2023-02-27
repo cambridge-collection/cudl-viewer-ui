@@ -407,7 +407,9 @@ function setupSeaDragon(data) {
 
 function setupInfoPanel(data) {
 
-    let breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li><li><a href=\""
+    let breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li>"
+            + "<li><a href=\"/collections/\">Browse</a></li>"
+            + "<li><a href=\""
             + context.collectionURL
             + "\">"
             + context.collectionTitle
