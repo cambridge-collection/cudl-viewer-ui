@@ -423,7 +423,7 @@ button {
 .dropdown-content {
     position: absolute;
     background-color: #6BBBAE;
-    height: 100vh;
+    height:  370px;
     overflow-x: hidden;
     right: 0;
     top: 0;
@@ -1084,6 +1084,55 @@ img {vertical-align: middle;}
 
 .collection_abstract {
     font-size: 0.85rem;
+}
+
+.builtby {
+    text-align: right;
+    float: right;
+}
+
+
+/* XL 'Search' and 'All Collections' buttons on homepage */
+.xl-button-caption {
+    background-color: #106470;
+    color: #fff;
+    display: inline-flex;
+    padding: 1rem !important;
+    width: 100%;
+}
+
+.xl-button-caption a:visited {
+    color: #fff;
+}
+
+.xl-button-caption:hover {
+    background-color: #E5007D;
+}
+
+.xl-button-container {
+    max-width: 100%;
+    display: flex;
+    padding: 30px 0 15px 0;
+}
+
+.xl-button-container a {
+    width: 100%;
+}
+
+.xl-button-left  {
+    max-width: 100%;
+    width: 100%;
+    display: inline-flex;
+}
+
+.xl-button-right {
+    max-width: 100%;
+    width: 100%;
+    display: inline-flex;
+}
+
+.xl-button-padding {
+    width: 30px;
 }
 
 
