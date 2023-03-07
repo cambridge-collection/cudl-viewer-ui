@@ -388,6 +388,10 @@ button {
     font-size: inherit;
 }
 
+.nav-right-items div.search {
+    display: inline-block;
+}
+
 /* Hidden menu */
 
 .dropbtn {
