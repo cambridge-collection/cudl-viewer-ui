@@ -1104,6 +1104,8 @@ img {vertical-align: middle;}
     display: inline-flex;
     padding: 0;
     width: 100%;
+    font-size: 1.25rem;
+    line-height:1.5
 }
 
 .xl-button-caption a, .xl-button-caption a:link, .xl-button-caption a:visited,.xl-button-caption a:hover, .xl-button-caption a:focus, .xl-button-caption a:active {
