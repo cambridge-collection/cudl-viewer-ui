@@ -347,6 +347,7 @@ h2, h3, h4, h5, h6 {
     padding: 0 0 0 40px;
     background-size: 35.2px 35.2px !important;
 }
+
 .icon.icon-menu {
     background-image: url(/img/interface/noun_menu_black.svg);
 }
@@ -385,6 +386,10 @@ button {
     border: 0;
     text-align: inherit;
     font-size: inherit;
+}
+
+.nav-right-items div.search {
+    display: inline-block;
 }
 
 /* Hidden menu */
@@ -1097,12 +1102,16 @@ img {vertical-align: middle;}
     background-color: #106470;
     color: #fff;
     display: inline-flex;
-    padding: 1rem !important;
+    padding: 0;
     width: 100%;
+    font-size: 1.5rem;
+    line-height:1.5;
+    text-align: center;
 }
 
-.xl-button-caption a:visited {
+.xl-button-caption a, .xl-button-caption a:link, .xl-button-caption a:visited,.xl-button-caption a:hover, .xl-button-caption a:focus, .xl-button-caption a:active {
     color: #fff;
+    text-decoration:none;
 }
 
 .xl-button-caption:hover {
@@ -1115,10 +1124,6 @@ img {vertical-align: middle;}
     padding: 30px 0 15px 0;
 }
 
-.xl-button-container a {
-    width: 100%;
-}
-
 .xl-button-left  {
     max-width: 100%;
     width: 100%;
@@ -1129,6 +1134,12 @@ img {vertical-align: middle;}
     max-width: 100%;
     width: 100%;
     display: inline-flex;
+}
+
+.xl-button-left a, .xl-button-right a {
+    display: inline-block;
+    width: 100%;
+    padding: 1rem;
 }
 
 .xl-button-padding {
