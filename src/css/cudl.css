@@ -243,6 +243,8 @@ body {
     color: #212529;
     text-align: left;
     background-color: #fff;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 body, h1, h2, h3, h4, h5, h6 {
@@ -342,12 +344,50 @@ h2, h3, h4, h5, h6 {
 
 .main-nav {
     background-color: #fff;
-    padding: 5px 0 18px 0;
 }
 
-@media (min-width: 576px) {
-    .main-nav {
-        padding: 5px 0 18px 0;
+.main-nav a.item {
+    display: inline-block;
+    height: fit-content;
+}
+
+@media only screen and (max-width: 576px) {
+    .fixed-top {
+        height: 56px;
+    }
+
+    .main-nav .cam-logo {
+        height: 24px;
+        transition: height 1s;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .fixed-top {
+        height: 56px;
+    }
+    .main-nav .cam-logo {
+        height: 24px;
+        transition: height 1s;
+    }
+    .main-nav a.item {
+        margin-top: 9px;
+    }
+    .nav-right-items {
+      margin-top: 0
+  }
+}
+
+@media only screen and (min-width: 800px) {
+    .fixed-top {
+        height: 79px;
+    }
+    .main-nav .cam-logo {
+        height: 48px;
+        transition: height 1s;
+    }
+    .main-nav a.item, .nav-right-items {
+        margin-top: 13px;
     }
 }
 
@@ -355,15 +395,13 @@ h2, h3, h4, h5, h6 {
     position:relative;
 }
 
-.main-nav .cam-logo {
-    height: 48px;
-}
 .main-nav .cam-logo .nav-right-items{
     height: 18px;
     margin-top: 8px;
 }
 .main-nav .icon {
     padding: 0 0 0 40px;
+    background-position: right;
 }
 .main-nav .icon .nav-right-items{
     padding: 0 0 0 40px;
@@ -603,6 +641,11 @@ button {
     color: #fff !important;
 }
 
+@media only screen and (max-width: 800px) {
+    .cudl-banner {
+        margin-bottom: 0.5em;
+    }
+}
 
 /* Crumbtrail classes */
 
@@ -658,20 +701,6 @@ li.campl-selected {font-weight: bold;}
     width: 100%;
 }
 
-@media only screen and (max-width: 800px) {
-    .cam-logo {
-        transition: zoom 1s, margin 1s;
-        zoom: 50%;
-        margin: 5px 0 5px 0 !important
-    }
-    .main-nav {
-        transition: padding 1s;
-        padding: 0;
-    }
-    .cudl-banner {
-        margin-bottom: 0.5em;
-    }
-}
 @media (max-width: 767px) {
     .campl-vertical-breadcrumb {font-size:18px;line-height: 24px}
     #crumbtrail li {margin:0 0 15px 0}
@@ -1174,26 +1203,3 @@ img {vertical-align: middle;}
     width: 30px;
 }
 
-
-/* Fixed-top classes */
-
-/*.fixed-top {*/
-/*    position: fixed;*/
-/*    top: 0;*/
-/*    right: 0;*/
-/*    left: 0;*/
-/*    z-index: 1030;*/
-/*}*/
-
-/*.cudl-banner {*/
-/*    padding-top: 120px*/
-/*}*/
-
-
-/**[id]:before {*/
-/*    display: block;*/
-/*    content: " ";*/
-/*    margin-top: -120px;*/
-/*    height: 120px;*/
-/*    visibility: hidden;*/
-/*}*/
