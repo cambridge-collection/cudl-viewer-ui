@@ -243,6 +243,8 @@ body {
     color: #212529;
     text-align: left;
     background-color: #fff;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 body, h1, h2, h3, h4, h5, h6 {
@@ -264,6 +266,15 @@ h2, h3, h4, h5, h6 {
     font-size: 1.5em;
 }
 
+.homepage h2 {
+    font-size: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.homepage .follow_us h2 {
+    margin-bottom: 0.6rem;
+}
 
 /* Misc */
 
@@ -292,40 +303,91 @@ h2, h3, h4, h5, h6 {
     padding-bottom: 15px;
 }
 
-.more-link-container{
-
-        bottom: 40px;
-        margin-left: auto;
-        margin-right: 0;
-        width: 25rem;
-
+.more-link {
+    position:relative;
+    display:table;
+    margin: 0.625rem 0 0 auto;
 }
 
-.more-link a{
-    background-color: #000;
+.more-link a, .more-link a:link, .more-link a:visited, .more-link a:hover, .more-link a:focus, .more-link a:active {
+    display:table-row;
+    min-width: 12rem;
     color: #fff;
-    padding: 0.6rem;
-    text-align: center;
-    font-size: 1rem;
+    background-color: #000000;
+    font-size: 1.25rem;
+    margin: 0;
     text-decoration: none;
-    float:right;
 }
 
 .more-link a:hover{
-    background-color: #106470;
-    text-decoration: none;
+    background-color: #E5007D;
+}
+
+.more-link a span, .more-link a i {
+    padding: 0.6rem 0rem;
+}
+
+.more-link a span {
+    display:table-cell;
+    text-align: center;
+    padding-left: 1.5rem;
+    padding-right:1.5rem;
+}
+
+.more-link a i {
+    position: absolute;
+    right: 3px;
+    top: 0.4rem;
 }
 
 /* Classes related to the uoc navigation bar */
 
 .main-nav {
     background-color: #fff;
-    padding: 5px 0 18px 0;
 }
 
-@media (min-width: 576px) {
-    .main-nav {
-        padding: 5px 0 18px 0;
+.main-nav a.item {
+    display: inline-block;
+    height: fit-content;
+}
+
+@media only screen and (max-width: 576px) {
+    .fixed-top {
+        height: 56px;
+    }
+
+    .main-nav .cam-logo {
+        height: 24px;
+        transition: height 1s;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .fixed-top {
+        height: 56px;
+    }
+    .main-nav .cam-logo {
+        height: 24px;
+        transition: height 1s;
+    }
+    .main-nav a.item {
+        margin-top: 9px;
+    }
+    .nav-right-items {
+      margin-top: 0
+  }
+}
+
+@media only screen and (min-width: 800px) {
+    .fixed-top {
+        height: 79px;
+    }
+    .main-nav .cam-logo {
+        height: 48px;
+        transition: height 1s;
+    }
+    .main-nav a.item, .nav-right-items {
+        margin-top: 13px;
     }
 }
 
@@ -333,15 +395,13 @@ h2, h3, h4, h5, h6 {
     position:relative;
 }
 
-.main-nav .cam-logo {
-    height: 48px;
-}
 .main-nav .cam-logo .nav-right-items{
     height: 18px;
     margin-top: 8px;
 }
 .main-nav .icon {
     padding: 0 0 0 40px;
+    background-position: right;
 }
 .main-nav .icon .nav-right-items{
     padding: 0 0 0 40px;
@@ -581,6 +641,11 @@ button {
     color: #fff !important;
 }
 
+@media only screen and (max-width: 800px) {
+    .cudl-banner {
+        margin-bottom: 0.5em;
+    }
+}
 
 /* Crumbtrail classes */
 
@@ -636,20 +701,6 @@ li.campl-selected {font-weight: bold;}
     width: 100%;
 }
 
-@media only screen and (max-width: 800px) {
-    .cam-logo {
-        transition: zoom 1s, margin 1s;
-        zoom: 50%;
-        margin: 5px 0 5px 0 !important
-    }
-    .main-nav {
-        transition: padding 1s;
-        padding: 0;
-    }
-    .cudl-banner {
-        margin-bottom: 0.5em;
-    }
-}
 @media (max-width: 767px) {
     .campl-vertical-breadcrumb {font-size:18px;line-height: 24px}
     #crumbtrail li {margin:0 0 15px 0}
@@ -869,16 +920,15 @@ img {vertical-align: middle;}
     list-style: none;
   }
 
-
   .watch-list-ul a{
       color:#000;
   }
 
-
-
   .watch-list-item {
-      padding-bottom: 50px;
+      font-size: 1.1rem;
+      padding-bottom: 2rem;
   }
+
 /* Mini article classes */
 
 .article {
@@ -888,6 +938,11 @@ img {vertical-align: middle;}
     float: left;
     padding: 10px;
   }
+
+.article h2 {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+}
 .article h2 a {
     color: #000000;
 }
@@ -895,6 +950,12 @@ img {vertical-align: middle;}
     text-decoration: underline;
     color: #E5007D;
 }
+
+.article p {
+    margin-top:0;
+    margin-bottom:0;
+}
+
   @media screen and (max-width: 800px) {
     .article {
       flex: 50%;
@@ -910,10 +971,6 @@ img {vertical-align: middle;}
   }
 
 /* Social media icons */
-
-.social{
-    padding-bottom: 20px;
-}
 
 .icon {
     background-position: left;
@@ -1146,26 +1203,3 @@ img {vertical-align: middle;}
     width: 30px;
 }
 
-
-/* Fixed-top classes */
-
-/*.fixed-top {*/
-/*    position: fixed;*/
-/*    top: 0;*/
-/*    right: 0;*/
-/*    left: 0;*/
-/*    z-index: 1030;*/
-/*}*/
-
-/*.cudl-banner {*/
-/*    padding-top: 120px*/
-/*}*/
-
-
-/**[id]:before {*/
-/*    display: block;*/
-/*    content: " ";*/
-/*    margin-top: -120px;*/
-/*    height: 120px;*/
-/*    visibility: hidden;*/
-/*}*/
