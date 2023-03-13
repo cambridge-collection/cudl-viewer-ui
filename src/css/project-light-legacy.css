@@ -152,7 +152,7 @@
 }
 /* Blockquote formatting */
 
-blockquote {padding: 0 0 0 25px;margin: 18px 0;font-style:italic;background:url(/img/interface/bg-blockquote-top.png) no-repeat top left}
+blockquote {font-size:19px; padding: 0 0 0 25px;margin: 18px 0;font-style:italic;background:url(/img/interface/bg-blockquote-top.png) no-repeat top left}
 blockquote p {margin-bottom: 10px;font-weight: 300;line-height: 22.5px;float:left;padding-right:25px}
 blockquote p.campl-quote-mark{background:url(/img/interface/bg-blockquote-bottom.png) no-repeat bottom right;}
 blockquote cite {display: block;line-height: 18px;color: #999999;clear:both}
@@ -161,5 +161,6 @@ q:before,q:after,blockquote:before,blockquote:after {content: ""; content: none;
 blockquote.campl-float-right {margin-left:20px;width:230px;margin-top:0;}
 blockquote.campl-float-right p {padding-right:0;background:url(/img/interface/bg-blockquote-bottom.png) no-repeat bottom right;}
 blockquote cite {
+    font-size: 13px;
     margin-top: 1rem;
 }
