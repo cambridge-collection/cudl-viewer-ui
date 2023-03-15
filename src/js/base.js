@@ -11,7 +11,8 @@ import { setup as setupQuickSearch } from './quicksearch';
 import { displayCookieNotice } from './cudl';
 import { resizeLogoColumn } from './footer';
 import { registerCsrfPrefilter } from './ajax-csrf';
-import { showSlides } from './mySlides-carousel'
+import { showSlides } from './mySlides-carousel';
+import { setupDropdownMenu } from "./dropdownMenu";
 
 function init() {
     // 3rd party libs included for their side-effects
@@ -30,6 +31,7 @@ function init() {
         displayCookieNotice();
         resizeLogoColumn();
         showSlides();
+        setupDropdownMenu();
     });
 }
 
