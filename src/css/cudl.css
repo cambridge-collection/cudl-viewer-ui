@@ -276,6 +276,23 @@ h2, h3, h4, h5, h6 {
     margin-bottom: 0.6rem;
 }
 
+a.campl-skipTo {
+    position: absolute;
+    left: 0;
+    margin: 0.5rem;
+    padding: 0.25rem;
+    transform: translateX(-200%);
+    transition: transform 0.3s;
+}
+
+a.campl-skipTo:focus {
+    transform: translateX(0%);
+}
+
+a.campl-skipTo:focus + .main-nav-section {
+    padding-top: 3rem;
+}
+
 /* Misc */
 
 .clearfix:after {
