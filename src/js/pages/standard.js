@@ -6,7 +6,7 @@
 import $ from 'jquery';
 
 // Bootstrap styles
-import '../../less/bootstrap/cudl-bootstrap.less';
+// import '../../less/bootstrap/cudl-bootstrap.less';
 
 // Use the normal CUDL style
 import '../../css/style.css';

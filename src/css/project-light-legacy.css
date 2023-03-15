@@ -1,0 +1,166 @@
+.campl-scale-with-grid {
+    max-width: 100%;
+    height: auto;
+}
+
+.ir {
+    display: block;
+    border: 0;
+    text-indent: -999em;
+    overflow: hidden;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    text-align: left;
+    direction: ltr;
+}
+
+.lt-ie8 .ir {
+    line-height: 0;
+}
+
+.ir br {
+    display: none;
+}
+
+.clearfix:before, .clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.lt-ie8 .clearfix {
+    zoom: 1;
+}
+
+.campl-teaser-title {
+    font-size: 19px;
+    line-height: 1.5;
+}
+
+.campl-focus-teaser a, .campl-focus-teaser a:focus, .campl-focus-teaser a:hover {
+    color: #fff;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.campl-teaser-title a {
+    color: #171717
+}
+
+.campl-focus-teaser a {
+    color: #fff
+}
+
+/* focus links */
+.campl-focus-link {
+    width: 33px;
+    height: 33px;
+    background: #313131 url(../img/icon-fwd-btn.png) 14px 13px no-repeat;
+    position: absolute;
+    bottom: 0;
+    right: 0
+}
+
+/* content containers - structural */
+.campl-content-container {
+    padding: 20px;
+}
+
+.campl-side-padding {
+    padding: 0 20px
+}
+
+.campl-horizontal-teaser-img,
+.campl-right-padding {
+    padding: 0 20px 0 0
+}
+
+.campl-horizontal-teaser-txt,
+.campl-left-padding {
+    padding: 0 0 0 20px
+}
+
+.campl-focus-teaser .campl-horizontal-teaser-img,
+.campl-quicklinks-list {
+    padding: 0 0 0 0
+}
+
+.campl-focus-teaser .campl-horizontal-teaser-txt {
+    padding: 15px 15px 25px 15px
+}
+
+/* teasers */
+.campl-teaser {
+    clear: both
+}
+
+.campl-teaser p {
+    margin-bottom: 20px;
+}
+
+.campl-teaser-img-link {
+    position: relative;
+    display: block
+}
+
+.campl-teaser-img-link:focus .campl-audio-overlay,
+.campl-teaser-img-link:hover .campl-audio-overlay {
+    background-position: -97px -10px
+}
+
+.campl-teaser-img-link:focus .campl-video-overlay,
+.campl-teaser-img-link:hover .campl-video-overlay {
+    background-position: -98px -108px
+}
+
+.campl-focus-teaser {
+    margin-bottom: 20px;
+    position: relative
+}
+
+.campl-focus-teaser-img {
+    width: 41.6667%;
+    float: left;
+    margin-right: 0;
+    padding: 0;
+}
+
+.campl-focus-teaser-txt {
+    width: 58.3333%;
+    float: left;
+    margin-right: 0;
+    padding: 0;
+}
+
+.lt-ie8 .campl-focus-teaser-img {
+    width: 41.1667%;
+}
+
+.lt-ie8 .campl-focus-teaser-txt {
+    width: 58.1333%;
+}
+
+.campl-focus-teaser {
+    background: #106470;
+}
+
+.campl-focus-link {
+    background-color: #0c5963
+}
+/* Blockquote formatting */
+
+blockquote {font-size:19px; padding: 0 0 0 25px;margin: 18px 0;font-style:italic;background:url(/img/interface/bg-blockquote-top.png) no-repeat top left}
+blockquote p {margin-bottom: 10px;font-weight: 300;line-height: 22.5px;float:left;padding-right:25px}
+blockquote p.campl-quote-mark{background:url(/img/interface/bg-blockquote-bottom.png) no-repeat bottom right;}
+blockquote cite {display: block;line-height: 18px;color: #999999;clear:both}
+blockquote cite:before {content: '\2014 \00A0';}
+q:before,q:after,blockquote:before,blockquote:after {content: ""; content: none;}
+blockquote.campl-float-right {margin-left:20px;width:230px;margin-top:0;}
+blockquote.campl-float-right p {padding-right:0;background:url(/img/interface/bg-blockquote-bottom.png) no-repeat bottom right;}
+blockquote cite {
+    font-size: 13px;
+    margin-top: 1rem;
+}
