@@ -465,18 +465,18 @@ button {
     cursor: pointer;
 }
 
-.closebtn {
+.closebtn.icon {
+    display: block;
     background-color: #6BBBAE;
     background-image: url(/img/interface/noun_cross_black.svg);
     background-position: left;
-    float: right;
+    width: 2.2rem;
     padding: 0;
     font-size: 16px;
     height: 20px;
     border: none;
     cursor: pointer;
     color: #000;
-    padding-left: 2.5rem !important;
 }
 
   .dropdown {
@@ -493,13 +493,11 @@ button {
     right: 0;
     top: 0;
     overflow: auto;
-    transition: .5s;
+    transition: width .5s;
     z-index: 1;
-    padding-top: 1.5rem;
+    padding: 0;
     width: 0;
     border-style: none;
-    padding-left: 0;
-    padding-right: 0
 }
 
 .dropdown-content a {
@@ -516,7 +514,6 @@ button {
 .dropdown-content.show {
     display: block;
     width: 50%;
-    padding-top: 1.5rem;
 }
 
 .dropdown-content.show ul {
@@ -538,7 +535,7 @@ button {
     list-style: none;
 }
 
-.dropdown-content a {
+.dropdown-content ul a {
     color: #fff;
     font-size: 1.25em;
     /*padding: 12px 16px;*/
@@ -555,12 +552,14 @@ button {
 }
 #myDropdown .clearfix {
     height: 3rem;
+    position: relative;
 }
-#myDropdown .closebtn {
+
+#menuDropdownCloseButton {
     position: absolute;
-    right: 12px;
+    right: 16px;
     top: 24px;
-    margin:0;
+    display: block;
 }
 
 @media screen and (max-width: 600px) {
@@ -580,11 +579,12 @@ button {
         font-size: 0.75rem !important;
     }
 
-    #myDropdown .closebtn {
-        position: absolute;
-        right: 0;
+    #menuDropdownCloseButton {
+        right: 12px;
         top: 16px;
-        padding-left: 2.5rem !important;
+    }
+
+    #myDropdown .closebtn {
         background-size: 1.75rem 1.75rem !important;
     }
 }
