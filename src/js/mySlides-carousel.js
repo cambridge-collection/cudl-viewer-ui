@@ -4,6 +4,11 @@ export function showSlides() {
     let i;
     const slides = document.getElementsByClassName("mySlides");
     const dots = document.getElementsByClassName("dot");
+
+    if (slides === undefined || slides.length===0 ) {
+        return;
+    }
+
     for (i = 0; i < slides.length; i++) {
         slides[i].style.display = "none";
     }
