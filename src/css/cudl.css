@@ -235,6 +235,10 @@ a:focus {
     outline: 6px solid #E5007D;
     outline-offset: 0;
 }
+html {
+    margin:0;
+    padding:0
+}
 
 body {
     font-size: 1rem;
@@ -243,8 +247,9 @@ body {
     color: #212529;
     text-align: left;
     background-color: #fff;
-    margin-top: 0;
-    margin-bottom: 0;
+    margin:0 8px;
+    padding:0;
+    height: 100%;
 }
 
 body, h1, h2, h3, h4, h5, h6 {
@@ -359,12 +364,28 @@ a.campl-skipTo:focus + .main-nav-section {
 
 /* Classes related to the uoc navigation bar */
 
+.masthead-container {
+    position: relative;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.flex-center {
+    width: 100%;
+    max-width: 1280px;
+}
+
 .main-nav {
     background-color: #fff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .main-nav a.item {
-    display: inline-block;
+    display: block;
     height: fit-content;
 }
 
@@ -452,7 +473,6 @@ a.campl-skipTo:focus + .main-nav-section {
 }
 .main-nav .nav-right-items {
     font-size: 32px;
-    float:right;
 }
 
 .bg-white {
@@ -507,7 +527,7 @@ button {
     background-color: #6BBBAE;
     height:  370px;
     overflow-x: hidden;
-    right: 0;
+    right: 0px;
     top: 0;
     overflow: auto;
     transition: width .5s;
@@ -1220,3 +1240,47 @@ img {vertical-align: middle;}
     width: 30px;
 }
 
+
+/* Fixed-top classes */
+.main-nav-section {
+    width: 100%;
+    max-width: 1280px;
+    background: #fff;
+    margin: 0 auto;
+}
+
+.fixed-top {
+    /* height of item is 79px when screen-width is greater than 800px; 56px otherwise. */
+    position: fixed;
+    display:block;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 1030;
+    background: #fff;
+    margin: 0 8px;
+}
+
+.container.banner {
+    margin-top: 79px;
+}
+
+/* This ensures that any hyperlinks to local id values are not obscured by the fixed masthead.
+   This code will fall apart if the item has top padding or a border
+   https://nicolasgallagher.com/jump-links-and-viewport-positioning/demo/
+ */
+:target {
+    scroll-margin-top: 79px; /* fixed header height*/
+    scroll-snap-margin-top: 79px; /* iOS 11 and older */
+}
+
+@media only screen and (max-width: 800px) {
+    .container.banner {
+        /* Body has 8px margin, so 50-8px */
+        margin-top: 56px;
+    }
+    :target {
+        scroll-margin-top: 56px; /* fixed header height*/
+        scroll-snap-margin-top: 56px; /* iOS 11 and older */
+    }
+}
