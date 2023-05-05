@@ -95,52 +95,17 @@ function loadPage(pagenumber, isReload = false) {
 
     // test for images
     var imageavailable = true;
-    if (typeof(data.pages[pagenumber-1].displayImageURL) == "undefined") {
+    if (typeof(data.pages[pagenumber-1].IIIFImageURL) == "undefined") {
         viewer._showMessage("No image available for page: "+data.pages[pagenumber-1].label);
         imageavailable = false;
     }
 
-    function openDzi(dziPath) {
-
-        // ajax call to fetch .dzi
-        $.ajax({
-            url: context.imageServer + dziPath,
-            'type': 'GET',
-            // Handle data conversion ourselves
-            dataType: 'text'
-        }).done(function(xml) {
-            // Seadragon AJAX supported being given a DZI as a string
-            // and rewriting the tilesource to an external URL
-            // openseadragon won't accept an external DZI so we build an
-            // inline tilesource with a modified URL
-
-            let $xml = $($.parseXML(xml));
-            let $image = $xml.find('Image');
-            let $size = $xml.find('Size');
-            var path = dziPath.substring(0, dziPath.length - 4);
-
-            var dzi = {
-                Image : {
-                    xmlns : $image.attr('xmlns'),
-                    Url : context.imageServer + path + '_files/',
-                    Format : $image.attr('Format'),
-                    Overlap : $image.attr('Overlap'),
-                    TileSize : $image.attr('TileSize'),
-                    Size : {
-                        Height : $size.attr('Height'),
-                        Width : $size.attr('Width')
-                    }
-                }
-            };
-
-            viewer.open(dzi);
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            viewer._showMessage("Image server temporarily unavailable");
-        });
+    function openIIIF(iiifPath) {
+        viewer.open(context.iiifImageServer + iiifPath + "/info.json");
     }
 
     // open Image
-    if (imageavailable) { openDzi(data.pages[pagenumber - 1].displayImageURL); }
+    if (imageavailable) { openIIIF(data.pages[pagenumber - 1].IIIFImageURL); }
 
     // update current page
     viewerModel.setPageNumber(pagenumber);
@@ -486,7 +451,7 @@ function setupInfoPanel(data) {
 
     // NB: This will disable thumbnails if the first page has no image. This assumes that
     // the there are documents either with a complete set of thumbnails or no thumbnails.
-    if (typeof data.pages[0].thumbnailImageURL == 'undefined') {
+    if (typeof data.pages[0].IIIFImageURL == 'undefined') {
         $('#rightTabs a[href="#thumbnailstab"]').parent().addClass("disabled");
         $('#rightTabs a[href="#thumbnailstab"]').click(function(e){return false;}); // disable link;
     }
@@ -537,8 +502,10 @@ function addBookmark() {
         data = viewerModel.getMetadata();
 
     // Generate bookmarkPath
-    var thumbnailURL = context.imageServer+data.pages[pageNum-1].thumbnailImageURL;
-    var bookmarkPath = "/mylibrary/addbookmark/?itemId="+context.docId+"&page="+pageNum+"&thumbnailURL="+encodeURIComponent(thumbnailURL);
+    // thumbnailImage should be e.g."MS-ADD-03996-000-00001.jp2" as we
+    // cannot always generate this from the itemid and pagenum.
+    var thumbnailImage = data.pages[pageNum-1].IIIFImageURL;
+    var bookmarkPath = "/mylibrary/addbookmark/?itemId="+context.docId+"&page="+pageNum+"&thumbnailImage="+encodeURIComponent(thumbnailImage);
 
     // ajax call to make the bookmark:
     $.post(bookmarkPath).done(function(xml) {
@@ -682,16 +649,16 @@ function showThumbnailPage(pagenum) {
                             + (data.pages[i].sequence)
                             + ");return false;' class='thumbnail'><img src='"
                             + context.imageServer
-                            + data.pages[i].thumbnailImageURL
+                            + data.pages[i].IIIFImageURL
                             + "' ");
 
             if (data.pages[i].thumbnailImageOrientation == "portrait") {
                 thumbnailhtml = thumbnailhtml
-                        .concat("style='height:150px;'><div class='caption'>"
+                    .concat("/full/,150/0/default.jpg' style='height:150px;'><div class='caption'>"
                                 + data.pages[i].label + "</div></a></div>");
             } else {
                 thumbnailhtml = thumbnailhtml
-                        .concat("style='width:130px;'><div class='caption'>"
+                    .concat("/full/150,/0/default.jpg' style='width:150px;'><div class='caption'>"
                                 + data.pages[i].label + "</div></a></div>");
             }
 
@@ -1128,7 +1095,7 @@ $(document).ready(function() {
     // Read in the JSON
     $.getJSON(context.jsonURL).done(function(data) {
 
-        // set seadragon options and load in dzi.
+        // set seadragon options and load in image.
         if(pageNum === 0) { pageNum = 1; } // page 0 returns item level metadata.
 
         viewerModel = new ViewerModel({
