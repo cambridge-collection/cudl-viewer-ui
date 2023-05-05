@@ -16,7 +16,8 @@
     "jquery-ui": "^1.12.1",
     "jquery.easing": "^1.4.1",
     "lodash": "^4.17.15",
-    "openseadragon": "^2.4.1",
+    "d3": "7.8.5",
+    "openseadragon": "^4.1.0",
     "recursive-iterator": "^3.3.0",
     "spin.js": "^4.1.0"
   },
@@ -58,7 +59,6 @@
   },
   "license": "UNLICENSED",
   "private": true,
-  "optionalDependencies": {},
   "scripts": {
     "show-config": "babel-node ./bin/show-config.js"
   }
