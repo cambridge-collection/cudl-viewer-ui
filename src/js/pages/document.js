@@ -15,6 +15,8 @@ import $ from 'jquery';
 import 'jquery-ui/ui/widgets/slider';
 import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
+import * as Overlay from 'svg-overlay';
+import * as d3 from 'd3';
 import range from 'lodash/range';
 import { setupSimilarityTab } from 'cudl-viewer-bubbles';
 import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
@@ -230,6 +232,21 @@ function setupSeaDragon(data) {
         },
         showNavigator: showNav,
         navigatorPosition: "TOP_LEFT"
+    });
+
+    var overlay = viewer.svgOverlay();
+
+    var d3Poly = d3.select(overlay.node()).append("polygon")
+        .style('fill', '#f00')
+        .attr("points","0.14075,0.788 0.63725,0.77125 0.638,0.74575 0.1415,0.76275")
+        .style("opacity", 0.5);
+
+    overlay.onClick(d3Poly.node(), function() {
+        console.log('click', arguments);
+    });
+
+    $(window).resize(function() {
+        overlay.resize();
     });
 
     // Rotation slider using jQuery UI slider
