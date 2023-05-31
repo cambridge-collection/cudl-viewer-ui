@@ -862,18 +862,29 @@ img {vertical-align: middle;}
 
 .tile-container{
     display: flex;
-  flex-wrap: wrap;
+    flex-wrap: wrap;
     padding-bottom: 10px;
 }
-.tile {
+
+.tile, .article {
     position: relative;
     flex: 33.3%;
     max-width: 33.3%;
-    float: left;
   }
-.tile:hover .tile-caption a {
+
+.tile-caption {
     background-color: #E5007D;
 }
+
+.tile a, .tile-container .article a {
+    display: block;
+    width: 100%;
+}
+
+.tile a:focus {
+    outline-offset: -6px;
+}
+
   @media screen and (max-width: 800px) {
     .tile {
       flex: 50%;
@@ -895,29 +906,31 @@ img {vertical-align: middle;}
     height: auto;
   }
 
-  .tile-caption-container{
+.tile-caption-container {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    margin-left: 0;
+    width: 25rem;
+}
 
-        position: absolute;
-        bottom: 80px;
-        left: 0;
-        right: 0;
-        margin-left: 0;
-        width: 25rem;
-
-
-  }
-
-  .tile-caption a {
+.tile-caption {
     background-color: #000;
     color: #fff;
-      padding: 0.6rem;
-      text-align: center;
+    padding: 0.6rem;
+    text-align: center;
     font-size: 1.25rem;
     text-decoration: none;
+}
 
-  }
-
-  .tile-caption a:hover{
+  .tile:hover .tile-caption, .tile a:focus .tile-caption {
+/* Jennie, , .tile a:focus .tile-caption could be removed.
+   It replicates the hover behaviour on the captions during
+   a focus state. I think it looks nice, but it's also inconsistent
+   with how focus works everywhere else. Because the tiles are themselves
+   different, I'm not sure whether to keep it or not.
+ */
       background-color: #E5007D;
   }
 
@@ -932,6 +945,11 @@ img {vertical-align: middle;}
       flex: 66%;
       max-width: 66%;
       float: left;
+  }
+
+  .watch-feature iframe {
+      width: 100%;
+      border: none;
   }
 
   .watch-list{
@@ -972,7 +990,6 @@ img {vertical-align: middle;}
     position: relative;
     flex: 33.3%;
     max-width: 33.3%;
-    float: left;
     padding: 10px;
   }
 
@@ -980,10 +997,11 @@ img {vertical-align: middle;}
     font-size: 1.5rem;
     margin-top: 1rem;
 }
-.article h2 a {
+.article a, .article:hover a p {
     color: #000000;
+    text-decoration: none;
 }
-.article:hover h2 a {
+.article:hover a h2 {
     text-decoration: underline;
     color: #E5007D;
 }
@@ -1009,34 +1027,35 @@ img {vertical-align: middle;}
 
 /* Social media icons */
 
+.follow_us a {
+    display: inline-block;
+    margin-right: 0.75rem;
+}
+
 .icon {
+    display: inline-block;
     background-position: left;
     background-repeat: no-repeat;
     background-size: 2.2rem 2.2rem !important;
-    padding: 0 0 0 5rem;
+    padding: 0;
+    height: 2.2rem;
+    width: 2.2rem;
 }
 
 .icon-facebook {
     background-image: url(https://www.cam.ac.uk/sites/www.cam.ac.uk/themes/fresh/images/interface/icons/facebook_black.svg);
-    padding: 1.5rem;
 }
 
 .icon-instagram {
     background-image: url(https://www.cam.ac.uk/sites/www.cam.ac.uk/themes/fresh/images/interface/icons/instagram_black.svg);
-    padding: 1.5rem;
-
 }
 
 .icon-twitter {
     background-image: url(https://www.cam.ac.uk/sites/www.cam.ac.uk/themes/fresh/images/interface/icons/twitter_blue.svg);
-    padding: 1.5rem;
-
 }
 
 .icon-youtube {
     background-image: url(https://www.cam.ac.uk/sites/www.cam.ac.uk/themes/fresh/images/interface/icons/youtube_black.svg);
-    padding: 1.5rem;
-
 }
 
 
