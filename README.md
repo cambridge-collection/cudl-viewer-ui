@@ -254,8 +254,8 @@ repository.
 Push the new commits and tag to the upstream repository:
 
 ```
-$ git push origin master 1.0.0
+$ git push origin main 1.0.0
 ```
 
-(Assuming you're on the master branch and you just created `1.0.0`. Adjust
+(Assuming you're on the main branch and you just created `1.0.0`. Adjust
 version as appropriate.)
