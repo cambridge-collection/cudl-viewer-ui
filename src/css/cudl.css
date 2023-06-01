@@ -776,9 +776,17 @@ li.campl-selected {font-weight: bold;}
 /* Carousel Classes */
 
 * {box-sizing: border-box;}
-.mySlides {display: none;}
-img {vertical-align: middle;}
+.mySlides {
+    display: none;
+}
 
+img {
+    vertical-align: middle;
+}
+
+.mySlides img {
+    max-width: 100%;
+}
 
 /* Slideshow container */
 
@@ -924,13 +932,7 @@ img {vertical-align: middle;}
     text-decoration: none;
 }
 
-  .tile:hover .tile-caption, .tile a:focus .tile-caption {
-/* Jennie, , .tile a:focus .tile-caption could be removed.
-   It replicates the hover behaviour on the captions during
-   a focus state. I think it looks nice, but it's also inconsistent
-   with how focus works everywhere else. Because the tiles are themselves
-   different, I'm not sure whether to keep it or not.
- */
+  .tile:hover .tile-caption {
       background-color: #E5007D;
   }
 
