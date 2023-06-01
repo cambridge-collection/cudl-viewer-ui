@@ -776,9 +776,17 @@ li.campl-selected {font-weight: bold;}
 /* Carousel Classes */
 
 * {box-sizing: border-box;}
-.mySlides {display: none;}
-img {vertical-align: middle;}
+.mySlides {
+    display: none;
+}
 
+img {
+    vertical-align: middle;
+}
+
+.mySlides img {
+    max-width: 100%;
+}
 
 /* Slideshow container */
 
