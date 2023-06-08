@@ -231,7 +231,7 @@ a:hover {
     text-decoration:underline;
 }
 
-a:focus {
+a:focus, .tile a:hover, .article a:hover {
     outline: 6px solid #E5007D;
     outline-offset: 0;
 }
@@ -889,7 +889,7 @@ img {
     width: 100%;
 }
 
-.tile a:focus {
+.tile a:hover, .tile a:focus {
     outline-offset: -6px;
 }
 
@@ -932,7 +932,7 @@ img {
     text-decoration: none;
 }
 
-  .tile:hover .tile-caption {
+  .tile a:hover .tile-caption, .tile a:focus .tile-caption  {
       background-color: #E5007D;
   }
 
