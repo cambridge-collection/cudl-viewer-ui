@@ -640,57 +640,53 @@ function showThumbnailPage(pagenum) {
         // thumbnails of.
         var startIndex = props.MAX_THUMBNAIL_ITEMS_ON_PAGE * (pageNum - 1);
         var endIndex = Math.min((props.MAX_THUMBNAIL_ITEMS_ON_PAGE * pageNum) - 1,
-                data.pages.length - 1);
+            data.pages.length - 1);
         var thumbnailhtml = "";
 
         for (let i = startIndex; i <= endIndex; i++) {
 
-            if (i == startIndex) {
+            // start
+            if (i === startIndex) {
                 thumbnailhtml = thumbnailhtml
-                        .concat("<div class='thumbnail-pane' id='thumbnail"
-                                + pageNum + "'>");
+                    .concat("<div class='thumbnail-pane' id='thumbnail"
+                        + pageNum + "'>");
             }
-            if (i == startIndex || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) == 0) {
 
-                if (typeof data.textDirection !== 'undefined' && data.textDirection === 'R'){
-
+            // Setup text direction
+            if (i === startIndex || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) === 0) {
+                if (typeof data.textDirection !== 'undefined' && data.textDirection === 'R') {
                     thumbnailhtml = thumbnailhtml.concat("<div class='row row-right-to-left'>");
-
                 } else {
                     thumbnailhtml = thumbnailhtml.concat("<div class='row'>");
                 }
             }
 
-            thumbnailhtml = thumbnailhtml
-                    .concat("<div class='col-md-4'><a href='' onclick='store.loadPage("
-                            + (data.pages[i].sequence)
-                            + ");return false;' class='thumbnail'><img src='"
-                            + context.imageServer
-                            + data.pages[i].IIIFImageURL
-                            + "' ");
-
-            if (data.pages[i].thumbnailImageOrientation == "portrait") {
-                thumbnailhtml = thumbnailhtml
-                    .concat("/full/,150/0/default.jpg' style='height:150px;'><div class='caption'>"
-                                + data.pages[i].label + "</div></a></div>");
+            // Setup orientation
+            let thumbnailURL = context.iiifImageServer + data.pages[i].IIIFImageURL;
+            if (data.pages[i].thumbnailImageOrientation === "portrait") {
+                thumbnailURL = thumbnailURL.concat("/full/,150/0/default.jpg' style='height:150px");
             } else {
-                thumbnailhtml = thumbnailhtml
-                    .concat("/full/150,/0/default.jpg' style='width:150px;'><div class='caption'>"
-                                + data.pages[i].label + "</div></a></div>");
+                thumbnailURL = thumbnailURL.concat("/full/150,/0/default.jpg' style='width:150px");
             }
 
-            if (i == endIndex
-                    || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) == props.MAX_THUMBNAIL_ITEMS_ON_ROW - 1) {
-                thumbnailhtml = thumbnailhtml.concat("</div>");
-            }
-            if (i == endIndex) {
-                thumbnailhtml = thumbnailhtml.concat("</div>");
-            }
+            thumbnailhtml = thumbnailhtml
+                .concat("<div class='col-md-4'><a href='' onclick='store.loadPage("
+                    + (data.pages[i].sequence) + ");return false;' class='thumbnail'>" +
+                    "<img src='" + thumbnailURL + "'> "
+                    + "<div class='caption'>" + data.pages[i].label + "</div></a></div>");
 
+            // finish
+            if (i === endIndex
+                || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) === props.MAX_THUMBNAIL_ITEMS_ON_ROW - 1) {
+                thumbnailhtml = thumbnailhtml.concat("</div>");
+            }
+            if (i === endIndex) {
+                thumbnailhtml = thumbnailhtml.concat("</div>");
+            }
         }
 
         $('#thumbnailimages').html(thumbnailhtml);
-    };
+    }
 
     if (pagenum > 0 && pagenum <= thumbnailProps.NUM_THUMBNAIL_PAGES) {
         currentThumbnailPage = pagenum;
