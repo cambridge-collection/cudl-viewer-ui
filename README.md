@@ -198,6 +198,8 @@ webpack devserver.
 
 # Releasing
 
+**Releasing should be done from the main branch.**
+
 The Maven release plugin should be used to tag release versions and deploy
 release artifacts to the
 [CUDL Maven repository](https://wiki.cam.ac.uk/cudl-docs/CUDL_Maven_Repository).
