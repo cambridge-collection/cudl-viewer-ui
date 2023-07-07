@@ -4,6 +4,7 @@
   "description": "This only exists to record bower dependencies",
   "dependencies": {
     "fancybox": "2.1.5",
-    "paging": "1.2.0"
+    "paging": "1.2.0",
+    "svg-overlay": "*"
   }
 }

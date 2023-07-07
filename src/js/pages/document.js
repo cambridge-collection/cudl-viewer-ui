@@ -15,8 +15,8 @@ import $ from 'jquery';
 import 'jquery-ui/ui/widgets/slider';
 import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
-//import * as Overlay from 'svg-overlay';
-//import * as d3 from 'd3';
+import * as Overlay from 'svg-overlay';
+import * as d3 from 'd3';
 import range from 'lodash/range';
 import { setupSimilarityTab } from 'cudl-viewer-bubbles';
 import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
@@ -128,6 +128,8 @@ function loadPage(pagenumber, isReload = false) {
 
     // Record each page turn as a page view with Google analytics
     ga('send', 'pageview');
+
+    //test
 }
 
 // Update the metadata that changes on page change
@@ -233,21 +235,6 @@ function setupSeaDragon(data) {
         showNavigator: showNav,
         navigatorPosition: "TOP_LEFT"
     });
-
-    // var overlay = viewer.svgOverlay();
-    //
-    // var d3Poly = d3.select(overlay.node()).append("polygon")
-    //     .style('fill', '#f00')
-    //     .attr("points","0.14075,0.788 0.63725,0.77125 0.638,0.74575 0.1415,0.76275")
-    //     .style("opacity", 0.5);
-    //
-    // overlay.onClick(d3Poly.node(), function() {
-    //     console.log('click', arguments);
-    // });
-    //
-    // $(window).resize(function() {
-    //     overlay.resize();
-    // });
 
     // Rotation slider using jQuery UI slider
     $("#rotationSlider").slider({
@@ -951,7 +938,19 @@ function setTranscriptionPage(data, pagenum) {
         let newIframe = targetIframe.clone();
         newIframe.attr('src', iframeData[key].src);
         targetIframe.replaceWith(newIframe);
+
+        // targetIframe.ready(function() {
+        //     alert (iframe.contents().find("body"))
+        //
+        //     iframe.contents().find("body").append('Test');
+        // });
     }
+
+    let diploFrame = $("#transcriptiondiploframe")[0];
+    console.log(diploFrame)
+    diploFrame.onload = function() { setupTranscriptionCoords(this); }
+    //$("#transcriptiondiploframe").contents().find("body").append('Test');
+
 }
 
 function writeBlankPage(pagenum, message = "") {
@@ -1099,6 +1098,65 @@ function setupKnowMoreLinks() {
     });
 }
 
+function setupTranscriptionCoords(iframe) {
+
+    var overlay = viewer.svgOverlay();
+
+    var d3Poly = d3.select(overlay.node()).append("polygon")
+        .style('fill', '#f00')
+        .attr("points","0.14075,0.788 0.63725,0.77125 0.638,0.74575 0.1415,0.76275")
+        .style("opacity", 0.5);
+
+    const frame = document.getElementById('transcriptiondiploframe');
+    frame.contentWindow.postMessage('This is my message to the frame', '*');
+
+    //document.querySelectorAll('p').forEach(e => console.log(e.textContent));
+
+    //var scriptTag = "<script> " +
+    //    " document.querySelectorAll('br[data-points]').forEach(e => console.log(e.dataset.points)); "+
+    //    "<\/script>";
+
+    // var scriptTag = "<script>" +
+    // " function setupPoints() { alert(1); } "+
+    //     //" setupPoints(); "+
+    // "<\/script>";
+    //
+    //
+    var scriptTag2 = "<script>" +
+        " document.getElementsByTagName('body')[0].setAttribute('onload', 'alert(1)')"+
+        //" document.querySelectorAll('br[data-points]').forEach(e => alert(e.dataset.points));  "+
+        "<\/script>";
+    //
+    // $("#transcriptiondiploframe").contents().find("body").append(scriptTag);
+    //$("#transcriptiondiploframe").contents().find("body").append(scriptTag2);
+    //$("#transcriptiondiploframe").contents().find("body").append("<div>this one</div>");
+   // var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+
+
+    //alert(iframeDocument.getElementById('frameBody'))
+    //console.log(iframeDocument)
+    //document.querySelectorAll('br[data-points]').forEach(e => alert(e.dataset.points));
+
+    // "         console.log(datapoint);\n" +
+    // "         datapoint.style.color = 'red';\n" +
+    // "         datapoint.link(\"http://www.google.com\")\n" +
+
+   // $("#transcriptiondiploframe").contents().find("body").append(scriptTag);
+    //$("#transcriptiondiploframe").contents().find("body")[0].append(x);
+   // $("#transcriptiondiploframe").contents().find("body")[0].onload="alert(1)";
+
+    //console.log($("#transcriptiondiploframe").contents().find("body")[0]);
+
+    overlay.onClick(d3Poly.node(), function() {
+        console.log('click', arguments);
+    });
+
+    $(window).resize(function() {
+        overlay.resize();
+    });
+}
+
+
 $(document).ready(function() {
     registerCsrfPrefilter();
 
@@ -1143,5 +1201,6 @@ $(document).ready(function() {
 
         loadPage(pageNum);
         showThumbnailPage(currentThumbnailPage);
+       // setupTranscriptionCoords();
     });
 });
