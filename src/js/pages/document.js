@@ -129,7 +129,7 @@ function loadPage(pagenumber, isReload = false) {
     // Record each page turn as a page view with Google analytics
     ga('send', 'pageview');
 
-    //test
+    setupTranscriptionCoords();
 }
 
 // Update the metadata that changes on page change
@@ -938,12 +938,6 @@ function setTranscriptionPage(data, pagenum) {
         let newIframe = targetIframe.clone();
         newIframe.attr('src', iframeData[key].src);
         targetIframe.replaceWith(newIframe);
-
-        // targetIframe.ready(function() {
-        //     alert (iframe.contents().find("body"))
-        //
-        //     iframe.contents().find("body").append('Test');
-        // });
     }
 
     let diploFrame = $("#transcriptiondiploframe")[0];
@@ -1201,6 +1195,5 @@ $(document).ready(function() {
 
         loadPage(pageNum);
         showThumbnailPage(currentThumbnailPage);
-       // setupTranscriptionCoords();
     });
 });
