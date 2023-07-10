@@ -941,9 +941,7 @@ function setTranscriptionPage(data, pagenum) {
     }
 
     let diploFrame = $("#transcriptiondiploframe")[0];
-    console.log(diploFrame)
     diploFrame.onload = function() { setupTranscriptionCoords(this); }
-    //$("#transcriptiondiploframe").contents().find("body").append('Test');
 
 }
 
@@ -1092,54 +1090,70 @@ function setupKnowMoreLinks() {
     });
 }
 
+
+window.showPoints = function showPoints(points)
+{
+    showPolygon(points);
+}
+
+function setupMessaging() {
+    if (window.addEventListener) {
+        window.addEventListener("message", onMessage, false);
+    } else if (window.attachEvent) {
+        window.attachEvent("onmessage", onMessage, false);
+    }
+}
+
+function onMessage(event) {
+    // Check sender origin to be trusted
+    if (event.origin !== "http://localhost:3000") return;
+
+    var data = event.data;
+
+    if (typeof(window[data.func]) == "function") {
+        window[data.func].call(null, data.message);
+    }
+}
+
 function setupTranscriptionCoords(iframe) {
 
-    var overlay = viewer.svgOverlay();
-
-    var d3Poly = d3.select(overlay.node()).append("polygon")
-        .style('fill', '#f00')
-        .attr("points","0.14075,0.788 0.63725,0.77125 0.638,0.74575 0.1415,0.76275")
-        .style("opacity", 0.5);
-
-    const frame = document.getElementById('transcriptiondiploframe');
-    frame.contentWindow.postMessage('This is my message to the frame', '*');
-
-    //document.querySelectorAll('p').forEach(e => console.log(e.textContent));
-
-    //var scriptTag = "<script> " +
-    //    " document.querySelectorAll('br[data-points]').forEach(e => console.log(e.dataset.points)); "+
-    //    "<\/script>";
-
-    // var scriptTag = "<script>" +
-    // " function setupPoints() { alert(1); } "+
-    //     //" setupPoints(); "+
-    // "<\/script>";
-    //
-    //
-    var scriptTag2 = "<script>" +
-        " document.getElementsByTagName('body')[0].setAttribute('onload', 'alert(1)')"+
-        //" document.querySelectorAll('br[data-points]').forEach(e => alert(e.dataset.points));  "+
-        "<\/script>";
-    //
-    // $("#transcriptiondiploframe").contents().find("body").append(scriptTag);
-    //$("#transcriptiondiploframe").contents().find("body").append(scriptTag2);
-    //$("#transcriptiondiploframe").contents().find("body").append("<div>this one</div>");
-   // var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+    setupMessaging();
+    d3.selectAll('polygon').remove();
+    overlay = null;
+}
 
 
-    //alert(iframeDocument.getElementById('frameBody'))
-    //console.log(iframeDocument)
-    //document.querySelectorAll('br[data-points]').forEach(e => alert(e.dataset.points));
+let overlay = null;
+function showPolygon(points) {
 
-    // "         console.log(datapoint);\n" +
-    // "         datapoint.style.color = 'red';\n" +
-    // "         datapoint.link(\"http://www.google.com\")\n" +
+    let data = viewerModel.getMetadata();
+    let pagenumber = context.pageNum;
+    let imageHeight = data.pages[pagenumber-1].imageHeight/1.66;
+    let imageWidth = data.pages[pagenumber-1].imageWidth;
 
-   // $("#transcriptiondiploframe").contents().find("body").append(scriptTag);
-    //$("#transcriptiondiploframe").contents().find("body")[0].append(x);
-   // $("#transcriptiondiploframe").contents().find("body")[0].onload="alert(1)";
+    // Translate Coords
+    let coords = points.split(" ");
+    let viewerPoints = "";
+    for (let i=0; i<coords.length; i++) {
+        let coord = coords[i];
+        let point = coord.split(",")
+        viewerPoints += Number(point[0])/imageHeight+","+(Number(point[1])/imageWidth);
+        if (i+1<coords.length) {
+            viewerPoints += " ";
+        }
+    }
 
-    //console.log($("#transcriptiondiploframe").contents().find("body")[0]);
+    // Remove any existing polygons
+    if (overlay == null) {
+        overlay = viewer.svgOverlay();
+    } else {
+        d3.selectAll('polygon').remove();
+    }
+
+    let d3Poly = d3.select(overlay.node()).append("polygon")
+        .style('fill', '#6eadcc')
+        .attr("points",viewerPoints)
+        .style("opacity", 0.3);
 
     overlay.onClick(d3Poly.node(), function() {
         console.log('click', arguments);
