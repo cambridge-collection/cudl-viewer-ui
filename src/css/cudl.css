@@ -892,6 +892,13 @@ img {
 .tile a:hover, .tile a:focus {
     outline-offset: -6px;
 }
+/* Tile-image adjustments*/
+
+.tile img{
+    min-width:100%;
+    max-width:100%;
+    width:100%;
+}
 
   @media screen and (max-width: 800px) {
     .tile {
