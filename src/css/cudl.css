@@ -895,9 +895,9 @@ img {
 /* Tile-image adjustments*/
 
 .tile img {
-    min-width:100%;
-    max-width:100%;
-    width:100%;
+    min-width: 100%;
+    max-width: 100%;
+    width: 100%;
 }
 
   @media screen and (max-width: 800px) {
