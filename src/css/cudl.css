@@ -894,12 +894,10 @@ img {
 }
 /* Tile-image adjustments*/
 
-.tile img{
+.tile img {
     min-width: 100%;
     max-width: 100%;
     width: 100%;
-    object-fit: contain;
-    object-position: middle;
 }
 
   @media screen and (max-width: 800px) {
