@@ -894,7 +894,7 @@ img {
 }
 /* Tile-image adjustments*/
 
-.tile img {
+.tile .image {
     min-width: 100%;
     max-width: 100%;
     width: 100%;
