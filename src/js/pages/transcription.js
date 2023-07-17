@@ -5,14 +5,3 @@
  */
 
  import '../../css/style-transcription.css';
-
- function setupDataPoints() {
-
-     // const dataPoints = document.querySelectorAll('[data-points]');
-     // for (let datapoint in dataPoints) {
-     //     console.log(datapoint);
-     //     datapoint.style.color = 'red';
-     //     datapoint.link("http://www.google.com")
-     // }
- }
-setupDataPoints();

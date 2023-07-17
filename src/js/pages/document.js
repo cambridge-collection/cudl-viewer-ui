@@ -941,7 +941,7 @@ function setTranscriptionPage(data, pagenum) {
     }
 
     let diploFrame = $("#transcriptiondiploframe")[0];
-    diploFrame.onload = function() { setupTranscriptionCoords(this); }
+    diploFrame.onload = function() { setupTranscriptionCoords(); }
 
 }
 
@@ -1090,7 +1090,6 @@ function setupKnowMoreLinks() {
     });
 }
 
-
 window.showPoints = function showPoints(points)
 {
     showPolygon(points);
@@ -1115,17 +1114,19 @@ function onMessage(event) {
     }
 }
 
-function setupTranscriptionCoords(iframe) {
+function setupTranscriptionCoords() {
 
     setupMessaging();
     d3.selectAll('polygon').remove();
     overlay = null;
+
 }
 
 
 let overlay = null;
 function showPolygon(points) {
 
+    console.log(viewer);
     let data = viewerModel.getMetadata();
     let pagenumber = context.pageNum;
     let imageHeight = data.pages[pagenumber-1].imageHeight/1.66;
@@ -1163,7 +1164,6 @@ function showPolygon(points) {
         overlay.resize();
     });
 }
-
 
 $(document).ready(function() {
     registerCsrfPrefilter();
