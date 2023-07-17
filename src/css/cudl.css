@@ -878,8 +878,6 @@ img {
     position: relative;
     flex: 33.3%;
     max-width: 33.3%;
-    aspect-ratio: 0.975007027;
-    overflow-y: clip;
   }
 
 .tile-caption {
@@ -899,7 +897,7 @@ img {
 .tile img {
     min-width: 100%;
     max-width: 100%;
-    width: 100%
+    width: 100%;
 }
 
   @media screen and (max-width: 800px) {
