@@ -475,12 +475,21 @@ ol#virtual_collections_carousel li {
    margin-right:20px;
 }
 
+.virtual_collections_carousel_image_box:hover, .virtual_collections_carousel_image_box:focus, .virtual_collections_carousel_image_box:active{
+    border-color: #E5007D;
+    border-width: 3px;
+}
+
 .virtual_collections_carousel_image {
    display: table-cell;
    vertical-align: middle;
    width: 180px;
    height: 180px;
    text-align: center;
+}
+
+.virtual_collections_carousel_image a, .virtual_collections_carousel_image a:link, .virtual_collections_carousel_image a:visited, .virtual_collections_carousel_image a:hover, .virtual_collections_carousel_image a:focus, .virtual_collections_carousel_image a:active {
+    outline:none;
 }
 
 .virtual_collections_carousel_image img {
@@ -568,12 +577,21 @@ ol#virtual_collections_carousel li {
     border-color: #333;
 }
 
+.collections_carousel_image_box:hover, .collections_carousel_image_box:focus, .collections_carousel_image_box:active {
+    border-color: #E5007D;
+    border-width: 3px;
+}
+
 .collections_carousel_image {
     display: table-cell;
     vertical-align: middle;
     width: 180px;
     height: 180px;
     text-align: center;
+}
+
+.collections_carousel_image a, .collections_carousel_image a:link, .collections_carousel_image a:visited, .collections_carousel_image a:hover, .collections_carousel_image a:focus, .collections_carousel_image a:active {
+    outline:none;
 }
 
 @media screen and (max-width: 320px) {
