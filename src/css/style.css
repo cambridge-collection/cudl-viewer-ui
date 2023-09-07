@@ -577,7 +577,7 @@ ol#virtual_collections_carousel li {
 }
 
 .collections_carousel_image_box:hover, .collections_carousel_image_box:focus, .collections_carousel_image_box:active {
-    outline: 5px solid#E5007D;
+    outline: 5px solid #E5007D;
 }
 
 .collections_carousel_image {
