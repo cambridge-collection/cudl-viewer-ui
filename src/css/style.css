@@ -476,8 +476,7 @@ ol#virtual_collections_carousel li {
 }
 
 .virtual_collections_carousel_image_box:hover, .virtual_collections_carousel_image_box:focus, .virtual_collections_carousel_image_box:active{
-    border-color: #E5007D;
-    border-width: 3px;
+    outline: 5px solid #E5007D;
 }
 
 .virtual_collections_carousel_image {
