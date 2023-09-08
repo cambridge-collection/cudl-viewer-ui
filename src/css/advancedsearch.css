@@ -85,7 +85,7 @@
     padding-right: 10px;
 }
 .collections_carousel_item {
-    width: calc(100% - 20px);
+    width: calc(100% - 30px);
 }
 .collections_carousel_item a {
     color: #0072cf;
