@@ -1,17 +1,4 @@
-target/
-
-# IntelliJ
-.idea/
-*.iml
-
-# NodeJS
-/node/
-/node_modules/
-
-# Webpack
+/.idea/
 /built/
-/bower_components/
-
-# Maven release plugin
-*.releaseBackup
-release.properties
+/node_modules/
+/target/

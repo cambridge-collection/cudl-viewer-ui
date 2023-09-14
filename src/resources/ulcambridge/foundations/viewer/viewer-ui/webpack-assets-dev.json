@@ -1,44 +1,38 @@
 {
-  "common": {
-    "js": "js/chunks/common.js"
-  },
-  "page-admin": {
-    "js": "js/page-admin.js"
-  },
-  "page-admin-file-browse": {
-    "js": "js/page-admin-file-browse.js"
-  },
-  "page-advanced-search-results": {
-    "js": "js/page-advanced-search-results.js"
-  },
-  "page-advancedsearch": {
-    "js": "js/page-advancedsearch.js"
-  },
-  "page-collection-organisation": {
-    "js": "js/page-collection-organisation.js"
+  "page-standard": {
+    "css": "css/page-standard.css",
+    "js": "./js/page-standard.js"
   },
   "page-document": {
-    "js": "js/page-document.js"
+    "css": "css/page-document.css",
+    "js": "./js/page-document.js"
   },
-  "page-error-500": {
-    "js": "js/page-error-500.js"
-  },
-  "page-feedback": {
-    "js": "js/page-feedback.js"
-  },
-  "page-login": {
-    "js": "js/page-login.js"
-  },
-  "page-my-library": {
-    "js": "js/page-my-library.js"
-  },
-  "page-standard": {
-    "js": "js/page-standard.js"
+  "page-advancedsearch": {
+    "css": "css/page-advancedsearch.css",
+    "js": "./js/page-advancedsearch.js"
   },
   "page-transcription": {
-    "js": "js/page-transcription.js"
+    "css": "css/page-transcription.css",
+    "js": "./js/page-transcription.js"
   },
-  "": {
-    "js": "js/chunks/0.js"
+  "page-collection-organisation": {
+    "css": "css/page-collection-organisation.css",
+    "js": "./js/page-collection-organisation.js"
+  },
+  "page-advanced-search-results": {
+    "css": "css/page-advanced-search-results.css",
+    "js": "./js/page-advanced-search-results.js"
+  },
+  "page-error-500": {
+    "css": "css/page-error-500.css",
+    "js": "./js/page-error-500.js"
+  },
+  "page-feedback": {
+    "css": "css/page-feedback.css",
+    "js": "./js/page-feedback.js"
+  },
+  "common": {
+    "css": "css/common.css",
+    "js": "./js/common.js"
   }
 }

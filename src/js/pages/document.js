@@ -3,28 +3,21 @@
  * CUDL item with the zooming image viewer.
  */
 
-// Bootstrap styles
-import '../../less/bootstrap/cudl-bootstrap.less';
-
 // Page styles
 import '../../css/style-document.css';
 import 'jquery-ui/themes/base/slider.css';
-import '../polyfill';
 
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/slider';
-import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
 import range from 'lodash/range';
-import { setupSimilarityTab } from 'cudl-viewer-bubbles';
-import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
 
 import '../cudl';
-import { msgBus } from '../cudl';
+//import { msgBus } from '../cudl';
 import { getPageContext } from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
 import { ViewerModel } from '../viewer/models';
-import { ga } from '../analytics';
+//import { ga } from '../analytics';
 import { registerCsrfPrefilter } from '../ajax-csrf';
 
 /*
@@ -148,10 +141,10 @@ function loadPage(pagenumber, isReload = false) {
     $("#maxPage").html(data.numberOfPages);
 
     // Open a tab identified by the URL hash
-    let defaultTabId = window.location.hash;
-    $('#rightTabs .nav-tabs li a[href]')
-        .filter((i, e) =>  $(e).attr('href') === defaultTabId)
-        .tab('show');
+    // let defaultTabId = window.location.hash;
+    // $('#rightTabs .nav-tabs li a[href]')
+    //     .filter((i, e) =>  $(e).attr('href') === defaultTabId)
+    //     .tab('show');
 
     // update transcription data
     setTranscriptionPage(data, pagenumber);
@@ -160,7 +153,7 @@ function loadPage(pagenumber, isReload = false) {
     updatePageMetadata(data, pagenumber, isReload);
 
     // Record each page turn as a page view with Google analytics
-    ga('send', 'pageview');
+    //ga('send', 'pageview');
 }
 
 // Update the metadata that changes on page change
@@ -261,7 +254,7 @@ function setupSeaDragon(data) {
         fullPageButton: "fullscreen",
         maxZoomPixelRatio: 1,
         gestureSettingsTouch: {
-            pinchRotate: false
+            pinchRotate: true
         },
         showNavigator: showNav,
         navigatorPosition: "TOP_LEFT"
@@ -1146,20 +1139,20 @@ $(document).ready(function() {
         setupViewMoreOptions();
         setupKnowMoreLinks();
 
-        // FIXME: load on demand when similarity tab is first opened
-        setupSimilarityTab({
-            viewerModel: viewerModel,
-            docId: context.docId,
-            servicesBaseUrl: context.services,
-            imageServerBaseUrl: context.imageServer
-        });
+        // // FIXME: load on demand when similarity tab is first opened
+        // setupSimilarityTab({
+        //     viewerModel: viewerModel,
+        //     docId: context.docId,
+        //     servicesBaseUrl: context.services,
+        //     imageServerBaseUrl: context.imageServer
+        // });
 
-        // FIXME: load on demand if tagging is enabled.
-        setupTaggingTab({
-            docId: context.docId,
-            viewer: viewer,
-            viewerModel: viewerModel
-        });
+        // // FIXME: load on demand if tagging is enabled.
+        // setupTaggingTab({
+        //     docId: context.docId,
+        //     viewer: viewer,
+        //     viewerModel: viewerModel
+        // });
 
         loadPage(pageNum);
         showThumbnailPage(currentThumbnailPage);

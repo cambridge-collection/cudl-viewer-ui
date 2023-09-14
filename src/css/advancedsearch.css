@@ -1,9 +1,8 @@
-@import '~hint.css/hint.css';
-@import '~bootstrap-slider/dist/css/bootstrap-slider.css';
-@import '~spin.js/spin.css';
+@import 'hint.css';
+@import 'spin.js/spin.css';
 
 /* Extend the normal CUDL style */
-@import './style.css';
+@import 'style.css';
 
 .campl-main-content {
     min-height: 350px;
@@ -85,7 +84,7 @@
     padding-right: 10px;
 }
 .collections_carousel_item {
-    width: calc(100% - 30px);
+    width: calc(100% - 20px);
 }
 .collections_carousel_item a {
     color: #0072cf;
