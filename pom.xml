@@ -3,15 +3,16 @@
 
     <groupId>ulcambridge.foundations.viewer</groupId>
     <artifactId>viewer-ui</artifactId>
-    <version>3.0.15-SNAPSHOT</version>
+    <version>4.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>CUDL Viewer UI</name>
     <url>https://bitbucket.org/CUDL/cudl-viewer-ui</url>
 
     <properties>
+        <project.build.directory>built</project.build.directory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cudl.webpack-output-dir>${project.build.directory}/webpack</cudl.webpack-output-dir>
+        <cudl.webpack-output-dir>${project.build.directory}</cudl.webpack-output-dir>
         <cudl.webpack-resources-dir>${cudl.webpack-output-dir}/resources</cudl.webpack-resources-dir>
         <!-- The path in the resource jar (i.e. namespace) to store the built assets -->
         <cudl.outputAssetPath>ulcambridge/foundations/viewer/viewer-ui/assets</cudl.outputAssetPath>
@@ -21,51 +22,46 @@
         <connection>scm:git:ssh://git@bitbucket.org/CUDL/cudl-viewer-ui.git</connection>
         <developerConnection>scm:git:ssh://git@bitbucket.org/CUDL/cudl-viewer-ui.git</developerConnection>
         <url>https://bitbucket.org/CUDL/cudl-viewer-ui</url>
-        <tag>3.0.7</tag>
+        <tag>4.0.1</tag>
     </scm>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.6</version>
+<!--            <plugin>-->
+<!--                <groupId>com.github.eirslett</groupId>-->
+<!--                <artifactId>frontend-maven-plugin</artifactId>-->
+<!--                <version>1.6</version>-->
 
-                <executions>
-                    <execution>
-                        <id>Install Node and NPM</id>
-                        <goals><goal>install-node-and-npm</goal></goals>
-                        <configuration>
-                            <nodeVersion>v12.16.0</nodeVersion>
-                            <npmVersion>8.5.0</npmVersion>
-                        </configuration>
-                    </execution>
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>Install Node and NPM</id>-->
+<!--                        <goals><goal>install-node-and-npm</goal></goals>-->
+<!--                        <configuration>-->
+<!--                            <nodeVersion>v16.20.2</nodeVersion>-->
+<!--                            <npmVersion>8.19.4</npmVersion>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
 
-                    <execution>
-                        <id>Install NPM packages</id>
-                        <goals><goal>npm</goal></goals>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>Install NPM packages</id>-->
+<!--                        <goals><goal>npm</goal></goals>-->
+<!--                    </execution>-->
 
-                    <execution>
-                        <id>Install Bower packages</id>
-                        <goals><goal>bower</goal></goals>
-                    </execution>
-
-                    <execution>
-                        <id>Run Webpack build</id>
-                        <goals><goal>webpack</goal></goals>
-                        <configuration>
-                            <arguments>--mode production --output-path ${cudl.webpack-output-dir}</arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--                    <execution>-->
+<!--                        <id>Run Webpack build</id>-->
+<!--                        <goals><goal>webpack</goal></goals>-->
+<!--                        <configuration>-->
+<!--                            <arguments>&#45;&#45;mode production &#45;&#45;output-path ${cudl.webpack-output-dir}</arguments>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>Create servlet 3.0 resource jar</id>
+                        <id>Create servlet resource jar</id>
                         <goals>
                             <goal>single</goal>
                         </goals>
@@ -81,7 +77,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
+                <version>3.0.1</version>
                 <configuration>
                     <!-- Don't automatically push changes to the remote repo
                          while executing release:prepare. -->
@@ -92,41 +88,55 @@
                     <localCheckout>true</localCheckout>
                 </configuration>
             </plugin>
+
         </plugins>
 
+<!--        <resources>-->
+<!--            <resource>-->
+<!--                <directory>built</directory>-->
+<!--                <filtering>false</filtering>-->
+<!--            </resource>-->
+<!--        </resources>-->
+<!--        <resources>-->
+<!--            &lt;!&ndash; Include the JSON file webpack generates as a classpath resource &ndash;&gt;-->
+<!--            <resource>-->
+<!--                <directory>${cudl.webpack-resources-dir}</directory>-->
+<!--                <filtering>false</filtering>-->
+<!--            </resource>-->
+<!--&lt;!&ndash;            &lt;!&ndash; Include the deps.json which contains a dependancy graph to&ndash;&gt;-->
+<!--&lt;!&ndash;                 resolve the common chunks required by an entry chunk. &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;            <resource>&ndash;&gt;-->
+<!--&lt;!&ndash;                <directory>built/resources</directory>&ndash;&gt;-->
+<!--&lt;!&ndash;                <filtering>false</filtering>&ndash;&gt;-->
+<!--&lt;!&ndash;            </resource>&ndash;&gt;-->
+<!--        </resources>-->
+
         <resources>
-            <!-- Include the JSON file webpack generates as a classpath resource -->
             <resource>
-                <directory>${cudl.webpack-resources-dir}</directory>
+                <targetPath>ulcambridge/foundations/viewer/viewer-ui</targetPath>
                 <filtering>false</filtering>
+                <directory>${basedir}/built/resources</directory>
             </resource>
             <!-- Include the deps.json which contains a dependancy graph to
-                 resolve the common chunks required by an entry chunk. -->
+            resolve the common chunks required by an entry chunk. -->
             <resource>
                 <directory>src/resources</directory>
                 <filtering>false</filtering>
             </resource>
         </resources>
 
+
         <extensions>
             <extension>
                 <groupId>org.springframework.build</groupId>
                 <artifactId>aws-maven</artifactId>
                 <version>5.0.0.RELEASE</version>
-          </extension>
+            </extension>
         </extensions>
+
     </build>
 
-    <!-- Resolve private CUDL artifacts -->
-    <repositories>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/cambridge-collection/*</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+
 
     <!-- Use CUDL's private repo to deploy artifacts -->
     <distributionManagement>

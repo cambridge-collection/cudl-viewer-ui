@@ -1,17 +1,16 @@
 // Bootstrap styles
-// import '../../less/bootstrap/cudl-bootstrap.less';
+
 import '../../css/advancedsearch.css';
 
 import $ from 'jquery';
-import 'jquery.easing';
-import 'jquery-paging';
+//import 'jquery.easing';
+//import 'jquery-paging';
 import defer from 'lodash/defer';
 import {Spinner} from 'spin.js';
 import 'bootstrap-slider';
 
 import '../base.js';
 import { getPageContext } from '../context';
-// import searchResults from '../../templates/search-results.jade';
 
 function styleSnippet(s) {
     s = s.replace(/<b>/g, "<span class=\"campl-search-term\">");

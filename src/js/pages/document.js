@@ -3,30 +3,21 @@
  * CUDL item with the zooming image viewer.
  */
 
-// Bootstrap styles
-import '../../less/bootstrap/cudl-bootstrap.less';
-
 // Page styles
 import '../../css/style-document.css';
 import 'jquery-ui/themes/base/slider.css';
-import '../polyfill';
 
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/slider';
-import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
-import * as Overlay from 'svg-overlay';
-import * as d3 from 'd3';
 import range from 'lodash/range';
-import { setupSimilarityTab } from 'cudl-viewer-bubbles';
-import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
 
 import '../cudl';
-import { msgBus } from '../cudl';
+//import { msgBus } from '../cudl';
 import { getPageContext } from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
 import { ViewerModel } from '../viewer/models';
-import { ga } from '../analytics';
+//import { ga } from '../analytics';
 import { registerCsrfPrefilter } from '../ajax-csrf';
 
 /*
@@ -115,10 +106,10 @@ function loadPage(pagenumber, isReload = false) {
     $("#maxPage").html(data.numberOfPages);
 
     // Open a tab identified by the URL hash
-    let defaultTabId = window.location.hash;
-    $('#rightTabs .nav-tabs li a[href]')
-        .filter((i, e) =>  $(e).attr('href') === defaultTabId)
-        .tab('show');
+    // let defaultTabId = window.location.hash;
+    // $('#rightTabs .nav-tabs li a[href]')
+    //     .filter((i, e) =>  $(e).attr('href') === defaultTabId)
+    //     .tab('show');
 
     // update transcription data
     setTranscriptionPage(data, pagenumber);
@@ -638,6 +629,7 @@ function showThumbnailPage(pagenum) {
                     .concat("<div class='thumbnail-pane' id='thumbnail"
                         + pageNum + "'>");
             }
+           
 
             // Setup text direction
             if (i === startIndex || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) === 0) {
@@ -1192,20 +1184,20 @@ $(document).ready(function() {
         setupViewMoreOptions();
         setupKnowMoreLinks();
 
-        // FIXME: load on demand when similarity tab is first opened
-        setupSimilarityTab({
-            viewerModel: viewerModel,
-            docId: context.docId,
-            servicesBaseUrl: context.services,
-            imageServerBaseUrl: context.imageServer
-        });
+        // // FIXME: load on demand when similarity tab is first opened
+        // setupSimilarityTab({
+        //     viewerModel: viewerModel,
+        //     docId: context.docId,
+        //     servicesBaseUrl: context.services,
+        //     imageServerBaseUrl: context.imageServer
+        // });
 
-        // FIXME: load on demand if tagging is enabled.
-        setupTaggingTab({
-            docId: context.docId,
-            viewer: viewer,
-            viewerModel: viewerModel
-        });
+        // // FIXME: load on demand if tagging is enabled.
+        // setupTaggingTab({
+        //     docId: context.docId,
+        //     viewer: viewer,
+        //     viewerModel: viewerModel
+        // });
 
         loadPage(pageNum);
         showThumbnailPage(currentThumbnailPage);
