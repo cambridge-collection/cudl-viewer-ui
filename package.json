@@ -3,7 +3,7 @@
   "version": "4.0.0-SNAPSHOT",
   "dependencies": {
     "assert": "^2.0.0",
-    "bootstrap": "^5.3.1",
+    "bootstrap": "^5.3.2",
     "bootstrap-slider": "^11.0.2",
     "es6-error": "^4.1.1",
     "font-awesome": "^4.7.0",

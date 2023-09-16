@@ -6,20 +6,24 @@
 // Page styles
 import '../../css/style-document.css';
 import 'jquery-ui/themes/base/slider.css';
+import 'jquery-ui/dist/themes/base/jquery-ui.min.css';
+import 'jquery-ui/dist/themes/base/theme.css';
+import 'font-awesome/css/font-awesome.min.css';
 
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/slider';
 import OpenSeadragon from 'openseadragon';
 import range from 'lodash/range';
 
-import '../cudl';
+//import '../cudl';
 //import { msgBus } from '../cudl';
 import { getPageContext } from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
 import { ViewerModel } from '../viewer/models';
-//import { ga } from '../analytics';
+import { ga } from '../analytics';
 import { registerCsrfPrefilter } from '../ajax-csrf';
 
+const bootstrap = require('bootstrap/dist/js/bootstrap.bundle.min.js');
 /*
     We have the following attributes set by the Java in the context JSON.
 
@@ -367,24 +371,25 @@ function setupSeaDragon(data) {
 
 function setupInfoPanel(data) {
 
-    let breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li>"
-            + "<li><a href=\"/collections/\">Browse</a></li>"
-            + "<li><a href=\""
+    let breadcrumbHTML = "<ol class=\"breadcrumb\">"
+            + "<li class=\"breadcrumb-item\"><a href='/'>Home</a></li>"
+            + "<li class=\"breadcrumb-item\"><a href=\"/collections/\">Browse</a></li>"
+            + "<li class=\"breadcrumb-item\"><a href=\""
             + context.collectionURL
             + "\">"
             + context.collectionTitle
-            + "</a></li><li class='active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
+            + "</a></li><li class='breadcrumb-item active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
     if (context.parentCollectionTitle) {
-        breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li>"
-                + "<li><a href=\"/collections/\">Browse</a></li>"
-                + "<li><a href=\""
+        breadcrumbHTML = "<ol class=\"breadcrumb\"><li class=\"breadcrumb-item\"><a href='/'>Home</a></li>"
+                + "<li class=\"breadcrumb-item\"><a href=\"/collections/\">Browse</a></li>"
+                + "<li class=\"breadcrumb-item\"><a href=\""
                 + context.parentCollectionURL
                 + "\">"
                 + context.parentCollectionTitle
-                + "</a></li><li><a href=\""
+                + "</a></li><li class=\"breadcrumb-item\"><a href=\""
                 + context.collectionURL
                 + "\">"
-                + context.collectionTitle + "</a></li><li class='active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
+                + context.collectionTitle + "</a></li><li class='active breadcrumb-item'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
     }
     $('#doc-breadcrumb').html(breadcrumbHTML);
 
@@ -430,17 +435,17 @@ function setupInfoPanel(data) {
     // We are enabling the menu if any are available.
 
     if (typeof data.useDiplomaticTranscriptions == 'undefined' || !data.useDiplomaticTranscriptions) {
-        $('#transcriptiondiplotab').parent().addClass("disabled");
+        $('#transcriptiondiplotab').addClass("disabled");
         $('#transcriptiondiplotab').click(function(e){return false;}); // disable link;
     }
 
     if (typeof data.useTranslations == 'undefined' || !data.useTranslations) {
-        $('#translationtab').parent().addClass("disabled");
+        $('#translationtab').addClass("disabled");
         $('#translationtab').click(function(e){return false;}); // disable link;
     }
 
     if (!data.logicalStructures[0].children) {
-        $('#rightTabs a[href="#contentstab"]').parent().addClass("disabled");
+        $('#rightTabs a[href="#contentstab"]').addClass("disabled");
         $('#rightTabs a[href="#contentstab"]').click(function(e){return false;}); // disable link;
     }
 
@@ -488,7 +493,16 @@ function setupInfoPanel(data) {
 /* Allows you to link to a tab panel */
 function showPanel(panelHREF) {
 
-    $('a[href="' + panelHREF + '"]').tab('show');
+    const item = $('a[href="' + panelHREF + '"]');
+   //
+   //
+   //  var triggerEl = document.querySelector('a[href="' + panelHREF + '"]');
+   //  console.log(bootstrap.Tab.getInstance(triggerEl));
+   // // bootstrap.Tab.getInstance(triggerEl).show();
+   // // const triggerEl = document.querySelector('#myTab a[href="#profile"]')
+   //  bootstrap.Tab.getInstance(triggerEl).show() // Select tab by name
+   //
+   //  //$( '#rightTabs').tabs( "option", "active", 2);
 
 };
 
