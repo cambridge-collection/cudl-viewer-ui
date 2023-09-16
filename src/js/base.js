@@ -1,6 +1,7 @@
 //import './polyfill.js.old';
 
 import $ from 'jquery';
+window.jQuery = $; // this is needed for paginationjs lib
 
 import './dynamic-public-path';
 import './configure-jquery-migrate';
@@ -15,10 +16,6 @@ import { showSlides } from './mySlides-carousel';
 import { setupDropdownMenu } from "./dropdownMenu";
 
 function init() {
-
-
-    // 3rd party libs included for their side-effects
-     require('bootstrap');
 
     $(() => {
         registerCsrfPrefilter();

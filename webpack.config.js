@@ -57,14 +57,6 @@ const commonConfig = {
         //       what order.
 
          splitChunks: {
-        //     chunks (chunk) {
-        //         if ((chunk.name !== 'page-document') && (chunk.name !== 'page-transcription')) {
-        //             return true;
-        //         }
-        //     },
-        //     name: 'common',
-        //     minChunks: 1
-        // },
             chunks (chunk) {
                 if ((chunk.name !== 'page-document') && (chunk.name !== 'page-transcription')) {
                     return true;
@@ -100,16 +92,6 @@ const commonConfig = {
     target:'web',
     module: {
         rules: [
-            // {
-            //     test: /\.js$/,
-            //     use: {
-            //         loader: 'babel-loader',
-            //         options: {
-            //             cacheDirectory: true,
-            //             presets: ['@babel/preset-env']
-            //         }
-            //     }
-            // },
             {
                 test: /\.jade$/,
                 loader:'simple-pug-loader'
@@ -129,42 +111,6 @@ const commonConfig = {
                     'postcss-loader'
                 ]
             },
-            // Plain library CSS
-            // {
-            //     test: /\.css(\?.*)?$/,
-            //     exclude: path.resolve(__dirname, '/src/css'),
-            //     use: [
-            //         {
-            //             loader: MiniCssExtractPlugin.loader,
-            //             options: { publicPath: publicPath }
-            //         },
-            //         {
-            //             loader: 'css-loader'
-            //             // options: {
-            //             //     url: {
-            //             //         filter: (url, _resourcePath) => {
-            //             //             // Do not load resources from css
-            //             //             return false
-            //             //         },
-            //             //     },
-            //             // }
-            //         }
-            //     ]
-            // },
-            // ,
-            // // Bootstrap less - don't want to apply postcss
-            // {
-            //     include: path.resolve(__dirname, '/src/less/bootstrap'),
-            //     test: /\.less$/,
-            //     use: [
-            //         {
-            //             loader: MiniCssExtractPlugin.loader,
-            //             options: { publicPath: publicPath }
-            //         },
-            //         'css-loader',
-            //         'less-loader'
-            //     ]
-            // }
         ]
     },
     plugins: [
