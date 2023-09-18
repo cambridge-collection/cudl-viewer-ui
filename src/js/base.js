@@ -6,7 +6,6 @@ window.jQuery = $; // this is needed for paginationjs lib
 import './dynamic-public-path';
 import './configure-jquery-migrate';
 
-import { ga } from './analytics';
 // import { enableLightboxes } from './lightbox';
 import { setup as setupQuickSearch } from './quicksearch';
 import { displayCookieNotice } from './cudl';
@@ -19,8 +18,6 @@ function init() {
 
     $(() => {
         registerCsrfPrefilter();
-
-//        ga('send', 'pageview');
 
 //    //     enableLightboxes();
          setupQuickSearch();
