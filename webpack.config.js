@@ -132,15 +132,5 @@ const commonConfig = {
         }),
     ],
 
-    resolve: {
-        fallback: {
-            package: false,
-            generate: false,
-            lib: false,
-            path: false,
-            fs: false
-        }
-    },
-
 
 };
