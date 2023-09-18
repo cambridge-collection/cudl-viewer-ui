@@ -12,4 +12,5 @@ dev:
 	rm -rf node_modules
 	npm install
 	webpack --mode development
+	mvn clean install
 	webpack serve --mode development --hot
