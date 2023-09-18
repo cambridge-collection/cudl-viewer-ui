@@ -14,8 +14,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cudl.webpack-output-dir>${project.build.directory}</cudl.webpack-output-dir>
         <cudl.webpack-resources-dir>${cudl.webpack-output-dir}/resources</cudl.webpack-resources-dir>
+        <cudl.outputPath>ulcambridge/foundations/viewer/viewer-ui</cudl.outputPath>
+
         <!-- The path in the resource jar (i.e. namespace) to store the built assets -->
-        <cudl.outputAssetPath>ulcambridge/foundations/viewer/viewer-ui/assets</cudl.outputAssetPath>
+        <cudl.outputAssetPath>${cudl.outputPath}/assets</cudl.outputAssetPath>
     </properties>
 
     <scm>
@@ -94,8 +96,9 @@
         <resources>
             <!-- Include the JSON file webpack generates as a classpath resource -->
             <resource>
-                <directory>built</directory>
+                <directory>built/resources</directory>
                 <filtering>false</filtering>
+                <targetPath>${cudl.outputPath}</targetPath>
             </resource>
             <!-- Include the deps.json which contains a dependancy graph to
                  resolve the common chunks required by an entry chunk. -->
@@ -104,21 +107,6 @@
                 <filtering>false</filtering>
             </resource>
         </resources>
-
-
-<!--        <resources>-->
-<!--            <resource>-->
-<!--                <targetPath>ulcambridge/foundations/viewer/viewer-ui</targetPath>-->
-<!--                <filtering>false</filtering>-->
-<!--                <directory>${basedir}/built/resources</directory>-->
-<!--            </resource>-->
-<!--            &lt;!&ndash; Include the deps.json which contains a dependancy graph to-->
-<!--                 resolve the common chunks required by an entry chunk. &ndash;&gt;-->
-<!--            <resource>-->
-<!--                <directory>src/resources</directory>-->
-<!--                <filtering>false</filtering>-->
-<!--            </resource>-->
-<!--        </resources>-->
 
         <extensions>
             <extension>
