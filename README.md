@@ -12,13 +12,15 @@ files into bundles.
 ## Requirements: 
 
 This project requires **Maven 3.6+**, which is available on Ubuntu 16.04 LTS and above.
+It also needs node version **v16.20+**
+and npm version **8.19+**
 
 # Quickstart
 
 Clone this repo and then run:
 
 ```
-$ mvn install
+$ make
 ```
 
 Maven will download `node.js`, install all dependencies, run a full build and
@@ -101,6 +103,11 @@ server as follows:
 
 ```
 $ webpack serve --mode development --hot
+```
+or
+
+```
+$ make dev
 ```
 
 If this is successful, you should now see a directory structure at: http://localhost:8080/
