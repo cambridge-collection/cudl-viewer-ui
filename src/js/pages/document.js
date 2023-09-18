@@ -20,7 +20,6 @@ import range from 'lodash/range';
 import { getPageContext } from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
 import { ViewerModel } from '../viewer/models';
-//import { ga } from '../analytics';
 import { registerCsrfPrefilter } from '../ajax-csrf';
 
 const bootstrap = require('bootstrap/dist/js/bootstrap.bundle.min.js');
@@ -156,8 +155,6 @@ function loadPage(pagenumber, isReload = false) {
     // update metadata
     updatePageMetadata(data, pagenumber, isReload);
 
-    // Record each page turn as a page view with Google analytics
-    //ga('send', 'pageview');
 }
 
 // Update the metadata that changes on page change

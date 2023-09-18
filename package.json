@@ -26,7 +26,6 @@
     "css-loader": "^6.8.1",
     "exports-loader": "^4.0.0",
     "file-loader": "^6.2.0",
-    "isogram": "^0.6.0",
     "mini-css-extract-plugin": "^2.7.6",
     "modernizr": "^3.13.0",
     "postcss-loader": "^7.3.3",
