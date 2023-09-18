@@ -3,14 +3,13 @@
 import '../../css/advancedsearch.css';
 
 import $ from 'jquery';
-//import 'jquery.easing';
-//import 'jquery-paging';
 import defer from 'lodash/defer';
 import {Spinner} from 'spin.js';
 import 'bootstrap-slider';
 
 import '../base.js';
 import { getPageContext } from '../context';
+import 'paginationjs';
 
 function styleSnippet(s) {
     s = s.replace(/<b>/g, "<span class=\"campl-search-term\">");
@@ -374,7 +373,8 @@ function loadPage(state) {
     })
     .done(function(data) {
 
-        withoutUserInteraction(() => paging.setPage(parseInt(state.page)));
+        //withoutUserInteraction(() => paging.setPage(parseInt(state.page)));
+        withoutUserInteraction(() => paging.pagination(parseInt(state.page)));
 
         // query duration
         $("#reqtime").text((Date.now() - startTime) / 1000 + ' seconds');
@@ -411,9 +411,9 @@ function requery(state) {
     })
     .done(function(data) {
         // Reset the pagination for the new data
-        paging.setNumber(data.info.hits);
-        paging.setPage(); // no page reloads the paginator
-        paging.setPage(parseInt(state.page));
+        paging.totalNumber = data.info.hits;
+        //paging.setPage(); // no page reloads the paginator
+        paging.pagination(parseInt(state.page));
 
         // query duration
         var requestTime = Date.now() - startTime;
@@ -468,55 +468,55 @@ function getSpinner() {
     return new Spinner(opts);
 }
 
-function formatPagination(type) {
-    switch (type) {
-
-        case 'block':
-            if (!this.active)
-                return '<span class="disabled">' + this.value + '</span>';
-            else if (this.value != this.page)
-                return '<em><a href="">' + this.value + '</a></em>';
-            return '<span class="current">' + this.value + '</span>';
-
-        case 'right':
-
-        case 'left':
-            if (!this.active) {
-                return '';
-            }
-            return '<a href="">' + this.value + '</a>';
-
-        case 'next':
-            if (this.active)
-                return '<a href="" class="next"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></a>';
-            return '<span class="disabled"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></span>';
-
-        case 'prev':
-            if (this.active)
-                return '<a href="" class="prev"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></a>';
-            return '<span class="disabled"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></span>';
-
-        case 'first':
-            if (this.active)
-                return '<a href="" class="first">|<</a>';
-            return '<span class="disabled">|<</span>';
-
-        case 'last':
-            if (this.active)
-                return '<a href="" class="last">>|</a>';
-            return '<span class="disabled">>|</span>';
-
-        case "leap":
-            if (this.active)
-                return "...";
-            return "";
-
-        case 'fill':
-            if (this.active)
-                return "...";
-            return "";
-    }
-}
+// function formatPagination(type) {
+//     switch (type) {
+//
+//         case 'block':
+//             if (!this.active)
+//                 return '<span class="disabled">' + this.value + '</span>';
+//             else if (this.value != this.page)
+//                 return '<em><a href="">' + this.value + '</a></em>';
+//             return '<span class="current">' + this.value + '</span>';
+//
+//         case 'right':
+//
+//         case 'left':
+//             if (!this.active) {
+//                 return '';
+//             }
+//             return '<a href="">' + this.value + '</a>';
+//
+//         case 'next':
+//             if (this.active)
+//                 return '<a href="" class="next"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></a>';
+//             return '<span class="disabled"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></span>';
+//
+//         case 'prev':
+//             if (this.active)
+//                 return '<a href="" class="prev"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></a>';
+//             return '<span class="disabled"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></span>';
+//
+//         case 'first':
+//             if (this.active)
+//                 return '<a href="" class="first">|<</a>';
+//             return '<span class="disabled">|<</span>';
+//
+//         case 'last':
+//             if (this.active)
+//                 return '<a href="" class="last">>|</a>';
+//             return '<span class="disabled">>|</span>';
+//
+//         case "leap":
+//             if (this.active)
+//                 return "...";
+//             return "";
+//
+//         case 'fill':
+//             if (this.active)
+//                 return "...";
+//             return "";
+//     }
+// }
 
 function setStatePage(page) {
     // This gets called by jQuery paging as the paginator is being created.
@@ -636,15 +636,82 @@ function init() {
 
     // Setup pagination
     withoutUserInteraction(() => {
-        paging = $(".pagination").paging(numResults, {
-            format : "< (q-) ncnnnnnn (-p) >",  //[< (q-) ncnnnnnn (-p) >]
-            perpage : pageLimit,
-            lapping : 0,
-            page : 1,
-            onSelect: setStatePage,
-            onFormat : formatPagination
-        });
+        // paging = $(".pagination").paging(numResults, {
+        //     format : "< (q-) ncnnnnnn (-p) >",  //[< (q-) ncnnnnnn (-p) >]
+        //     perpage : pageLimit,
+        //     lapping : 0,
+        //     page : 1,
+        //     onSelect: setStatePage,
+        //     onFormat : formatPagination
+        // });
+        const paginationConfig = {
+            dataSource: '/search/JSON',
+            locator: 'items',
+            pageNumber: 1,
+            pageSize: pageLimit,
+            totalNumber: numResults,
+            // ajax: {
+            //     // As our ajax function expects "start" and "end" parameters
+            //     // we're going to do a quick conversion from the given pageSize and
+            //     // pageNumber.
+            //     beforeSend: function () {
+            //         const urlParams = new URLSearchParams(this.url.split("?")[1]);
+            //         const pageNumber = urlParams.get('pageNumber');
+            //         const pageSize = urlParams.get('pageSize');
+            //         const start =  (pageNumber*pageSize)-pageSize;
+            //         const end = pageNumber*pageSize;
+            //         this.url += "&start="+start+"&end="+end;
+            //     }
+            // },
+            hideOnlyOnePage:true,
+            callback: function (data, pagination) {
+                if (data!==undefined && data.size>0) {
+                    renderResult(data);
+                }
+
+            }
+            // callback: function(data, pagination) {
+            //
+            //     // content replace
+            //     let container = document.getElementById("collections_carousel");
+            //
+            //     // Remove all children
+            //     container.innerHTML = '';
+            //
+            //     // add in the results
+            //     for(let i=0; i<data.length; i++) {
+            //         let item = data[i];
+            //         let imageDimensions = "";
+            //         if(item.thumbnailOrientation==="portrait") {
+            //             imageDimensions = " style='height:100%' ";
+            //         }
+            //         else if(item.thumbnailOrientation==="landscape") {
+            //             imageDimensions = " style='width:100%' ";
+            //         }
+            //         let shelfLocator = "";
+            //         if(item.shelfLocator !== "") {
+            //             shelfLocator = " (" +item.shelfLocator+ ") ";
+            //         }
+            //
+            //         const itemDiv = document.createElement('div');
+            //         itemDiv.setAttribute("class", "collections_carousel_item");
+            //         itemDiv.innerHTML = "<div class='collections_carousel_image_box'>" +
+            //             "<div class='collections_carousel_image'>" +
+            //             "<a href='/view/" + item.id + "'><img src='" + item.thumbnailURL + "' alt='" + item.id + "' " +
+            //             imageDimensions + " > </a></div></div> " +
+            //             "<div class=\"collections_carousel_text word-wrap-200\"><h4>" + item.title + shelfLocator + "</h4> <div class=\"collection_abstract\">" + item.abstractShort +
+            //             " ... <a href=\"/view/" + item.id + "\">more</a></div><div class=\"clear\"></div></div>";
+            //         container.appendChild(itemDiv);
+            //     }
+            //
+            //     updatePageHistory(pageNumber);
+            // }
+        };
+
+        paging = $('.pagination:first').pagination(paginationConfig);
     });
+
+
 
     spinner = getSpinner();
     currentState = parseState(window.location.search);

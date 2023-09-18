@@ -1,16 +1,12 @@
-// Bootstrap styles
-// import '../../less/bootstrap/cudl-bootstrap.less';
-
 // Use the normal CUDL style
 import $ from 'jquery';
-import 'bootstrap';
+
 import '../../css/style.css';
+import '../base.js';
 
-
-import '../base';
 //import * as cudl from '../cudl';
 import { getPageContext } from '../context';
-window.jQuery = $; // this is needed for paginationjs lib
+
 import ('paginationjs');
 
 $(function() {
@@ -24,6 +20,7 @@ $(function() {
     const paginationConfig = {
         dataSource: context.collectionUrl + '/itemJSON',
         locator: 'items',
+        pageNumber: pageNumber,
         pageSize: pageLimit,
         totalNumber: numResults,
         ajax: {
@@ -41,11 +38,6 @@ $(function() {
         },
         hideOnlyOnePage:true,
         callback: function(data, pagination) {
-
-            // This ensures that asynchronous requests don;t mean that you see a different
-            // page to the last one you requested because the order of the ajax response
-            // was different to the order it was requested.
-           // if (currentSlice[0]==data.request.start && currentSlice[1]==data.request.end) {
 
             // content replace
             let container = document.getElementById("collections_carousel");
@@ -78,17 +70,14 @@ $(function() {
                     " ... <a href=\"/view/" + item.id + "\">more</a></div><div class=\"clear\"></div></div>";
                 container.appendChild(itemDiv);
                 }
-          //  }
 
-               // updatePageHistory(page);
+            updatePageHistory(pageNumber);
         }
     };
 
     $('.pagination:first').pagination(paginationConfig);
     //$('.pagination:last').replaceWith($('.pagination:first').clone(true,true));
     //$('.pagination:last').pagination(paginationConfig);
-
-    $('.pagination').pagination('go', pageNumber);
 
     // style pagination
     $('.paginationjs').addClass("paginationjs-small");
