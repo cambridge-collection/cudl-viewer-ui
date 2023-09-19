@@ -1,5 +1,5 @@
 //import './polyfill.js.old';
-
+import './cookie-banner-config';
 import $ from 'jquery';
 window.jQuery = $; // this is needed for paginationjs lib
 

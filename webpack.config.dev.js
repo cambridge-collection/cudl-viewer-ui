@@ -1,6 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
+const webpack = require('webpack');
 /**
  * This contains just the specific config for development mode.
  *
@@ -34,6 +34,7 @@ module.exports = {
         new MiniCssExtractPlugin({
         filename: 'css/[name].css',
         chunkFilename: 'css/[name].css'
-    })
+    }),
+        new webpack.EnvironmentPlugin({"GA4": "G-2XDQTMVL9Y"})
     ]
 };
