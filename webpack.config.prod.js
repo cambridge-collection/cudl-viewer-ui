@@ -9,6 +9,8 @@
  **/
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpack = require('webpack');
+
 module.exports = {
     name: 'productionConfig',
     mode: 'production',
@@ -23,6 +25,7 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: 'css/[name]-[chunkhash].css',
             chunkFilename: 'css/[name]-[chunkhash].css'
-        })
+        }),
+        new webpack.EnvironmentPlugin({"GA4": "G-89DQZCHV21"})
     ]
 };
