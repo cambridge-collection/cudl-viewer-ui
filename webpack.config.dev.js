@@ -15,7 +15,6 @@ module.exports = {
     dependencies: ['common-config'],
     optimization: {
         minimize: false,
-        //runtimeChunk: 'single', // needed fpr devserver
     },
     devtool: 'inline-source-map',
     devServer: {

@@ -36,11 +36,6 @@
     "webpack-dev-server": "^4.15.1",
     "webpack-merge": "^5.9.0"
   },
-  "browser": {
-    "fs": false,
-    "path": false,
-    "os": false
-  },
   "private": true,
   "scripts": {
     "watch": "webpack --watch",
