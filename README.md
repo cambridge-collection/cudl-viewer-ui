@@ -132,8 +132,6 @@ webpack devserver.
 
 # Releasing
 
-**Releasing should be done from the main branch.**
-
 The Maven release plugin should be used to tag release versions and deploy
 release artifacts to the
 [CUDL Maven repository](https://wiki.cam.ac.uk/cudl-docs/CUDL_Maven_Repository).
@@ -154,9 +152,9 @@ This will run a full build, which will take longer than usual (several minutes)
 due to minifying being enabled.
 
 Once it's done you'll have two new commits on your current branch and a new tag.
-None of these will have been pushed upstream yet.
 
-# Step 3
+
+# Step 2
 
 Run the perform phase of the Maven release plugin:
 
@@ -168,13 +166,11 @@ This will checkout the tag that `prepare` just created into a subdirectory, run
 ANOTHER full rebuild with that and deploy the result to the CUDL Maven
 repository.
 
-# Step 4
+# Step 3
 
 Push the new commits and tag to the upstream repository:
 
 ```
-$ git push origin main 1.0.0
+$ git push 
+$ git push --tags
 ```
-
-(Assuming you're on the main branch and you just created `1.0.0`. Adjust
-version as appropriate.)
