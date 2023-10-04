@@ -266,6 +266,11 @@ h2, h3, h4, h5, h6 {
     margin-bottom: 0.5rem;
 }
 
+/* test */
+.h3, h3, .h4, h4 {
+    font-size: 1rem;
+}
+
 /* Shim added to so that old hard-coded page titles in imported HTML come through styled like h2 */
 #content h1 {
     font-size: 1.5em;
@@ -1272,7 +1277,7 @@ img {
 /* Fixed-top classes */
 .main-nav-section {
     width: 100%;
-    max-width: 1280px;
+    /* max-width: 1280px; fix width Boostrap 5.3 */
     background: #fff;
     margin: 0 auto;
 }

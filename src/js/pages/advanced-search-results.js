@@ -126,7 +126,7 @@ function renderResult(result) {
         .attr("class", "collections_carousel_item")
         .append(
             $("<div>")
-                .addClass("collections_carousel_image_box campl-column4")
+                .addClass("collections_carousel_image_box col-md-4")
                 .append(
                     $("<div>")
                         .addClass("collections_carousel_image")
@@ -143,7 +143,7 @@ function renderResult(result) {
                         )
                 ),
             $("<div>")
-                .addClass("collections_carousel_text campl-column8")
+                .addClass("collections_carousel_text col-md-8")
                 .append(
                     $("<h3>")
                         .append(

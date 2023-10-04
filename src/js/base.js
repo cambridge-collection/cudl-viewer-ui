@@ -13,6 +13,7 @@ import { displayCookieNotice } from './cudl';
 import { registerCsrfPrefilter } from './ajax-csrf';
 import { showSlides } from './mySlides-carousel';
 import { setupDropdownMenu } from "./dropdownMenu";
+import 'bootstrap';
 
 function init() {
 
