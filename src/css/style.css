@@ -1,4 +1,3 @@
-@import "cudl.css";
 @import "cudl-editor.css";
 @import "recall-slider.css";
 @import "column-layouts.css";
@@ -6,8 +5,10 @@
 @import "font-awesome/css/font-awesome.min.css";
 @import 'paginationjs/dist/pagination.css';
 @import "cookieconsent/build/cookieconsent.min.css";
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "cudl.css";
 
-/*@import "bootstrap/dist/css/bootstrap.min.css"; */
+
 
 /* homepage style */
 .carousel-panel {
@@ -1051,3 +1052,73 @@ div.pagination {
 .campl-btn.campl-primary-cta.campl-btn-darkbg {
     border: 1px solid #545454;
 }
+
+/* These classes are a TEST for Bootstrap 5.3 */
+
+/* Classes for the "View all collections" page. */
+
+/* Cards. Ratio image:text 5:7 */
+
+.card {
+    border-radius: 0px; /* Overrides Bootstrap default rounded corners. Makes card square */
+    box-sizing: border-box;
+    background-color: #106470;
+    height: 150px; /* height: 150px prevents layout from breaking when there's no image */
+}
+
+.card img {
+    height: 150px; /*fits the height of the card container */
+    width: auto; /*intrinsic width */
+    object-fit: cover; /* maintains the aspect-ratio but clips the image to fit */
+
+}
+
+.card:link, .card:hover {
+    background: #6BBBAE;
+    color: #000 !important;
+}
+
+.col a:link {
+    text-decoration: none;
+}
+
+
+/* card text : max chars to avoid text wrapping into three lines which breaks the layout */
+
+.card-title {
+    font-size: 1.1875em; /*16px equival or 1118.75% */
+    font-weight: 500; /* Medium: between "normal" (400) and "semibold" (600) */
+    line-height: 1.5;
+}
+
+/* Classes for the about-nav.tag */
+
+/* tertiary navigation classes */
+
+.tertiary-navigation {
+    font-size: 14px;
+    line-height: 20px;
+    border: 1px solid #e4e4e4;
+}
+
+.tertiary-navigation li a {
+    display: inline-block;
+    width: 100%
+}
+
+/* Classes for the home page */
+
+/* Carousel indicators on home page : change to dots */
+.carousel .carousel-indicators button {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #bbb; /* using red for testing use "#bbb" on live site */
+}
+
+/* Places carousel indicators under the carousel itself */
+.carousel-indicators {
+    bottom: -3rem;
+}
+
+/* end of TEST classes for Bootstrap 5.3 */
