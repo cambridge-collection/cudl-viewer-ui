@@ -2,6 +2,7 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "cookieconsent/build/cookieconsent.min.css";
 
+
 body {
     font-family: verdana, arial, sans-serif;
     font-size: 12px;
@@ -578,4 +579,74 @@ body {
     .cudl-viewer-buttons-pagination {
         margin-right: auto;
     }
+}
+
+/* PANEL CLASSES for Bootstrap 5.3 */
+
+#about-header {
+    font-size: 1.313rem; /*21px based on root 16px*/
+    line-height: 1.1;
+}
+
+.panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 0.875rem; /*14px based on root 16px*/
+    color: inherit;
+}
+
+#know-more h4 {
+    font-size: 0.875rem; /*14px based on root 16px*/
+}
+.panel {
+    margin-bottom: 17px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.panel-info {
+    border-color: #bce8f1;
+}
+
+.panel-info > .panel-heading {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-bottom-color: transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.panel-info > .panel-heading + .panel-collapse > .panel-body {
+    border-top-color: #bce8f1;
+}
+
+.panel-body {
+    padding: 15px;
+}
+
+/* Overwrites scss dropdown default --- Allows metadata info panels to show contents */
+.collapse:not(.show) {
+    display: block;
+}
+
+/* Class for "know-more" panel */
+
+.well {
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
