@@ -32,18 +32,18 @@ export function quickSearch(placeholderEl) {
     var enableTagging = $this.closest('.quick-search')
                                .is('.quick-search-tagging');
 
-    var recallSlider =
-        '<div class="recall-slider">' +
-            '<input class="recall-slider-input" type="text" name="recallScale"' +
-                    'data-slider-value="0.1"' +
-                    'data-slider-min="0"' +
-                    'data-slider-max="1"' +
-                    'data-slider-step="0.1"' +
-                    'data-slider-ticks="[0, 0.5, 1]"' +
-                    'data-slider-ticks-labels=\'["Curated<br>metadata", "Secondary<br>literature", "Crowd-<br>sourced"]\'' +
-                    'data-slider-tooltip="hide">' +
-            '<input type="hidden" name="tagging" value="1">' +
-        '</div>';
+    // var recallSlider =
+    //     '<div class="recall-slider">' +
+    //         '<input class="recall-slider-input" type="text" name="recallScale"' +
+    //                 'data-slider-value="0.1"' +
+    //                 'data-slider-min="0"' +
+    //                 'data-slider-max="1"' +
+    //                 'data-slider-step="0.1"' +
+    //                 'data-slider-ticks="[0, 0.5, 1]"' +
+    //                 'data-slider-ticks-labels=\'["Curated<br>metadata", "Secondary<br>literature", "Crowd-<br>sourced"]\'' +
+    //                 'data-slider-tooltip="hide">' +
+    //         '<input type="hidden" name="tagging" value="1">' +
+    //     '</div>';
 
     var keywordInput = $(
         '<div class="campl-column9">' +
@@ -80,10 +80,10 @@ export function quickSearch(placeholderEl) {
     // Replace the placeholder with the search form
     form.replaceAll(placeholderEl);
 
-    defer(() => {
-        // Enable the bootstrap slider
-        form.find('.recall-slider-input').slider();
-    })
+    // defer(() => {
+    //     // Enable the bootstrap slider
+    //     form.find('.recall-slider-input').slider();
+    // })
 }
 
 export function setup() {
