@@ -16,7 +16,6 @@ import '../base.js';
 
 
 function changeHintDirection() {
-    console.log('changeHintDirection()');
     // change hint direction
     if ($(window).width() > 767) {
         $('span.hint--bottom').addClass('hint--right')
