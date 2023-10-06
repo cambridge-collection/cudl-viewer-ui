@@ -524,16 +524,8 @@ function setupInfoPanel(data) {
 /* Allows you to link to a tab panel */
 function showPanel(panelHREF) {
 
-    const item = $('a[href="' + panelHREF + '"]');
-   //
-   //
-   //  var triggerEl = document.querySelector('a[href="' + panelHREF + '"]');
-   //  console.log(bootstrap.Tab.getInstance(triggerEl));
-   // // bootstrap.Tab.getInstance(triggerEl).show();
-   // // const triggerEl = document.querySelector('#myTab a[href="#profile"]')
-   //  bootstrap.Tab.getInstance(triggerEl).show() // Select tab by name
-   //
-   //  //$( '#rightTabs').tabs( "option", "active", 2);
+    const triggerEl = document.querySelector('a[href="'+panelHREF+'"]');
+    bootstrap.Tab.getOrCreateInstance(triggerEl).show();
 
 };
 
