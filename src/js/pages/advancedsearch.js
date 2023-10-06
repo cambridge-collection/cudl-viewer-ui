@@ -27,10 +27,10 @@ function changeHintDirection() {
     }
 }
 
-function createVariableRecallSlider() {
-    // Use bootstrap slider to create a slider bar
-    $('#recall-slider-input').slider();
-}
+// function createVariableRecallSlider() {
+//     // Use bootstrap slider to create a slider bar
+//     $('#recall-slider-input').slider();
+// }
 
 $(() => {
     $(window).resize(debounce(changeHintDirection, 50));
@@ -38,5 +38,5 @@ $(() => {
 
     // Initialisation needs to be deferred in dev mode as otherwise the CSS is
     // not in place when the width of the slider is calculated.
-    defer(createVariableRecallSlider);
+    //defer(createVariableRecallSlider);
 });
