@@ -354,6 +354,11 @@ function renderChangeQueryUrl(state) {
     return './query' + query;
 }
 
+/**
+ * This function is called when no facets have been used.
+ * @param state
+ * @returns {boolean}
+ */
 function loadPage(state) {
     setBusy(true);
 
@@ -373,12 +378,10 @@ function loadPage(state) {
     })
     .done(function(data) {
 
-        //withoutUserInteraction(() => paging.setPage(parseInt(state.page)));
         withoutUserInteraction(() => paging.pagination(parseInt(state.page)));
 
         // query duration
         $("#reqtime").text((Date.now() - startTime) / 1000 + ' seconds');
-
 
         $('#collections_carousel')
             .empty()
@@ -387,6 +390,11 @@ function loadPage(state) {
 
     return false;
 }
+
+/**
+ * This function is called when a facet is used to make an ajax call with the new parameters
+ * @param state
+ */
 
 function requery(state) {
 
@@ -411,9 +419,7 @@ function requery(state) {
     })
     .done(function(data) {
         // Reset the pagination for the new data
-        paging.totalNumber = data.info.hits;
-        //paging.setPage(); // no page reloads the paginator
-        paging.pagination(parseInt(state.page));
+        setupPagination(data.info.hits, pageLimit);
 
         // query duration
         var requestTime = Date.now() - startTime;
@@ -536,9 +542,7 @@ function setStatePage(page) {
 }
 
 function scrollToTopOfResults() {
-    $(document.body).animate({
-        scrollTop: $("#collections_carousel").offset().top - 50
-    }, 800, 'easeInOutQuint');
+    document.body.scrollTop = document.documentElement.scrollTop = $("#collections_carousel").offset().top - 50;
 }
 
 /**
@@ -553,6 +557,7 @@ function showState(state) {
 
     // Just page changed
     if(Object.keys(change).length === 1 && change.page) {
+        //alert("loading");
         loadPage(state);
     }
     // Facets/recallScale changed, perform new query
@@ -629,92 +634,31 @@ function withoutUserInteraction(f) {
     }
 }
 
+function setupPagination (numResults, pageLimit) {
+    const paginationConfig = {
+        dataSource: new Array(numResults).fill(0), //'dummy' data as the existing code handles the ajax calls
+        locator: 'items',
+        pageNumber: 1,
+        pageSize: pageLimit,
+        totalNumber: numResults,
+        hideOnlyOnePage:true,
+        callback: function (data, pagination) {
+            setStatePage(pagination.pageNumber);
+        }
+    };
+    paging = $('.pagination:first').pagination(paginationConfig);
+}
+
 function init() {
     let context = getPageContext();
 
     numResults = context.resultCount;
 
-    // Setup pagination
-    withoutUserInteraction(() => {
-        // paging = $(".pagination").paging(numResults, {
-        //     format : "< (q-) ncnnnnnn (-p) >",  //[< (q-) ncnnnnnn (-p) >]
-        //     perpage : pageLimit,
-        //     lapping : 0,
-        //     page : 1,
-        //     onSelect: setStatePage,
-        //     onFormat : formatPagination
-        // });
-        const paginationConfig = {
-            dataSource: '/search/JSON',
-            locator: 'items',
-            pageNumber: 1,
-            pageSize: pageLimit,
-            totalNumber: numResults,
-            // ajax: {
-            //     // As our ajax function expects "start" and "end" parameters
-            //     // we're going to do a quick conversion from the given pageSize and
-            //     // pageNumber.
-            //     beforeSend: function () {
-            //         const urlParams = new URLSearchParams(this.url.split("?")[1]);
-            //         const pageNumber = urlParams.get('pageNumber');
-            //         const pageSize = urlParams.get('pageSize');
-            //         const start =  (pageNumber*pageSize)-pageSize;
-            //         const end = pageNumber*pageSize;
-            //         this.url += "&start="+start+"&end="+end;
-            //     }
-            // },
-            hideOnlyOnePage:true,
-            callback: function (data, pagination) {
-                if (data!==undefined && data.size>0) {
-                    renderResult(data);
-                }
-
-            }
-            // callback: function(data, pagination) {
-            //
-            //     // content replace
-            //     let container = document.getElementById("collections_carousel");
-            //
-            //     // Remove all children
-            //     container.innerHTML = '';
-            //
-            //     // add in the results
-            //     for(let i=0; i<data.length; i++) {
-            //         let item = data[i];
-            //         let imageDimensions = "";
-            //         if(item.thumbnailOrientation==="portrait") {
-            //             imageDimensions = " style='height:100%' ";
-            //         }
-            //         else if(item.thumbnailOrientation==="landscape") {
-            //             imageDimensions = " style='width:100%' ";
-            //         }
-            //         let shelfLocator = "";
-            //         if(item.shelfLocator !== "") {
-            //             shelfLocator = " (" +item.shelfLocator+ ") ";
-            //         }
-            //
-            //         const itemDiv = document.createElement('div');
-            //         itemDiv.setAttribute("class", "collections_carousel_item");
-            //         itemDiv.innerHTML = "<div class='collections_carousel_image_box'>" +
-            //             "<div class='collections_carousel_image'>" +
-            //             "<a href='/view/" + item.id + "'><img src='" + item.thumbnailURL + "' alt='" + item.id + "' " +
-            //             imageDimensions + " > </a></div></div> " +
-            //             "<div class=\"collections_carousel_text word-wrap-200\"><h4>" + item.title + shelfLocator + "</h4> <div class=\"collection_abstract\">" + item.abstractShort +
-            //             " ... <a href=\"/view/" + item.id + "\">more</a></div><div class=\"clear\"></div></div>";
-            //         container.appendChild(itemDiv);
-            //     }
-            //
-            //     updatePageHistory(pageNumber);
-            // }
-        };
-
-        paging = $('.pagination:first').pagination(paginationConfig);
-    });
-
-
-
     spinner = getSpinner();
     currentState = parseState(window.location.search);
+
+    // Setup pagination
+    withoutUserInteraction(() => setupPagination(numResults,pageLimit));
 
     // The page is rendered w/out results, so we have to always fetch them
     // initially. Deleting the current page means it always changes initially.
@@ -735,14 +679,14 @@ function init() {
         }
     });
 
-    $("#recall-slider-input")
-        .on("change", function(e) {
-            var recallScale = e.value.newValue;
-            requestState(Object.assign({}, currentState, {
-                recallScale: recallScale,
-                page: 1 // Reset page as it's a new query
-            }));
-        })
+    // $("#recall-slider-input")
+    //     .on("change", function(e) {
+    //         var recallScale = e.value.newValue;
+    //         requestState(Object.assign({}, currentState, {
+    //             recallScale: recallScale,
+    //             page: 1 // Reset page as it's a new query
+    //         }));
+    //     })
 
     // Handle facet activation and deactivation
     $('#tree,#selected_facets').on('click', 'a', function(e) {
@@ -754,12 +698,12 @@ function init() {
     });
 }
 
-function createVariableRecallSlider() {
-    // Use bootstrap slider to create a slider bar
-    $('#recall-slider-input').slider();
-}
+// function createVariableRecallSlider() {
+//     // Use bootstrap slider to create a slider bar
+//     $('#recall-slider-input').slider();
+// }
 
 $(() => {
     init();
-    defer(createVariableRecallSlider);
+  //  defer(createVariableRecallSlider);
 });
