@@ -737,3 +737,10 @@ button, select {
     white-space: nowrap;
 }
 
+/* Link styling in document page */
+
+.nav-link,  a {
+    color: #337ab7;
+    text-decoration: none;
+}
+
