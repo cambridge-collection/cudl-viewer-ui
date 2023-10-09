@@ -6,7 +6,6 @@ import '../base.js';
 
 //import * as cudl from '../cudl';
 import { getPageContext } from '../context';
-
 import ('paginationjs');
 
 $(function() {
@@ -71,13 +70,17 @@ $(function() {
                 container.appendChild(itemDiv);
                 }
 
+            pageNumber = pagination.pageNumber;
             updatePageHistory(pageNumber);
+
+            // Update bottom Pagination
+            const paginationFirst = $('#topPagination');
+            const paginationLast = $('#bottomPagination');
+            paginationLast.replaceWith(paginationFirst.clone(true,true).attr("id", "bottomPagination"));
         }
     };
 
-    $('.pagination:first').pagination(paginationConfig);
-    //$('.pagination:last').replaceWith($('.pagination:first').clone(true,true));
-    //$('.pagination:last').pagination(paginationConfig);
+    $('#topPagination').pagination(paginationConfig);
 
     // style pagination
     $('.paginationjs').addClass("paginationjs-small");
