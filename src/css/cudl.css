@@ -266,10 +266,33 @@ h2, h3, h4, h5, h6 {
     margin-bottom: 0.5rem;
 }
 
-/* test */
-h3, h4 {
-    font-size: 1rem;
+/* Bootstrap 5.3 test for heading sizes -- scss override */
+
+h1 {
+    font-size: 1.938rem; /*31px based on 16px root*/
 }
+h2 {
+    font-size: 1.563rem; /*25px based on 16px root*/
+}
+h3 {
+    font-size: 1.313rem; /*21px based on 16px root*/
+}
+h4 {
+    font-size: 1rem; /*16px based on 16px root*/
+}
+h5 {
+    font-size: 0.75rem; /*12px based on 16px root*/
+}
+h6 {
+    font-size: 0.688rem; /*11px based on 16px root*/
+}
+
+h1, h2, h3 {
+    margin-top: 1.063rem; /*17px based on 16px root*/
+    margin-bottom: 0.531rem; /*8.5px based on 16px root*/
+}
+
+/*end of Bootstrap 5.3 test for headings */
 
 /* Shim added to so that old hard-coded page titles in imported HTML come through styled like h2 */
 #content h1 {
