@@ -718,3 +718,22 @@ button, select {
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
+
+/* Classes for "More" dropdown menu */
+
+.dropdown-menu {
+    font-size: 0.75rem; /*12px based on root 16px*/
+    text-align: left;
+    list-style: none;
+}
+
+.dropdown-menu > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333333;
+    white-space: nowrap;
+}
+
