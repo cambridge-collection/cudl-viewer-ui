@@ -256,7 +256,7 @@ function setupSeaDragon(data) {
         fullPageButton: "fullscreen",
         maxZoomPixelRatio: 1,
         gestureSettingsTouch: {
-            pinchRotate: true
+            pinchRotate: false
         },
         showNavigator: showNav,
         navigatorPosition: "TOP_LEFT"
