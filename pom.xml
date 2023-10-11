@@ -3,25 +3,28 @@
 
     <groupId>ulcambridge.foundations.viewer</groupId>
     <artifactId>viewer-ui</artifactId>
-    <version>3.0.13-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>CUDL Viewer UI</name>
-    <url>https://bitbucket.org/CUDL/cudl-viewer-ui</url>
+    <url>https://github.com/cambridge-collection/cudl-viewer-ui</url>
 
     <properties>
+        <project.build.directory>built</project.build.directory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cudl.webpack-output-dir>${project.build.directory}/webpack</cudl.webpack-output-dir>
+        <cudl.webpack-output-dir>${project.build.directory}</cudl.webpack-output-dir>
         <cudl.webpack-resources-dir>${cudl.webpack-output-dir}/resources</cudl.webpack-resources-dir>
+        <cudl.outputPath>ulcambridge/foundations/viewer/viewer-ui</cudl.outputPath>
+
         <!-- The path in the resource jar (i.e. namespace) to store the built assets -->
-        <cudl.outputAssetPath>ulcambridge/foundations/viewer/viewer-ui/assets</cudl.outputAssetPath>
+        <cudl.outputAssetPath>${cudl.outputPath}/assets</cudl.outputAssetPath>
     </properties>
 
     <scm>
-        <connection>scm:git:ssh://git@bitbucket.org/CUDL/cudl-viewer-ui.git</connection>
-        <developerConnection>scm:git:ssh://git@bitbucket.org/CUDL/cudl-viewer-ui.git</developerConnection>
-        <url>https://bitbucket.org/CUDL/cudl-viewer-ui</url>
-        <tag>3.0.7</tag>
+        <connection>scm:git:ssh://git@github.com:cambridge-collection/cudl-viewer-ui.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:cambridge-collection/cudl-viewer-ui.git</developerConnection>
+        <url>https://github.com/cambridge-collection/cudl-viewer-ui</url>
+        <tag>4.0.0</tag>
     </scm>
 
     <build>
@@ -29,26 +32,21 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.6</version>
+                <version>1.14.0</version>
 
                 <executions>
                     <execution>
                         <id>Install Node and NPM</id>
                         <goals><goal>install-node-and-npm</goal></goals>
                         <configuration>
-                            <nodeVersion>v12.16.0</nodeVersion>
-                            <npmVersion>8.5.0</npmVersion>
+                            <nodeVersion>v16.20.2</nodeVersion>
+                            <npmVersion>8.19.4</npmVersion>
                         </configuration>
                     </execution>
 
                     <execution>
                         <id>Install NPM packages</id>
                         <goals><goal>npm</goal></goals>
-                    </execution>
-
-                    <execution>
-                        <id>Install Bower packages</id>
-                        <goals><goal>bower</goal></goals>
                     </execution>
 
                     <execution>
@@ -65,7 +63,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>Create servlet 3.0 resource jar</id>
+                        <id>Create servlet resource jar</id>
                         <goals>
                             <goal>single</goal>
                         </goals>
@@ -81,7 +79,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
+                <version>3.0.1</version>
                 <configuration>
                     <!-- Don't automatically push changes to the remote repo
                          while executing release:prepare. -->
@@ -89,16 +87,18 @@
                     <tagNameFormat>@{project.version}</tagNameFormat>
                     <!-- Use the local repo with release:perform instead of the
                          upstream repository specified in <scm>. -->
-                    <localCheckout>true</localCheckout>
+<!--                    <localCheckout>true</localCheckout>-->
                 </configuration>
             </plugin>
+
         </plugins>
 
         <resources>
             <!-- Include the JSON file webpack generates as a classpath resource -->
             <resource>
-                <directory>${cudl.webpack-resources-dir}</directory>
+                <directory>built/resources</directory>
                 <filtering>false</filtering>
+                <targetPath>${cudl.outputPath}</targetPath>
             </resource>
             <!-- Include the deps.json which contains a dependancy graph to
                  resolve the common chunks required by an entry chunk. -->
@@ -116,17 +116,6 @@
           </extension>
         </extensions>
     </build>
-
-    <!-- Resolve private CUDL artifacts -->
-    <repositories>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/cambridge-collection/*</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <!-- Use CUDL's private repo to deploy artifacts -->
     <distributionManagement>

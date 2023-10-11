@@ -3,30 +3,27 @@
  * CUDL item with the zooming image viewer.
  */
 
-// Bootstrap styles
-import '../../less/bootstrap/cudl-bootstrap.less';
-
 // Page styles
 import '../../css/style-document.css';
 import 'jquery-ui/themes/base/slider.css';
-import '../polyfill';
+import 'jquery-ui/dist/themes/base/jquery-ui.min.css';
+import 'jquery-ui/dist/themes/base/theme.css';
+import 'font-awesome/css/font-awesome.min.css';
 
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/slider';
-import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
 import range from 'lodash/range';
-import { setupSimilarityTab } from 'cudl-viewer-bubbles';
-import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
 
-import '../cudl';
-import { msgBus } from '../cudl';
+//import '../cudl';
+//import { msgBus } from '../cudl';
 import { getPageContext } from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
 import { ViewerModel } from '../viewer/models';
-import { ga } from '../analytics';
 import { registerCsrfPrefilter } from '../ajax-csrf';
+import '../cookie-banner-config';
 
+const bootstrap = require('bootstrap/dist/js/bootstrap.bundle.min.js');
 /*
     We have the following attributes set by the Java in the context JSON.
 
@@ -148,10 +145,10 @@ function loadPage(pagenumber, isReload = false) {
     $("#maxPage").html(data.numberOfPages);
 
     // Open a tab identified by the URL hash
-    let defaultTabId = window.location.hash;
-    $('#rightTabs .nav-tabs li a[href]')
-        .filter((i, e) =>  $(e).attr('href') === defaultTabId)
-        .tab('show');
+    // let defaultTabId = window.location.hash;
+    // $('#rightTabs .nav-tabs li a[href]')
+    //     .filter((i, e) =>  $(e).attr('href') === defaultTabId)
+    //     .tab('show');
 
     // update transcription data
     setTranscriptionPage(data, pagenumber);
@@ -159,8 +156,6 @@ function loadPage(pagenumber, isReload = false) {
     // update metadata
     updatePageMetadata(data, pagenumber, isReload);
 
-    // Record each page turn as a page view with Google analytics
-    ga('send', 'pageview');
 }
 
 // Update the metadata that changes on page change
@@ -407,24 +402,25 @@ function setupSeaDragon(data) {
 
 function setupInfoPanel(data) {
 
-    let breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li>"
-            + "<li><a href=\"/collections/\">Browse</a></li>"
-            + "<li><a href=\""
+    let breadcrumbHTML = "<ol class=\"breadcrumb\">"
+            + "<li class=\"breadcrumb-item\"><a href='/'>Home</a></li>"
+            + "<li class=\"breadcrumb-item\"><a href=\"/collections/\">Browse</a></li>"
+            + "<li class=\"breadcrumb-item\"><a href=\""
             + context.collectionURL
             + "\">"
             + context.collectionTitle
-            + "</a></li><li class='active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
+            + "</a></li><li class='breadcrumb-item active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
     if (context.parentCollectionTitle) {
-        breadcrumbHTML = "<ol class=\"breadcrumb\"><li><a href='/'>Home</a></li>"
-                + "<li><a href=\"/collections/\">Browse</a></li>"
-                + "<li><a href=\""
+        breadcrumbHTML = "<ol class=\"breadcrumb\"><li class=\"breadcrumb-item\"><a href='/'>Home</a></li>"
+                + "<li class=\"breadcrumb-item\"><a href=\"/collections/\">Browse</a></li>"
+                + "<li class=\"breadcrumb-item\"><a href=\""
                 + context.parentCollectionURL
                 + "\">"
                 + context.parentCollectionTitle
-                + "</a></li><li><a href=\""
+                + "</a></li><li class=\"breadcrumb-item\"><a href=\""
                 + context.collectionURL
                 + "\">"
-                + context.collectionTitle + "</a></li><li class='active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
+                + context.collectionTitle + "</a></li><li class='active breadcrumb-item'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
     }
     $('#doc-breadcrumb').html(breadcrumbHTML);
 
@@ -470,24 +466,24 @@ function setupInfoPanel(data) {
     // We are enabling the menu if any are available.
 
     if (typeof data.useDiplomaticTranscriptions == 'undefined' || !data.useDiplomaticTranscriptions) {
-        $('#transcriptiondiplotab').parent().addClass("disabled");
+        $('#transcriptiondiplotab').addClass("disabled");
         $('#transcriptiondiplotab').click(function(e){return false;}); // disable link;
     }
 
     if (typeof data.useTranslations == 'undefined' || !data.useTranslations) {
-        $('#translationtab').parent().addClass("disabled");
+        $('#translationtab').addClass("disabled");
         $('#translationtab').click(function(e){return false;}); // disable link;
     }
 
     if (!data.logicalStructures[0].children) {
-        $('#rightTabs a[href="#contentstab"]').parent().addClass("disabled");
+        $('#rightTabs a[href="#contentstab"]').addClass("disabled");
         $('#rightTabs a[href="#contentstab"]').click(function(e){return false;}); // disable link;
     }
 
     // NB: This will disable thumbnails if the first page has no image. This assumes that
     // the there are documents either with a complete set of thumbnails or no thumbnails.
     if (typeof data.pages[0].thumbnailImageURL == 'undefined') {
-        $('#rightTabs a[href="#thumbnailstab"]').parent().addClass("disabled");
+        $('#rightTabs a[href="#thumbnailstab"]').addClass("disabled");
         $('#rightTabs a[href="#thumbnailstab"]').click(function(e){return false;}); // disable link;
     }
 
@@ -528,7 +524,8 @@ function setupInfoPanel(data) {
 /* Allows you to link to a tab panel */
 function showPanel(panelHREF) {
 
-    $('a[href="' + panelHREF + '"]').tab('show');
+    const triggerEl = document.querySelector('a[href="'+panelHREF+'"]');
+    bootstrap.Tab.getOrCreateInstance(triggerEl).show();
 
 };
 
@@ -1146,20 +1143,20 @@ $(document).ready(function() {
         setupViewMoreOptions();
         setupKnowMoreLinks();
 
-        // FIXME: load on demand when similarity tab is first opened
-        setupSimilarityTab({
-            viewerModel: viewerModel,
-            docId: context.docId,
-            servicesBaseUrl: context.services,
-            imageServerBaseUrl: context.imageServer
-        });
+        // // FIXME: load on demand when similarity tab is first opened
+        // setupSimilarityTab({
+        //     viewerModel: viewerModel,
+        //     docId: context.docId,
+        //     servicesBaseUrl: context.services,
+        //     imageServerBaseUrl: context.imageServer
+        // });
 
-        // FIXME: load on demand if tagging is enabled.
-        setupTaggingTab({
-            docId: context.docId,
-            viewer: viewer,
-            viewerModel: viewerModel
-        });
+        // // FIXME: load on demand if tagging is enabled.
+        // setupTaggingTab({
+        //     docId: context.docId,
+        //     viewer: viewer,
+        //     viewerModel: viewerModel
+        // });
 
         loadPage(pageNum);
         showThumbnailPage(currentThumbnailPage);

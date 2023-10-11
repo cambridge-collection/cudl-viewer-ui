@@ -1,17 +1,15 @@
 // Bootstrap styles
-// import '../../less/bootstrap/cudl-bootstrap.less';
+
 import '../../css/advancedsearch.css';
 
 import $ from 'jquery';
-import 'jquery.easing';
-import 'jquery-paging';
 import defer from 'lodash/defer';
 import {Spinner} from 'spin.js';
 import 'bootstrap-slider';
 
 import '../base.js';
 import { getPageContext } from '../context';
-// import searchResults from '../../templates/search-results.jade';
+import 'paginationjs';
 
 function styleSnippet(s) {
     s = s.replace(/<b>/g, "<span class=\"campl-search-term\">");
@@ -128,7 +126,7 @@ function renderResult(result) {
         .attr("class", "collections_carousel_item")
         .append(
             $("<div>")
-                .addClass("collections_carousel_image_box campl-column4")
+                .addClass("collections_carousel_image_box col-md-4")
                 .append(
                     $("<div>")
                         .addClass("collections_carousel_image")
@@ -145,7 +143,7 @@ function renderResult(result) {
                         )
                 ),
             $("<div>")
-                .addClass("collections_carousel_text campl-column8")
+                .addClass("collections_carousel_text col-md-8")
                 .append(
                     $("<h3>")
                         .append(
@@ -356,6 +354,11 @@ function renderChangeQueryUrl(state) {
     return './query' + query;
 }
 
+/**
+ * This function is called when no facets have been used.
+ * @param state
+ * @returns {boolean}
+ */
 function loadPage(state) {
     setBusy(true);
 
@@ -375,11 +378,10 @@ function loadPage(state) {
     })
     .done(function(data) {
 
-        withoutUserInteraction(() => paging.setPage(parseInt(state.page)));
+        withoutUserInteraction(() => paging.pagination(parseInt(state.page)));
 
         // query duration
         $("#reqtime").text((Date.now() - startTime) / 1000 + ' seconds');
-
 
         $('#collections_carousel')
             .empty()
@@ -388,6 +390,11 @@ function loadPage(state) {
 
     return false;
 }
+
+/**
+ * This function is called when a facet is used to make an ajax call with the new parameters
+ * @param state
+ */
 
 function requery(state) {
 
@@ -412,9 +419,7 @@ function requery(state) {
     })
     .done(function(data) {
         // Reset the pagination for the new data
-        paging.setNumber(data.info.hits);
-        paging.setPage(); // no page reloads the paginator
-        paging.setPage(parseInt(state.page));
+        setupPagination(data.info.hits, pageLimit);
 
         // query duration
         var requestTime = Date.now() - startTime;
@@ -469,55 +474,55 @@ function getSpinner() {
     return new Spinner(opts);
 }
 
-function formatPagination(type) {
-    switch (type) {
-
-        case 'block':
-            if (!this.active)
-                return '<span class="disabled">' + this.value + '</span>';
-            else if (this.value != this.page)
-                return '<em><a href="">' + this.value + '</a></em>';
-            return '<span class="current">' + this.value + '</span>';
-
-        case 'right':
-
-        case 'left':
-            if (!this.active) {
-                return '';
-            }
-            return '<a href="">' + this.value + '</a>';
-
-        case 'next':
-            if (this.active)
-                return '<a href="" class="next"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></a>';
-            return '<span class="disabled"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></span>';
-
-        case 'prev':
-            if (this.active)
-                return '<a href="" class="prev"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></a>';
-            return '<span class="disabled"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></span>';
-
-        case 'first':
-            if (this.active)
-                return '<a href="" class="first">|<</a>';
-            return '<span class="disabled">|<</span>';
-
-        case 'last':
-            if (this.active)
-                return '<a href="" class="last">>|</a>';
-            return '<span class="disabled">>|</span>';
-
-        case "leap":
-            if (this.active)
-                return "...";
-            return "";
-
-        case 'fill':
-            if (this.active)
-                return "...";
-            return "";
-    }
-}
+// function formatPagination(type) {
+//     switch (type) {
+//
+//         case 'block':
+//             if (!this.active)
+//                 return '<span class="disabled">' + this.value + '</span>';
+//             else if (this.value != this.page)
+//                 return '<em><a href="">' + this.value + '</a></em>';
+//             return '<span class="current">' + this.value + '</span>';
+//
+//         case 'right':
+//
+//         case 'left':
+//             if (!this.active) {
+//                 return '';
+//             }
+//             return '<a href="">' + this.value + '</a>';
+//
+//         case 'next':
+//             if (this.active)
+//                 return '<a href="" class="next"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></a>';
+//             return '<span class="disabled"><img src="/img/interface/icon-fwd-btn-larger.png" class="pagination-fwd"/></span>';
+//
+//         case 'prev':
+//             if (this.active)
+//                 return '<a href="" class="prev"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></a>';
+//             return '<span class="disabled"><img src="/img/interface/icon-back-btn-larger.png" class="pagination-back"/></span>';
+//
+//         case 'first':
+//             if (this.active)
+//                 return '<a href="" class="first">|<</a>';
+//             return '<span class="disabled">|<</span>';
+//
+//         case 'last':
+//             if (this.active)
+//                 return '<a href="" class="last">>|</a>';
+//             return '<span class="disabled">>|</span>';
+//
+//         case "leap":
+//             if (this.active)
+//                 return "...";
+//             return "";
+//
+//         case 'fill':
+//             if (this.active)
+//                 return "...";
+//             return "";
+//     }
+// }
 
 function setStatePage(page) {
     // This gets called by jQuery paging as the paginator is being created.
@@ -537,9 +542,7 @@ function setStatePage(page) {
 }
 
 function scrollToTopOfResults() {
-    $(document.body).animate({
-        scrollTop: $("#collections_carousel").offset().top - 50
-    }, 800, 'easeInOutQuint');
+    document.body.scrollTop = document.documentElement.scrollTop = $("#collections_carousel").offset().top - 50;
 }
 
 /**
@@ -554,6 +557,7 @@ function showState(state) {
 
     // Just page changed
     if(Object.keys(change).length === 1 && change.page) {
+        //alert("loading");
         loadPage(state);
     }
     // Facets/recallScale changed, perform new query
@@ -630,25 +634,31 @@ function withoutUserInteraction(f) {
     }
 }
 
+function setupPagination (numResults, pageLimit) {
+    const paginationConfig = {
+        dataSource: new Array(numResults).fill(0), //'dummy' data as the existing code handles the ajax calls
+        locator: 'items',
+        pageNumber: 1,
+        pageSize: pageLimit,
+        totalNumber: numResults,
+        hideOnlyOnePage:true,
+        callback: function (data, pagination) {
+            setStatePage(pagination.pageNumber);
+        }
+    };
+    paging = $('.pagination:first').pagination(paginationConfig);
+}
+
 function init() {
     let context = getPageContext();
 
     numResults = context.resultCount;
 
-    // Setup pagination
-    withoutUserInteraction(() => {
-        paging = $(".pagination").paging(numResults, {
-            format : "< (q-) ncnnnnnn (-p) >",  //[< (q-) ncnnnnnn (-p) >]
-            perpage : pageLimit,
-            lapping : 0,
-            page : 1,
-            onSelect: setStatePage,
-            onFormat : formatPagination
-        });
-    });
-
     spinner = getSpinner();
     currentState = parseState(window.location.search);
+
+    // Setup pagination
+    withoutUserInteraction(() => setupPagination(numResults,pageLimit));
 
     // The page is rendered w/out results, so we have to always fetch them
     // initially. Deleting the current page means it always changes initially.
@@ -669,14 +679,14 @@ function init() {
         }
     });
 
-    $("#recall-slider-input")
-        .on("change", function(e) {
-            var recallScale = e.value.newValue;
-            requestState(Object.assign({}, currentState, {
-                recallScale: recallScale,
-                page: 1 // Reset page as it's a new query
-            }));
-        })
+    // $("#recall-slider-input")
+    //     .on("change", function(e) {
+    //         var recallScale = e.value.newValue;
+    //         requestState(Object.assign({}, currentState, {
+    //             recallScale: recallScale,
+    //             page: 1 // Reset page as it's a new query
+    //         }));
+    //     })
 
     // Handle facet activation and deactivation
     $('#tree,#selected_facets').on('click', 'a', function(e) {
@@ -688,12 +698,12 @@ function init() {
     });
 }
 
-function createVariableRecallSlider() {
-    // Use bootstrap slider to create a slider bar
-    $('#recall-slider-input').slider();
-}
+// function createVariableRecallSlider() {
+//     // Use bootstrap slider to create a slider bar
+//     $('#recall-slider-input').slider();
+// }
 
 $(() => {
     init();
-    defer(createVariableRecallSlider);
+  //  defer(createVariableRecallSlider);
 });

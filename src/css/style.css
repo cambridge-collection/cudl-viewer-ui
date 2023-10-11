@@ -1,12 +1,14 @@
-/* 3rd party CSS libs */
-/*@import "~project-light/stylesheets/full-stylesheet.css";*/
+@import "cudl-editor.css";
+/* @import "recall-slider.css"; */
+@import "column-layouts.css";
+@import "project-light-legacy.css";
+@import "font-awesome/css/font-awesome.min.css";
+@import 'paginationjs/dist/pagination.css';
+@import "cookieconsent/build/cookieconsent.min.css";
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "cudl.css";
 
-@import "./cudl.css";
-@import "./cudl-editor.css";
-@import "./recall-slider.css";
-@import "./column-layouts.css";
-@import "./project-light-legacy.css";
-@import "~font-awesome/css/font-awesome.css";
+
 
 /* homepage style */
 .carousel-panel {
@@ -19,8 +21,6 @@
 
 @media screen and (min-width: 1177px) {
     .carousel-panel {
-        background: url("../img/grey.png") repeat scroll 0px 0px
-            transparent;
         height: 374px;
         right: 0px;
         padding: 10px;
@@ -111,24 +111,24 @@ div.campl-site-search {
     background-color: #FFFFFF;
 }
 
-.library-logo {
-    margin: 20px 0;
+/*.library-logo {*/
+/*    margin: 20px 0;*/
 
-    background-image: url("../img/ul-600-logo-landscape.svg");
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-size: contain;
+/*    background-image: url("../img/img-logo-landscape.svg");*/
+/*    background-repeat: no-repeat;*/
+/*    background-position: left center;*/
+/*    background-size: contain;*/
 
-    display: block;
-    height: 80px;
-}
+/*    display: block;*/
+/*    height: 80px;*/
+/*}
 @media (max-width: 767px) {
     .library-logo {
         background-position: center;
         margin: 20px 10px;
     }
 }
-
+*/
 .content {
     background-color: #FFFFFF;
 }
@@ -348,7 +348,7 @@ div.campl-site-search {
 
 blockquote {
     border-left: 0px;
-    margin-right: 20px;
+    margin: 18px 0px;
 }
 
 .cam-quote-mark {
@@ -692,67 +692,48 @@ ol#virtual_collections_carousel li {
 }
 
 /* For pagination */
+
+#bottomPagination {
+    margin-top: 1.5em;
+}
+
+.paginationjs {
+    width: 100%;
+}
+
+.paginationjs>:first-child {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.paginationjs .paginationjs-pages li {
+    border: 0;
+}
+
+.paginationjs .paginationjs-pages li:last-child {
+    border-right: 0;
+}
+
+.paginationjs.paginationjs-small .paginationjs-pages li.active>a {
+    height: 24px;
+}
+
+.paginationjs-prev,
+.paginationjs-prev a,
+.paginationjs .paginationjs-pages li:first-child>a {
+    background: black;
+    color: white;
+}
+
+.paginationjs-next,
+.paginationjs-next a,
+.paginationjs .paginationjs-pages li:last-child>a {
+    background: black;
+    color: white;
+}
+
 div.pagination {
     text-align: center;
-}
-
-div.pagination a:hover, div.pagination span.current {
-    background-color: #F2F2F2;
-    color: #000;
-}
-
-div.pagination a {
-    font-style: normal;
-    background-color: #fff;
-    border-color: #D6D6D6;
-    border-style: solid;
-    border-width: 1px;
-    color: #000;
-    font-size: 11px;
-    font-weight: 400;
-    line-height: 12px;
-    margin: 0px 2px;
-    padding: 4px 7px;
-    text-align: center;
-    text-decoration: none;
-}
-
-div.pagination span.current {
-    font-style: normal;
-    background-color: #F2F2F2;
-    border-color: #D6D6D6;
-    border-style: solid;
-    border-width: 1px;
-    color: #000;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 12px;
-    margin: 0px 2px;
-    padding: 4px 7px;
-    text-align: center;
-    text-decoration: none;
-}
-
-div.pagination a.next, div.pagination span.disabled, div.pagination a.last,
-    div.pagination a.first, div.pagination a.prev {
-    font-style: normal;
-    background-color: #000;
-    border-color: #000;
-    border-style: solid;
-    border-width: 1px;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 400;
-    line-height: 12px;
-    margin: 0px 2px;
-    padding: 4px 7px;
-    text-align: center;
-    text-decoration: none;
-}
-
-div.pagination a.next:hover, div.pagination a.last:hover, div.pagination a.first:hover,
-    div.pagination a.prev:hover {
-    background-color: #454545
 }
 
 /* search on bar */
@@ -776,20 +757,20 @@ div.pagination a.next:hover, div.pagination a.last:hover, div.pagination a.first
     z-index: 2;
 }
 
-#navPrimary #submit {
-    background: url("../img/sprite.png") no-repeat scroll -768px -17px
-        transparent;
-    cursor: pointer;
-    display: inline-block;
-    height: 16px;
-    overflow: hidden;
-    position: absolute;
-    right: 10px;
-    text-indent: -9999px;
-    top: 9px;
-    width: 16px;
-    z-index: 3;
-}
+/*#navPrimary #submit {*/
+/*    background: url("img.png") no-repeat scroll -768px -17px*/
+/*        transparent;*/
+/*    cursor: pointer;*/
+/*    display: inline-block;*/
+/*    height: 16px;*/
+/*    overflow: hidden;*/
+/*    position: absolute;*/
+/*    right: 10px;*/
+/*    text-indent: -9999px;*/
+/*    top: 9px;*/
+/*    width: 16px;*/
+/*    z-index: 3;*/
+/*}*/
 
 #navPrimary input {
     margin-right: 2px;
@@ -810,20 +791,20 @@ div.pagination a.next:hover, div.pagination a.last:hover, div.pagination a.first
     z-index: 2;
 }
 
-.search #submit {
-    background: url("../img/sprite.png") no-repeat scroll -768px -17px
-        transparent;
-    cursor: pointer;
-    display: inline-block;
-    height: 16px;
-    overflow: hidden;
-    position: absolute;
-    right: 10px;
-    text-indent: -9999px;
-    top: 9px;
-    width: 16px;
-    z-index: 3;
-}
+/*.search #submit {*/
+/*    background: url("img.png") no-repeat scroll -768px -17px*/
+/*        transparent;*/
+/*    cursor: pointer;*/
+/*    display: inline-block;*/
+/*    height: 16px;*/
+/*    overflow: hidden;*/
+/*    position: absolute;*/
+/*    right: 10px;*/
+/*    text-indent: -9999px;*/
+/*    top: 9px;*/
+/*    width: 16px;*/
+/*    z-index: 3;*/
+/*}*/
 
 .search input {
     margin-right: 2px;
@@ -870,20 +851,20 @@ div.pagination a.next:hover, div.pagination a.last:hover, div.pagination a.first
     line-height: 25px;
 }
 
-.searchform #submit {
-    background: url("../img/sprite.png") no-repeat scroll -768px -17px
-        transparent;
-    cursor: pointer;
-    display: inline-block;
-    height: 16px;
-    overflow: hidden;
-    position: absolute;
-    right: 5px;
-    text-indent: -9999px;
-    top: 5px;
-    width: 16px;
-    z-index: 3;
-}
+/*.searchform #submit {*/
+/*    background: url("img.png") no-repeat scroll -768px -17px*/
+/*        transparent;*/
+/*    cursor: pointer;*/
+/*    display: inline-block;*/
+/*    height: 16px;*/
+/*    overflow: hidden;*/
+/*    position: absolute;*/
+/*    right: 5px;*/
+/*    text-indent: -9999px;*/
+/*    top: 5px;*/
+/*    width: 16px;*/
+/*    z-index: 3;*/
+/*}*/
 
 /* advancd search query page */
 .advancedsearchform {
@@ -1091,3 +1072,74 @@ div.pagination a.next:hover, div.pagination a.last:hover, div.pagination a.first
 .campl-btn.campl-primary-cta.campl-btn-darkbg {
     border: 1px solid #545454;
 }
+
+/* These classes are a TEST for Bootstrap 5.3 */
+
+/* Classes for the "View all collections" page. */
+
+/* Cards. Ratio image:text 5:7 */
+
+.card {
+    border-radius: 0px; /* Overrides Bootstrap default rounded corners. Makes card square */
+    box-sizing: border-box;
+    background-color: #106470;
+    height: 150px; /* height: 150px prevents layout from breaking when there's no image */
+}
+
+.card img {
+    height: 150px; /*fits the height of the card container */
+    width: auto; /*intrinsic width */
+    object-fit: cover; /* maintains the aspect-ratio but clips the image to fit */
+
+}
+
+.card:link, .card:hover {
+    background: #6BBBAE;
+    color: #000 !important;
+}
+
+.col a:link {
+    text-decoration: none;
+}
+
+
+/* card text : max chars to avoid text wrapping into three lines which breaks the layout */
+
+.card-title {
+    font-size: 1.1875em; /*16px equival or 1118.75% */
+    font-weight: 500; /* Medium: between "normal" (400) and "semibold" (600) */
+    line-height: 1.5;
+    margin-top: auto;
+}
+
+/* Classes for the about-nav.tag */
+
+/* tertiary navigation classes */
+
+.tertiary-navigation {
+    font-size: 14px;
+    line-height: 20px;
+    border: 1px solid #e4e4e4;
+}
+
+.tertiary-navigation li a {
+    display: inline-block;
+    width: 100%
+}
+
+/* Classes for the home page */
+
+/* Carousel indicators on home page : change to dots */
+.carousel .carousel-indicators button {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #bbb; /* using red for testing use "#bbb" on live site */
+}
+
+/* Places carousel indicators under the carousel itself */
+.carousel-indicators {
+    bottom: -3rem;
+}
+
+/* end of TEST classes for Bootstrap 5.3 */
