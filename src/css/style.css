@@ -348,7 +348,7 @@ div.campl-site-search {
 
 blockquote {
     border-left: 0px;
-    margin-right: 20px;
+    margin: 18px 0px;
 }
 
 .cam-quote-mark {
@@ -1089,6 +1089,7 @@ div.pagination {
     font-size: 1.1875em; /*16px equival or 1118.75% */
     font-weight: 500; /* Medium: between "normal" (400) and "semibold" (600) */
     line-height: 1.5;
+    margin-top: auto;
 }
 
 /* Classes for the about-nav.tag */
