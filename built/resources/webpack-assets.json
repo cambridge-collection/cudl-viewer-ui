@@ -1,0 +1,38 @@
+{
+  "page-standard": {
+    "css": "css/page-standard-279c874c08257b1ac18d.css",
+    "js": "./js/page-standard-279c874c08257b1ac18d.js"
+  },
+  "page-document": {
+    "css": "css/page-document-f9c6660d5a6a993b4ff6.css",
+    "js": "./js/page-document-f9c6660d5a6a993b4ff6.js"
+  },
+  "page-advancedsearch": {
+    "css": "css/page-advancedsearch-f3aa664113ebe7455d17.css",
+    "js": "./js/page-advancedsearch-f3aa664113ebe7455d17.js"
+  },
+  "page-transcription": {
+    "css": "css/page-transcription-ff1e834b858acc13484a.css",
+    "js": "./js/page-transcription-ff1e834b858acc13484a.js"
+  },
+  "page-collection-organisation": {
+    "css": "css/page-collection-organisation-b3a32b7c7622adb39961.css",
+    "js": "./js/page-collection-organisation-b3a32b7c7622adb39961.js"
+  },
+  "page-advanced-search-results": {
+    "css": "css/page-advanced-search-results-2582a1372a9d8bc9ea87.css",
+    "js": "./js/page-advanced-search-results-2582a1372a9d8bc9ea87.js"
+  },
+  "page-error-500": {
+    "css": "css/page-error-500-7556ab6a54e9d3c1d6af.css",
+    "js": "./js/page-error-500-7556ab6a54e9d3c1d6af.js"
+  },
+  "page-feedback": {
+    "css": "css/page-feedback-6a120956d737282a0e51.css",
+    "js": "./js/page-feedback-6a120956d737282a0e51.js"
+  },
+  "common": {
+    "css": "css/common-b55cb3874f17daa0c5d4.css",
+    "js": "./js/common-b55cb3874f17daa0c5d4.js"
+  }
+}
