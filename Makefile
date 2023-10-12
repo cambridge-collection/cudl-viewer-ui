@@ -19,7 +19,8 @@ release:
 	make build && \
 	git add -f built && \
 	(git diff-index --quiet HEAD ||	git commit -m "Temporarily adding resources for build") && \
-	mvn release:prepare -DpushChanges=true && \
+	mvn release:prepare && \
+	git push --tags && \
 	mvn release:perform && \
  	git rm -r --cached built && \
 	(git diff-index --quiet HEAD ||	git commit -m "Removing resources for build") ;
