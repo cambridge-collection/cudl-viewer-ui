@@ -8,12 +8,12 @@ window.addEventListener('load', function(){
         theme: "classic",
         palette: {
             popup: {
-                background: "#ccc",
-                text: "#444"
+                background: "#151515",
+                text: "#fcfcfc"
             },
             button: {
-                background: "#8c6",
-                text: "#fff"
+                background: "#fcfcfc",
+                text: "#151515"
             }
         },
         content: {
