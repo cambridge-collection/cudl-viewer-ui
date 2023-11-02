@@ -357,6 +357,7 @@ a.campl-skipTo:focus + .main-nav-section {
     position:relative;
     display:table;
     margin: 0.625rem 0 0 auto;
+    max-width: fit-content;
 }
 
 .more-link a, .more-link a:link, .more-link a:visited, .more-link a:hover, .more-link a:focus, .more-link a:active {
