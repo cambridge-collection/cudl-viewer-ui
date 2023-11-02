@@ -461,6 +461,7 @@ ol#virtual_collections_carousel li {
     min-height: 190px;
     max-width: 500px;
     float:left;
+    margin: 5px; /*space needed for perimetral hover pink highlighting */
 }
 
 .virtual_collections_carousel_image_box {
