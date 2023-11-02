@@ -1343,3 +1343,11 @@ img {
         scroll-snap-margin-top: 56px; /* iOS 11 and older */
     }
 }
+
+/* Custom Cookie banner style */
+.cc-compliance a.cc-btn.cc-deny {
+    /* border-color: #f0f; */
+    border-style: solid;
+    border-width: 2px;
+    border-color: #fcfcfc;
+}
