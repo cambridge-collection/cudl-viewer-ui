@@ -1,6 +1,6 @@
 {
   "name": "cudl-viewer-ui",
-  "version": "3.0.5-SNAPSHOT",
+  "version": "3.0.13-SNAPSHOT",
   "dependencies": {
     "bootstrap": "^3.4.1",
     "bootstrap-slider": "^10.6.2",
@@ -8,6 +8,7 @@
     "console-polyfill": "^0.3.0",
     "cudl-viewer-bubbles": "git+ssh://git@github.com:cambridge-collection/cudl-viewer-bubbles.git#v1.5.0",
     "cudl-viewer-tagging-ui": "git+ssh://git@github.com:cambridge-collection/cudl-viewer-tagging-ui.git#v1.4.0",
+    "d3": "7.8.5",
     "es6-error": "^4.1.1",
     "font-awesome": "^4.7.0",
     "hint.css": "^2.6.0",
@@ -16,7 +17,8 @@
     "jquery-ui": "^1.12.1",
     "jquery.easing": "^1.4.1",
     "lodash": "^4.17.15",
-    "openseadragon": "^2.4.1",
+    "modernizr": "^3.11.8",
+    "openseadragon": "^4.1.0",
     "recursive-iterator": "^3.3.0",
     "spin.js": "^4.1.0"
   },
@@ -58,7 +60,6 @@
   },
   "license": "UNLICENSED",
   "private": true,
-  "optionalDependencies": {},
   "scripts": {
     "show-config": "babel-node ./bin/show-config.js"
   }

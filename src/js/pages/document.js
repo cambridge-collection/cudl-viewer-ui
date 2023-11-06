@@ -15,6 +15,8 @@ import $ from 'jquery';
 import 'jquery-ui/ui/widgets/slider';
 import 'bootstrap';
 import OpenSeadragon from 'openseadragon';
+import * as Overlay from 'svg-overlay';
+import * as d3 from 'd3';
 import range from 'lodash/range';
 import { setupSimilarityTab } from 'cudl-viewer-bubbles';
 import { setupTaggingTab } from 'cudl-viewer-tagging-ui';
@@ -95,52 +97,17 @@ function loadPage(pagenumber, isReload = false) {
 
     // test for images
     var imageavailable = true;
-    if (typeof(data.pages[pagenumber-1].displayImageURL) == "undefined") {
+    if (typeof(data.pages[pagenumber-1].IIIFImageURL) == "undefined") {
         viewer._showMessage("No image available for page: "+data.pages[pagenumber-1].label);
         imageavailable = false;
     }
 
-    function openDzi(dziPath) {
-
-        // ajax call to fetch .dzi
-        $.ajax({
-            url: context.imageServer + dziPath,
-            'type': 'GET',
-            // Handle data conversion ourselves
-            dataType: 'text'
-        }).done(function(xml) {
-            // Seadragon AJAX supported being given a DZI as a string
-            // and rewriting the tilesource to an external URL
-            // openseadragon won't accept an external DZI so we build an
-            // inline tilesource with a modified URL
-
-            let $xml = $($.parseXML(xml));
-            let $image = $xml.find('Image');
-            let $size = $xml.find('Size');
-            var path = dziPath.substring(0, dziPath.length - 4);
-
-            var dzi = {
-                Image : {
-                    xmlns : $image.attr('xmlns'),
-                    Url : context.imageServer + path + '_files/',
-                    Format : $image.attr('Format'),
-                    Overlap : $image.attr('Overlap'),
-                    TileSize : $image.attr('TileSize'),
-                    Size : {
-                        Height : $size.attr('Height'),
-                        Width : $size.attr('Width')
-                    }
-                }
-            };
-
-            viewer.open(dzi);
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            viewer._showMessage("Image server temporarily unavailable");
-        });
+    function openIIIF(iiifPath) {
+        viewer.open(context.iiifImageServer + iiifPath + "/info.json");
     }
 
     // open Image
-    if (imageavailable) { openDzi(data.pages[pagenumber - 1].displayImageURL); }
+    if (imageavailable) { openIIIF(data.pages[pagenumber - 1].IIIFImageURL); }
 
     // update current page
     viewerModel.setPageNumber(pagenumber);
@@ -161,6 +128,8 @@ function loadPage(pagenumber, isReload = false) {
 
     // Record each page turn as a page view with Google analytics
     ga('send', 'pageview');
+
+    setupTranscriptionCoords();
 }
 
 // Update the metadata that changes on page change
@@ -486,7 +455,7 @@ function setupInfoPanel(data) {
 
     // NB: This will disable thumbnails if the first page has no image. This assumes that
     // the there are documents either with a complete set of thumbnails or no thumbnails.
-    if (typeof data.pages[0].thumbnailImageURL == 'undefined') {
+    if (typeof data.pages[0].IIIFImageURL == 'undefined') {
         $('#rightTabs a[href="#thumbnailstab"]').parent().addClass("disabled");
         $('#rightTabs a[href="#thumbnailstab"]').click(function(e){return false;}); // disable link;
     }
@@ -537,8 +506,10 @@ function addBookmark() {
         data = viewerModel.getMetadata();
 
     // Generate bookmarkPath
-    var thumbnailURL = context.imageServer+data.pages[pageNum-1].thumbnailImageURL;
-    var bookmarkPath = "/mylibrary/addbookmark/?itemId="+context.docId+"&page="+pageNum+"&thumbnailURL="+encodeURIComponent(thumbnailURL);
+    // thumbnailImage should be e.g."MS-ADD-03996-000-00001.jp2" as we
+    // cannot always generate this from the itemid and pagenum.
+    var thumbnailImage = data.pages[pageNum-1].IIIFImageURL;
+    var bookmarkPath = "/mylibrary/addbookmark/?itemId="+context.docId+"&page="+pageNum+"&thumbnailImage="+encodeURIComponent(thumbnailImage);
 
     // ajax call to make the bookmark:
     $.post(bookmarkPath).done(function(xml) {
@@ -656,57 +627,53 @@ function showThumbnailPage(pagenum) {
         // thumbnails of.
         var startIndex = props.MAX_THUMBNAIL_ITEMS_ON_PAGE * (pageNum - 1);
         var endIndex = Math.min((props.MAX_THUMBNAIL_ITEMS_ON_PAGE * pageNum) - 1,
-                data.pages.length - 1);
+            data.pages.length - 1);
         var thumbnailhtml = "";
 
         for (let i = startIndex; i <= endIndex; i++) {
 
-            if (i == startIndex) {
+            // start
+            if (i === startIndex) {
                 thumbnailhtml = thumbnailhtml
-                        .concat("<div class='thumbnail-pane' id='thumbnail"
-                                + pageNum + "'>");
+                    .concat("<div class='thumbnail-pane' id='thumbnail"
+                        + pageNum + "'>");
             }
-            if (i == startIndex || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) == 0) {
 
-                if (typeof data.textDirection !== 'undefined' && data.textDirection === 'R'){
-
+            // Setup text direction
+            if (i === startIndex || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) === 0) {
+                if (typeof data.textDirection !== 'undefined' && data.textDirection === 'R') {
                     thumbnailhtml = thumbnailhtml.concat("<div class='row row-right-to-left'>");
-
                 } else {
                     thumbnailhtml = thumbnailhtml.concat("<div class='row'>");
                 }
             }
 
-            thumbnailhtml = thumbnailhtml
-                    .concat("<div class='col-md-4'><a href='' onclick='store.loadPage("
-                            + (data.pages[i].sequence)
-                            + ");return false;' class='thumbnail'><img src='"
-                            + context.imageServer
-                            + data.pages[i].thumbnailImageURL
-                            + "' ");
-
-            if (data.pages[i].thumbnailImageOrientation == "portrait") {
-                thumbnailhtml = thumbnailhtml
-                        .concat("style='height:150px;'><div class='caption'>"
-                                + data.pages[i].label + "</div></a></div>");
+            // Setup orientation
+            let thumbnailURL = context.iiifImageServer + data.pages[i].IIIFImageURL;
+            if (data.pages[i].thumbnailImageOrientation === "portrait") {
+                thumbnailURL = thumbnailURL.concat("/full/,150/0/default.jpg' style='height:150px");
             } else {
-                thumbnailhtml = thumbnailhtml
-                        .concat("style='width:130px;'><div class='caption'>"
-                                + data.pages[i].label + "</div></a></div>");
+                thumbnailURL = thumbnailURL.concat("/full/150,/0/default.jpg' style='width:150px");
             }
 
-            if (i == endIndex
-                    || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) == props.MAX_THUMBNAIL_ITEMS_ON_ROW - 1) {
-                thumbnailhtml = thumbnailhtml.concat("</div>");
-            }
-            if (i == endIndex) {
-                thumbnailhtml = thumbnailhtml.concat("</div>");
-            }
+            thumbnailhtml = thumbnailhtml
+                .concat("<div class='col-md-4'><a href='' onclick='store.loadPage("
+                    + (data.pages[i].sequence) + ");return false;' class='thumbnail'>" +
+                    "<img src='" + thumbnailURL + "'> "
+                    + "<div class='caption'>" + data.pages[i].label + "</div></a></div>");
 
+            // finish
+            if (i === endIndex
+                || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) === props.MAX_THUMBNAIL_ITEMS_ON_ROW - 1) {
+                thumbnailhtml = thumbnailhtml.concat("</div>");
+            }
+            if (i === endIndex) {
+                thumbnailhtml = thumbnailhtml.concat("</div>");
+            }
         }
 
         $('#thumbnailimages').html(thumbnailhtml);
-    };
+    }
 
     if (pagenum > 0 && pagenum <= thumbnailProps.NUM_THUMBNAIL_PAGES) {
         currentThumbnailPage = pagenum;
@@ -972,6 +939,10 @@ function setTranscriptionPage(data, pagenum) {
         newIframe.attr('src', iframeData[key].src);
         targetIframe.replaceWith(newIframe);
     }
+
+    let diploFrame = $("#transcriptiondiploframe")[0];
+    diploFrame.onload = function() { setupTranscriptionCoords(); }
+
 }
 
 function writeBlankPage(pagenum, message = "") {
@@ -1119,6 +1090,81 @@ function setupKnowMoreLinks() {
     });
 }
 
+window.showPoints = function showPoints(points)
+{
+    showPolygon(points);
+}
+
+function setupMessaging() {
+    if (window.addEventListener) {
+        window.addEventListener("message", onMessage, false);
+    } else if (window.attachEvent) {
+        window.attachEvent("onmessage", onMessage, false);
+    }
+}
+
+function onMessage(event) {
+    // Check sender origin to be trusted
+    if (event.origin !== "http://localhost:3000") return;
+
+    var data = event.data;
+
+    if (typeof(window[data.func]) == "function") {
+        window[data.func].call(null, data.message);
+    }
+}
+
+function setupTranscriptionCoords() {
+
+    setupMessaging();
+    d3.selectAll('polygon').remove();
+    overlay = null;
+
+}
+
+
+let overlay = null;
+function showPolygon(points) {
+
+    console.log(viewer);
+    let data = viewerModel.getMetadata();
+    let pagenumber = context.pageNum;
+    let imageHeight = data.pages[pagenumber-1].imageHeight/1.66;
+    let imageWidth = data.pages[pagenumber-1].imageWidth;
+
+    // Translate Coords
+    let coords = points.split(" ");
+    let viewerPoints = "";
+    for (let i=0; i<coords.length; i++) {
+        let coord = coords[i];
+        let point = coord.split(",")
+        viewerPoints += Number(point[0])/imageHeight+","+(Number(point[1])/imageWidth);
+        if (i+1<coords.length) {
+            viewerPoints += " ";
+        }
+    }
+
+    // Remove any existing polygons
+    if (overlay == null) {
+        overlay = viewer.svgOverlay();
+    } else {
+        d3.selectAll('polygon').remove();
+    }
+
+    let d3Poly = d3.select(overlay.node()).append("polygon")
+        .style('fill', '#6eadcc')
+        .attr("points",viewerPoints)
+        .style("opacity", 0.3);
+
+    overlay.onClick(d3Poly.node(), function() {
+        console.log('click', arguments);
+    });
+
+    $(window).resize(function() {
+        overlay.resize();
+    });
+}
+
 $(document).ready(function() {
     registerCsrfPrefilter();
 
@@ -1128,7 +1174,7 @@ $(document).ready(function() {
     // Read in the JSON
     $.getJSON(context.jsonURL).done(function(data) {
 
-        // set seadragon options and load in dzi.
+        // set seadragon options and load in image.
         if(pageNum === 0) { pageNum = 1; } // page 0 returns item level metadata.
 
         viewerModel = new ViewerModel({

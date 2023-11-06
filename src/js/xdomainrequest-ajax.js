@@ -1,7 +1,7 @@
 // FIXME: This is also used by the embedded viewer, factor out into shared lib.
 
 import $ from 'jquery';
-import Modernizr from 'modernizr';
+//import Modernizr from 'modernizr';
 
 
 /**
@@ -54,8 +54,8 @@ export class XDomainRequestAjaxTransport {
     static canHandle(options) {
         // Handle cross origin requests if the browser does not support
         // CORS and XDomainRequest exists (e.g. IE 8 and 9)
-        if(isSameOrigin(options.url) || Modernizr.cors ||
-                !window.XDomainRequest) {
+        // || Modernizr.cors
+        if(isSameOrigin(options.url) || !window.XDomainRequest) {
             return false;
         }
 
