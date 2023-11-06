@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import Modernizr from 'modernizr';
+//import Modernizr from 'modernizr';
 import pipe from 'lodash/fp/pipe';
 import map from 'lodash/fp/map';
 import max from 'lodash/fp/max';
@@ -20,9 +20,9 @@ export function resizeLogoColumn() {
             container = logo.parents('.campl-footer-navigation');
         }
 
-        if(Modernizr.mq('only screen and (max-width: 767px)')) {
-            container.height('');
-        }
+        // if(Modernizr.mq('only screen and (max-width: 767px)')) {
+        //     container.height('');
+        // }
         else {
             if(height === undefined) {
                 let columns = container.siblings('.campl-footer-navigation')
