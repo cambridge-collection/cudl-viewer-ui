@@ -1,38 +1,32 @@
-import './polyfill';
-
+//import './polyfill.js.old';
+import './cookie-banner-config';
 import $ from 'jquery';
+window.jQuery = $; // this is needed for paginationjs lib
 
 import './dynamic-public-path';
 import './configure-jquery-migrate';
-//import { patchProjectLight, loadProjectLight } from './projectlight';
-import { ga } from './analytics';
-import { enableLightboxes } from './lightbox';
+
+// import { enableLightboxes } from './lightbox';
 import { setup as setupQuickSearch } from './quicksearch';
 import { displayCookieNotice } from './cudl';
-import { resizeLogoColumn } from './footer';
+// import { resizeLogoColumn } from './footer';
 import { registerCsrfPrefilter } from './ajax-csrf';
 import { showSlides } from './mySlides-carousel';
 import { setupDropdownMenu } from "./dropdownMenu";
+import 'bootstrap';
 
 function init() {
-    // 3rd party libs included for their side-effects
-    require('bootstrap');
-
-    //patchProjectLight();
 
     $(() => {
         registerCsrfPrefilter();
-        //loadProjectLight();
 
-        ga('send', 'pageview');
-
-        enableLightboxes();
-        setupQuickSearch();
-        displayCookieNotice();
-        resizeLogoColumn();
-        showSlides();
-        setupDropdownMenu();
-    });
-}
+//    //     enableLightboxes();
+         setupQuickSearch();
+         displayCookieNotice();
+//         resizeLogoColumn();
+         showSlides();
+         setupDropdownMenu();
+     });
+ }
 
 init();

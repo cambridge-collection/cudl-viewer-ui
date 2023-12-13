@@ -1,8 +1,11 @@
-@import "~font-awesome/css/font-awesome.css";
+@import "font-awesome/css/font-awesome.min.css";
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "cookieconsent/build/cookieconsent.min.css";
 
-@import "./similarity.css";
 
 body {
+    font-family: verdana, arial, sans-serif;
+    font-size: 12px;
     overflow: hidden;
     background: none repeat scroll 0% 0% #000;
     height: 100%;
@@ -13,12 +16,14 @@ body {
     position: absolute;
     top: 0px;
     height: 68px;
+    --bs-navbar-padding-y: 0;
 }
 
 .navbar .container {
     margin-left: 0px;
     float: left;
     width: 100%;
+    max-width: 100%;
     border-bottom: thin solid #333;
     background: none repeat scroll 0% 0% #000;
 }
@@ -383,6 +388,7 @@ body {
 
 #use .panel-body {
     padding: 10px;
+    overflow: hidden;
 }
 
 .usebutton a.btn {
@@ -446,6 +452,15 @@ body {
     padding: 0px;
 }
 
+/* .thumbnailpaginationitem {
+    padding: 2px;
+}
+
+#thumbnailpaginationtop .pagination {
+    margin: auto;
+    width: 100px;
+} */
+
 /* pop up confirmations */
 #bookmarkConfirmation,
 #downloadConfirmation,
@@ -462,6 +477,40 @@ body {
     top: 200px;
     color: #000;
 }
+
+.close {
+    float: right;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: 0.2;
+    text-decoration: none;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+}
+.alert {
+    padding: 15px;
+    margin-bottom: 17px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
 
 #downloadConfirmation select {
     height: 28px;
@@ -483,6 +532,40 @@ body {
     border: 1px dashed #000;
     margin: 25px;
     background-color: #eee;
+}
+
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 12px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    user-select: none;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+button, select {
+    text-transform: none;
 }
 
 /** Responsive Design Stuff **/
@@ -564,4 +647,220 @@ body {
     .cudl-viewer-buttons-pagination {
         margin-right: auto;
     }
+}
+
+/* PANEL CLASSES for Bootstrap 5.3 */
+
+#about-content h3 {
+    font-size: 1.313rem; /*21px based on root 16px */
+    margin-top: 1.063rem; /*17px based on 16px root*/
+    margin-bottom: 0.531rem; /*8.5px based on 16px root*/
+}
+
+#about-header {
+    font-size: 1.313rem; /*21px based on root 16px */
+    line-height: 1.1;
+    }
+
+.panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 0.875rem; /*14px based on root 16px*/
+    color: inherit;
+}
+
+#know-more h4 {
+    font-size: 0.875rem; /*14px based on root 16px*/
+}
+
+.panel-group {
+    margin-bottom: 17px;
+}
+
+.panel {
+    margin-bottom: 17px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.panel-default {
+    border-color: #ddd;
+}
+
+.panel-default > .panel-heading {
+    color: #333333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+}
+
+.panel-info {
+    border-color: #bce8f1;
+}
+
+.panel-info > .panel-heading {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.panel-info > .panel-heading + .panel-collapse > .panel-body {
+    border-top-color: #bce8f1;
+}
+
+.panel-body {
+    padding: 15px;
+}
+
+/* Overrides scss dropdown default --- Allows metadata info panels to show contents */
+.collapse:not(.show) {
+    display: block;
+}
+
+/* Class for "know-more" panel */
+
+.well {
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+/* Classes for "More" dropdown menu */
+
+.dropdown-menu {
+    font-size: 0.75rem; /*12px based on root 16px*/
+    text-align: left;
+    list-style: none;
+}
+
+.dropdown-menu > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333333;
+    white-space: nowrap;
+}
+
+/* Link styling in document page */
+
+.nav-link, a {
+    color: #337ab7;
+    text-decoration: none;
+}
+
+/* Thumbnails tab pagination and panel styles for Bootstrap 5.3 */
+
+.thumbnail {
+    display: block;
+    padding: 4px;
+    margin-bottom: 17px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border 0.2s ease-in-out;
+}
+
+.thumbnail > img,
+.thumbnail a > img {
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+    max-width: 100%;
+}
+
+a.thumbnail:hover,
+a.thumbnail:focus,
+a.thumbnail.active {
+    border-color: #337ab7;
+}
+
+.thumbnail .caption {
+    padding: 9px;
+    color: #333333;
+}
+
+.pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 17px 0;
+    border-radius: 4px;
+}
+
+.pagination > li {
+    display: inline;
+}
+
+.pagination > li > a,
+.pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.pagination > li > a:hover,
+.pagination > li > span:hover,
+.pagination > li > a:focus,
+.pagination > li > span:focus {
+    z-index: 2;
+    color: #23527c;
+    background-color: #eeeeee;
+    border-color: #ddd;
+}
+
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+    z-index: 3;
+    color: #fff;
+    cursor: default;
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+    color: #777777;
+    cursor: not-allowed;
+    background-color: #fff;
+    border-color: #ddd;
 }

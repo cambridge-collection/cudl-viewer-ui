@@ -5,7 +5,6 @@
  */
 
 // Bootstrap styles
-// import '../../less/bootstrap/cudl-bootstrap.less';
 import '../../css/advancedsearch.css';
 
 import $ from 'jquery';
@@ -17,7 +16,6 @@ import '../base.js';
 
 
 function changeHintDirection() {
-    console.log('changeHintDirection()');
     // change hint direction
     if ($(window).width() > 767) {
         $('span.hint--bottom').addClass('hint--right')
@@ -28,10 +26,10 @@ function changeHintDirection() {
     }
 }
 
-function createVariableRecallSlider() {
-    // Use bootstrap slider to create a slider bar
-    $('#recall-slider-input').slider();
-}
+// function createVariableRecallSlider() {
+//     // Use bootstrap slider to create a slider bar
+//     $('#recall-slider-input').slider();
+// }
 
 $(() => {
     $(window).resize(debounce(changeHintDirection, 50));
@@ -39,5 +37,5 @@ $(() => {
 
     // Initialisation needs to be deferred in dev mode as otherwise the CSS is
     // not in place when the width of the slider is calculated.
-    defer(createVariableRecallSlider);
+    //defer(createVariableRecallSlider);
 });
