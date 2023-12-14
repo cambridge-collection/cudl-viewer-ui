@@ -13,6 +13,8 @@ import 'font-awesome/css/font-awesome.min.css';
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/slider';
 import OpenSeadragon from 'openseadragon';
+//import * as Overlay from 'svg-overlay';
+import * as d3 from 'd3';
 import range from 'lodash/range';
 
 //import '../cudl';
