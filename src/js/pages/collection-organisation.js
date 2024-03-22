@@ -87,7 +87,7 @@ $(function() {
 
     function updatePageHistory(page){
         var historyStateObject = context.collectionTitle + " page: "+ page;
-        var historyTitle = "Cambridge Digital Library, " + context.collectionTitle + " page: "+ page;
+        var historyTitle = context.collectionTitle + " page: "+ page;
         var historyUrl = location.protocol + '//' + location.host + context.collectionUrl + "/" + page;
         if(window.history.replaceState) window.history.replaceState(historyStateObject, historyTitle, historyUrl);
         context.collectionPage = page;

@@ -13,7 +13,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/slider';
 import OpenSeadragon from 'openseadragon';
-//import * as Overlay from 'svg-overlay';
+import * as Overlay from '../openseadragon-svg-overlay';
 import * as d3 from 'd3';
 import range from 'lodash/range';
 
@@ -47,6 +47,7 @@ const bootstrap = require('bootstrap/dist/js/bootstrap.bundle.min.js');
     iiifEnabled
     iiifManifestURL
     iiifMiradorURL
+    servicesURL
     itemAuthors - not used
     itemAuthorsFullForm - not used
 
@@ -1101,8 +1102,9 @@ function setupMessaging() {
 }
 
 function onMessage(event) {
-    // Check sender origin to be trusted
-    if (event.origin !== "http://localhost:3000") return;
+
+    // Check sender origin to be trusted.  Remove final slash if present.
+    if (event.origin !== context.services.replace(/\/$/, "")) return;
 
     var data = event.data;
 
@@ -1123,7 +1125,6 @@ function setupTranscriptionCoords() {
 let overlay = null;
 function showPolygon(points) {
 
-    console.log(viewer);
     let data = viewerModel.getMetadata();
     let pagenumber = context.pageNum;
     let imageHeight = data.pages[pagenumber-1].imageHeight/1.66;
