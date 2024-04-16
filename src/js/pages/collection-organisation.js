@@ -94,4 +94,11 @@ $(function() {
         $(document.body).attr('data-context', JSON.stringify(context));
     }
 
+    $( document ).ready(function() {
+        $('*[data-toggle="collapse"]').on( "click", function() {
+            let href_attr = $(this).attr('href');
+            $(href_attr).toggle("slow");
+        } );
+    });
+
 });
