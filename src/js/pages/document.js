@@ -124,7 +124,7 @@ function loadPage(pagenumber, isReload = false) {
     // update metadata
     updatePageMetadata(data, pagenumber, isReload);
 
-    setupTranscriptionCoords();
+    context.pageNum = pagenumber;
 }
 
 // Update the metadata that changes on page change
@@ -938,8 +938,11 @@ function setTranscriptionPage(data, pagenum) {
         targetIframe.replaceWith(newIframe);
     }
 
+    // Setup polygons for display
+    setupTranscriptionCoords();
+
     let diploFrame = $("#transcriptiondiploframe")[0];
-    diploFrame.onload = function() { setupTranscriptionCoords(); }
+    diploFrame.onload = function() { resetPolygons(); }
 
 }
 
@@ -1116,9 +1119,12 @@ function onMessage(event) {
 function setupTranscriptionCoords() {
 
     setupMessaging();
+}
+
+function resetPolygons() {
+
     d3.selectAll('polygon').remove();
     overlay = null;
-
 }
 
 
@@ -1152,7 +1158,7 @@ function showPolygon(points) {
     let d3Poly = d3.select(overlay.node()).append("polygon")
         .style('fill', '#6eadcc')
         .attr("points",viewerPoints)
-        .style("opacity", 0.3);
+        .style("opacity", 0.4);
 
     overlay.onClick(d3Poly.node(), function() {
         console.log('click', arguments);
