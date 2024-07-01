@@ -2,13 +2,9 @@
     "common": [],
     "page-standard": ["common"],
     "page-advancedsearch": ["common"],
-    "page-login": ["common"],
     "page-collection-organisation": ["common"],
-    "page-my-library": ["common"],
     "page-advanced-search-results": ["common"],
     "page-error-500": ["common"],
-    "page-admin": ["common"],
     "page-feedback": ["common"],
-    "page-admin-file-browse": ["common"],
     "page-document": []
 }

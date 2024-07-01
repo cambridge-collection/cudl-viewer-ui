@@ -22,7 +22,6 @@ import range from 'lodash/range';
 import { getPageContext } from '../context';
 import paginationTemplate from './document-thumbnail-pagination.jade';
 import { ViewerModel } from '../viewer/models';
-import { registerCsrfPrefilter } from '../ajax-csrf';
 import '../cookie-banner-config';
 
 const bootstrap = require('bootstrap/dist/js/bootstrap.bundle.min.js');
@@ -1170,7 +1169,7 @@ function showPolygon(points) {
 }
 
 $(document).ready(function() {
-    registerCsrfPrefilter();
+    //registerCsrfPrefilter();
 
     context = getPageContext();
     let pageNum = context.pageNum;

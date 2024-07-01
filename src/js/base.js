@@ -10,7 +10,6 @@ import './configure-jquery-migrate';
 import { setup as setupQuickSearch } from './quicksearch';
 import { displayCookieNotice } from './cudl';
 // import { resizeLogoColumn } from './footer';
-import { registerCsrfPrefilter } from './ajax-csrf';
 import { showSlides } from './mySlides-carousel';
 import { setupDropdownMenu } from "./dropdownMenu";
 import 'bootstrap';
@@ -18,8 +17,6 @@ import 'bootstrap';
 function init() {
 
     $(() => {
-        registerCsrfPrefilter();
-
 //    //     enableLightboxes();
          setupQuickSearch();
          displayCookieNotice();
