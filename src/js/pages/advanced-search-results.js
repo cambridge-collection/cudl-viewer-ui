@@ -13,8 +13,7 @@ import 'paginationjs';
 import {toggleDiv} from "../cudl";
 
 function styleSnippet(s) {
-    s = s.replace(/<b>/g, "<span class=\"campl-search-term\">");
-    s = s.replace(/<\/b>/g, "</span>");
+    s = s.replace(/(^[^<>]+>|<[^>]+$)/g, "");
     return s;
 }
 
