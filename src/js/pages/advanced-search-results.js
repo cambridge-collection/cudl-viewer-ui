@@ -139,29 +139,37 @@ function getSearchQueryString(state) {
     return serialiseQuery(queryParams);
 }
 
-function setupFacets() {
 
-    $('.collapse').collapse();
-    $('[id^="facetToggle"]').filter(function (i, elem){
-        return !elem.id.endsWith("Div");
+function setupFacets(init) {
 
-    }).each(function (i) {
+    if (init) {
+        $('.collapse').collapse();
+    }
 
-        this.onclick = function() {
+    $('[id^="facetToggle"]').click(function (el) {
 
-            $('#'+this.id+'Div').collapse('toggle')
-
-            // Setup icon
-            if (this.innerHTML.includes("▾")) {
-                this.innerHTML = this.innerHTML.replace("▾","▸");
-            } else {
-                this.innerHTML = this.innerHTML.replace("▸", "▾");
-            }
-
-            return false;
-        };
+        // Add click to facet icon and name
+        toggleFacet(this);
     });
 
+}
+
+function toggleFacet(linkEl) {
+
+    const panelEl = $("#div"+linkEl.id);
+
+    // First switch the icons
+    if (linkEl.innerHTML) {
+        // Setup icon
+        if (panelEl.hasClass('show')) {
+            linkEl.innerHTML = linkEl.innerHTML.replace("▾", "▸");
+        } else {
+            linkEl.innerHTML = linkEl.innerHTML.replace("▸", "▾");
+        }
+    }
+
+    // The toggle collapse
+    panelEl.collapse('toggle');
 }
 
 /**
@@ -327,7 +335,7 @@ function renderFacetTree(state, facets) {
                         renderLessFacetLink(state, facetGroup)
                     ),
                 $('<div>')
-                    .attr("id", "facetToggle"+facetGroup.label+"Div")
+                    .attr("id", "divfacetToggle"+facetGroup.label)
                     .addClass("collapse show")
                     .append(
                     $('<ul>')
@@ -521,6 +529,8 @@ function requery(state) {
 
         $('.query-actions .change-query')
             .attr('href', renderChangeQueryUrl(state));
+
+        setupFacets(false);
     });
 }
 
@@ -641,8 +651,6 @@ function showState(state) {
         requery(state);
     }
     currentState = state;
-
-    setupFacets();
 }
 
 function requestState(state, mode) {
@@ -775,7 +783,7 @@ function init() {
         return false;
     });
 
-    setupFacets();
+    setupFacets(true);
 }
 
 // function createVariableRecallSlider() {
