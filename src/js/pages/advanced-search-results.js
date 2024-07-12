@@ -13,8 +13,7 @@ import 'paginationjs';
 import {toggleDiv} from "../cudl";
 
 function styleSnippet(s) {
-    s = s.replace(/<b>/g, "<span class=\"campl-search-term\">");
-    s = s.replace(/<\/b>/g, "</span>");
+    s = s.replace(/(^[^<>]+>|<[^>]+$)/g, "");
     return s;
 }
 
@@ -230,12 +229,12 @@ function renderResult(result) {
                                     "Page: ", document.createTextNode(result.startPageLabel), ")"
                                 )
                         ),
-                    document.createTextNode(item.abstractShort),
-                    $("<br><br>"),
-                    $("<ul>")
+                    $("<div>").append(
+                    document.createTextNode(item.abstractShort)),
+                    $("<ul class=\"snippets\">")
                         .append(
                             result.snippets.filter(Boolean).map(function(snippet) {
-                                return $("<li>")
+                                return $("<li class=\"snippet\">")
                                     .append(
                                         $("<span>").html(styleSnippet(snippet))
                                     )[0];
