@@ -142,10 +142,6 @@ function getSearchQueryString(state) {
 
 function setupFacets(init) {
 
-    if (init) {
-        $('.collapse').collapse();
-    }
-
     $('[id^="facetToggle"]').click(function (el) {
 
         // Add click to facet icon and name
@@ -325,7 +321,7 @@ function renderFacetTree(state, facets) {
                             .attr("id", "facetToggle"+facetGroup.label)
                             .attr("data-toggle", "collapse")
                             .append(
-                                $('<span>').html('▾ '),
+                                $('<span>').html('▸ '),
                                 document.createTextNode(facetGroup.label)
                             ),
                     ),
@@ -336,7 +332,7 @@ function renderFacetTree(state, facets) {
                     ),
                 $('<div>')
                     .attr("id", "divfacetToggle"+facetGroup.label)
-                    .addClass("collapse show")
+                    .addClass("collapse")
                     .append(
                     $('<ul>')
                         .addClass('campl-unstyled-list')

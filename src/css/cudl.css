@@ -629,6 +629,9 @@ button {
     top: 24px;
     display: block;
 }
+#headerSearchForm {
+    font-size: 18px;
+}
 
 @media screen and (max-width: 600px) {
     .dropdown-content {
