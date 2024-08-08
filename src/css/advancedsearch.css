@@ -144,7 +144,14 @@ div.collections_carousel_item ul.snippets li.snippet span td {
 }
 
 div.collections_carousel_item ul.snippets li.snippet em.match {
-    color: red
+    color: black;
+    font-weight: bold;
+    font-style: normal;
+    background: rgba(16, 100, 112, 0.1);
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: rgba(16, 100, 112, 0.75);
+    padding: 0 0.2em;
 }
 
 /* pagination */
