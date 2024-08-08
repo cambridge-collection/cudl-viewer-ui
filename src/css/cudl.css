@@ -1369,9 +1369,22 @@ img {
 }
 
 /* Custom Cookie banner style */
+
+.cookie-text-container {
+    max-width:75%;
+    font-weight:200;
+}
+.cookie-text-container .cookie-head {
+    font-size: 1.25em;
+    font-weight: 600;
+}
+
+.cookie-text-container b {
+    font-weight:600;
+}
 .cc-compliance a.cc-btn.cc-deny {
-    /* border-color: #f0f; */
     border-style: solid;
     border-width: 2px;
     border-color: #fcfcfc;
 }
+
