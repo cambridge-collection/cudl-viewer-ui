@@ -805,10 +805,6 @@ div.pagination {
 /*    z-index: 3;*/
 /*}*/
 
-.search input {
-    margin-right: 2px;
-}
-
 /* Search box on search results page */
 .searchform form {
     margin-left: auto;
