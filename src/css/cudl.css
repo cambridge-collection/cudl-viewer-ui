@@ -1137,6 +1137,10 @@ img {
       flex: 50%;
       max-width: 50%;
     }
+    .masthead-container {
+        margin-top: 5px;
+    }
+
   }
 
   @media screen and (max-width: 600px) {
