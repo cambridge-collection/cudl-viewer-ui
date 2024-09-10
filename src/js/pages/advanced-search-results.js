@@ -752,14 +752,14 @@ function init() {
     requestState(Object.assign({}, currentState, {page: initialPage}), 'replace');
 
     // Show the stored state when browser history is accessed.
-    $(window).on('popstate', function(e) {
-        var state = e.originalEvent.state;
-
-        // Safari fires a popstate event on page load with null state
-        if(state !== null) {
-            showState(state);
-        }
-    });
+    // $(window).on('popstate', function(e) {
+    //     var state = e.originalEvent.state;
+    //
+    //     // Safari fires a popstate event on page load with null state
+    //     if(state !== null) {
+    //         showState(state);
+    //     }
+    // });
 
     // $("#recall-slider-input")
     //     .on("change", function(e) {
