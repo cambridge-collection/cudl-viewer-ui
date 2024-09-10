@@ -431,7 +431,7 @@ function renderChangeQueryUrl(state) {
             .map(function(k) { return [k, state[k]]; })
     );
 
-    return './query' + query;
+    return '/search/query' + query;
 }
 
 /**
