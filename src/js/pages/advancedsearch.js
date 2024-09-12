@@ -39,3 +39,11 @@ $(() => {
     // not in place when the width of the slider is calculated.
     //defer(createVariableRecallSlider);
 });
+$(() => {
+    $("#searchForm button[type='reset']").click(function(){
+        var form = $(this).parents('form:first');
+        form.find("*[value]").attr('value', '');
+        form.find("*[selected]").removeAttr('selected');
+    });
+
+});
