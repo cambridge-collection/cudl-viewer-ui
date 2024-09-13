@@ -1,0 +1,38 @@
+{
+  "page-standard": {
+    "css": "css/page-standard-07bc574bb462014c6a45.css",
+    "js": "./js/page-standard-07bc574bb462014c6a45.js"
+  },
+  "page-document": {
+    "css": "css/page-document-e5a8911b6077f6be83c7.css",
+    "js": "./js/page-document-e5a8911b6077f6be83c7.js"
+  },
+  "page-advancedsearch": {
+    "css": "css/page-advancedsearch-8cbdce64d31f13a817de.css",
+    "js": "./js/page-advancedsearch-8cbdce64d31f13a817de.js"
+  },
+  "page-transcription": {
+    "css": "css/page-transcription-70e80de02eec1fe2b5a6.css",
+    "js": "./js/page-transcription-70e80de02eec1fe2b5a6.js"
+  },
+  "page-collection-organisation": {
+    "css": "css/page-collection-organisation-8a1c766fcc8f7e79a035.css",
+    "js": "./js/page-collection-organisation-8a1c766fcc8f7e79a035.js"
+  },
+  "page-advanced-search-results": {
+    "css": "css/page-advanced-search-results-3eec3fb3bd2a7040c6ba.css",
+    "js": "./js/page-advanced-search-results-3eec3fb3bd2a7040c6ba.js"
+  },
+  "page-error-500": {
+    "css": "css/page-error-500-bf13a53a36c3ed7fd3fe.css",
+    "js": "./js/page-error-500-bf13a53a36c3ed7fd3fe.js"
+  },
+  "page-feedback": {
+    "css": "css/page-feedback-38c4d32f316ea37691cd.css",
+    "js": "./js/page-feedback-38c4d32f316ea37691cd.js"
+  },
+  "common": {
+    "css": "css/common-dc55bd07741324ffdf6a.css",
+    "js": "./js/common-dc55bd07741324ffdf6a.js"
+  }
+}
