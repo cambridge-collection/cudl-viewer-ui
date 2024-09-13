@@ -311,6 +311,16 @@ function renderFacet(state, group, facet) {
         )[0];
 }
 
+/**
+ * Transforms the Uppercase_Undercored_Version of the facet name into
+ * something suitable for display
+ * @param facetName
+ */
+function renderFacetName(facetName) {
+    var displayFacetName =  facetName.toLowerCase().replaceAll("_", " ");
+    return displayFacetName.charAt(0).toUpperCase() + displayFacetName.slice(1);
+}
+
 function renderFacetTree(state, facets) {
     const tree =  $(facets.map(function(facetGroup) {
         return $('<li>')
@@ -322,7 +332,7 @@ function renderFacetTree(state, facets) {
                             .attr("data-toggle", "collapse")
                             .append(
                                 $('<span>').html('▸ '),
-                                document.createTextNode(facetGroup.label)
+                                document.createTextNode(renderFacetName(facetGroup.label))
                             ),
                     ),
                 $('<div>')
@@ -413,7 +423,7 @@ function renderSelectedFacet(state, selectedFacet) {
                     'in ',
                     $('<b>')
                         .append($('<span>').text(selectedFacet.value)[0]),
-                    ' (', document.createTextNode(selectedFacet.field), ') ❌'
+                    ' (', document.createTextNode(renderFacetName(selectedFacet.field)), ') ❌'
                 )
         )[0];
 }
