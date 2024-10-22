@@ -61,9 +61,18 @@ $(function() {
 
                 const itemDiv = document.createElement('div');
                 itemDiv.setAttribute("class", "collections_carousel_item");
+
+                // Setup thumbnail url
+                let thumbnailURL = context.iiifImageServer + item.IIIFImageURL;
+                if (item.pages[0].thumbnailImageOrientation === "portrait") {
+                    thumbnailURL = thumbnailURL.concat("/full/,150/0/default.jpg' style='height:150px");
+                } else {
+                    thumbnailURL = thumbnailURL.concat("/full/150,/0/default.jpg' style='width:150px");
+                }
+
                 itemDiv.innerHTML = "<div class='collections_carousel_image_box'>" +
                     "<div class='collections_carousel_image'>" +
-                    "<a href='/view/" + item.id + "'><img src='" + item.thumbnailURL + "' alt='" + item.id + "' " +
+                    "<a href='/view/" + item.id + "'><img src='" + thumbnailURL + "' alt='" + item.id + "' " +
                     imageDimensions + " > </a></div></div> " +
                     "<div class=\"collections_carousel_text word-wrap-200\"><h4>" + item.title + shelfLocator + "</h4> <div class=\"collection_abstract\">" + item.abstractShort +
                     " ... <a href=\"/view/" + item.id + "\">more</a></div><div class=\"clear\"></div></div>";
