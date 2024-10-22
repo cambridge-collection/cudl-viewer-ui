@@ -518,6 +518,23 @@ button {
 
 .nav-right-items div.search {
     display: inline-block;
+    vertical-align: top;
+}
+
+.masthead-container .search-form:has(> .form-control:focus) {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
+}
+
+.form-control:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: none;
 }
 
 /* Hidden menu */
@@ -628,6 +645,9 @@ button {
     right: 16px;
     top: 24px;
     display: block;
+}
+.masthead-container .search-form {
+    font-size: 18px;
 }
 
 @media screen and (max-width: 600px) {
@@ -1117,6 +1137,10 @@ img {
       flex: 50%;
       max-width: 50%;
     }
+    .masthead-container {
+        margin-top: 5px;
+    }
+
   }
 
   @media screen and (max-width: 600px) {
@@ -1345,9 +1369,22 @@ img {
 }
 
 /* Custom Cookie banner style */
+
+.cookie-text-container {
+    max-width:75%;
+    font-weight:200;
+}
+.cookie-text-container .cookie-head {
+    font-size: 1.25em;
+    font-weight: 600;
+}
+
+.cookie-text-container b {
+    font-weight:600;
+}
 .cc-compliance a.cc-btn.cc-deny {
-    /* border-color: #f0f; */
     border-style: solid;
     border-width: 2px;
     border-color: #fcfcfc;
 }
+

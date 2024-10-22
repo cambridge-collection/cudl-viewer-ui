@@ -10,10 +10,10 @@ import 'bootstrap-slider';
 import '../base.js';
 import { getPageContext } from '../context';
 import 'paginationjs';
+import {toggleDiv} from "../cudl";
 
 function styleSnippet(s) {
-    s = s.replace(/<b>/g, "<span class=\"campl-search-term\">");
-    s = s.replace(/<\/b>/g, "</span>");
+    s = s.replace(/(^[^<>]+>|<[^>]+$)/g, "");
     return s;
 }
 
@@ -33,7 +33,8 @@ function unionKeys(objA, objB) {
 }
 
 function parseQuery(q) {
-    return q.replace(/^\?/, '')
+
+    var keyValuePairs =  q.replace(/^\?/, '')
         .split('&')
         .map(function(s) {
             var i = s.indexOf('=');
@@ -42,6 +43,23 @@ function parseQuery(q) {
                               _decodeURIComponent(s.substr(i + 1))];
         })
         .reduce(objAddKeyValuePair, {});
+
+    // Split facets param into separate key values
+    if ("facets" in keyValuePairs) {
+        var facets = keyValuePairs.facets
+            .split('||')
+            .map(function (s) {
+                var i = s.indexOf('::');
+                return i == -1 ? [_decodeURIComponent("facet"+s), '']
+                    : [_decodeURIComponent("facet"+s.substr(0, i)),
+                        _decodeURIComponent(s.substr(i + 2))];
+            })
+            .reduce(objAddKeyValuePair, {});
+
+        delete keyValuePairs.facets;
+    }
+    return {...keyValuePairs, ...facets};
+
 }
 
 /** As decodeURIComponent() but interprets + as space. */
@@ -58,7 +76,28 @@ function serialiseQuery(params) {
 }
 
 function serialiseQueryPairs(keyValuePairs) {
-    return '?' + keyValuePairs
+
+    var facet_strings = [];
+    var encodedKVP = [];
+
+    for(var i = 0; i < keyValuePairs.length; i++){
+        var entry = keyValuePairs[i];
+        var k = entry[0];
+        var v= entry[1];
+        if (k.startsWith("facet") && k !== "facets") {
+            k = k.substring(5); // strip out word 'facet'
+            facet_strings.push(k+"::"+v);
+        } else if (k=="facets") {
+            facet_strings.push(v);
+        } else {
+            encodedKVP.push([k,v]);
+        }
+    }
+    if (facet_strings.length>0) {
+        encodedKVP.push(["facets",facet_strings.join('||')]);
+    }
+
+    return '?' + encodedKVP
         .map(function(kvp) {
             return encodeURIComponent(kvp[0]) + '=' + encodeURIComponent(kvp[1]);
         })
@@ -98,6 +137,35 @@ function getSearchQueryString(state) {
     delete queryParams.tagging;
 
     return serialiseQuery(queryParams);
+}
+
+
+function setupFacets(init) {
+
+    $('[id^="facetToggle"]').click(function (el) {
+
+        // Add click to facet icon and name
+        toggleFacet(this);
+    });
+
+}
+
+function toggleFacet(linkEl) {
+
+    const panelEl = $("#div"+linkEl.id);
+
+    // First switch the icons
+    if (linkEl.innerHTML) {
+        // Setup icon
+        if (panelEl.hasClass('show')) {
+            linkEl.innerHTML = linkEl.innerHTML.replace("▾", "▸");
+        } else {
+            linkEl.innerHTML = linkEl.innerHTML.replace("▸", "▾");
+        }
+    }
+
+    // The toggle collapse
+    panelEl.collapse('toggle');
 }
 
 /**
@@ -165,12 +233,12 @@ function renderResult(result) {
                                     "Page: ", document.createTextNode(result.startPageLabel), ")"
                                 )
                         ),
-                    document.createTextNode(item.abstractShort),
-                    $("<br><br>"),
-                    $("<ul>")
+                    $("<div>").append(
+                    document.createTextNode(item.abstractShort)),
+                    $("<ul class=\"snippets\">")
                         .append(
                             result.snippets.filter(Boolean).map(function(snippet) {
-                                return $("<li>")
+                                return $("<li class=\"snippet\">")
                                     .append(
                                         $("<span>").html(styleSnippet(snippet))
                                     )[0];
@@ -223,7 +291,7 @@ function renderResultInfo(count, time) {
 }
 
 function getFacetParam(facetField) {
-    return 'facet' + facetField.substr(0, 1).toUpperCase()
+    return 'facet'+facetField.substr(0, 1).toUpperCase()
             + facetField.substr(1);
 }
 
@@ -243,24 +311,44 @@ function renderFacet(state, group, facet) {
         )[0];
 }
 
+/**
+ * Transforms the Uppercase_Undercored_Version of the facet name into
+ * something suitable for display
+ * @param facetName
+ */
+function renderFacetName(facetName) {
+    var displayFacetName =  facetName.toLowerCase().replaceAll("_", " ");
+    return displayFacetName.charAt(0).toUpperCase() + displayFacetName.slice(1);
+}
+
 function renderFacetTree(state, facets) {
-    return $(facets.map(function(facetGroup) {
+    const tree =  $(facets.map(function(facetGroup) {
         return $('<li>')
             .append(
                 $('<strong>')
                     .append(
-                        $('<span>').html('&#9662 '),
-                        document.createTextNode(facetGroup.label)
+                        $('<div>')
+                            .attr("id", "facetToggle"+facetGroup.label)
+                            .attr("data-toggle", "collapse")
+                            .append(
+                                $('<span>').html('▸ '),
+                                document.createTextNode(renderFacetName(facetGroup.label))
+                            ),
                     ),
                 $('<div>')
                     .addClass('search-facet-expansion')
                     .append(
                         renderLessFacetLink(state, facetGroup)
                     ),
-                $('<ul>')
-                    .addClass('campl-unstyled-list')
+                $('<div>')
+                    .attr("id", "divfacetToggle"+facetGroup.label)
+                    .addClass("collapse")
                     .append(
-                        facetGroup.facets.map(renderFacet.bind(undefined, state, facetGroup))
+                    $('<ul>')
+                        .addClass('campl-unstyled-list')
+                        .append(
+                            facetGroup.facets.map(renderFacet.bind(undefined, state, facetGroup))
+                        ),
                     ),
                 $('<div>')
                     .addClass('search-facet-expansion')
@@ -270,6 +358,8 @@ function renderFacetTree(state, facets) {
                     ),
             )[0];
     }));
+
+    return tree;
 }
 
 /**
@@ -333,7 +423,7 @@ function renderSelectedFacet(state, selectedFacet) {
                     'in ',
                     $('<b>')
                         .append($('<span>').text(selectedFacet.value)[0]),
-                    ' (', document.createTextNode(selectedFacet.field), ') ❌'
+                    ' (', document.createTextNode(renderFacetName(selectedFacet.field)), ') ❌'
                 )
         )[0];
 }
@@ -351,7 +441,7 @@ function renderChangeQueryUrl(state) {
             .map(function(k) { return [k, state[k]]; })
     );
 
-    return './query' + query;
+    return '/search/query' + query;
 }
 
 /**
@@ -445,6 +535,8 @@ function requery(state) {
 
         $('.query-actions .change-query')
             .attr('href', renderChangeQueryUrl(state));
+
+        setupFacets(false);
     });
 }
 
@@ -670,14 +762,14 @@ function init() {
     requestState(Object.assign({}, currentState, {page: initialPage}), 'replace');
 
     // Show the stored state when browser history is accessed.
-    $(window).on('popstate', function(e) {
-        var state = e.originalEvent.state;
-
-        // Safari fires a popstate event on page load with null state
-        if(state !== null) {
-            showState(state);
-        }
-    });
+    // $(window).on('popstate', function(e) {
+    //     var state = e.originalEvent.state;
+    //
+    //     // Safari fires a popstate event on page load with null state
+    //     if(state !== null) {
+    //         showState(state);
+    //     }
+    // });
 
     // $("#recall-slider-input")
     //     .on("change", function(e) {
@@ -696,6 +788,8 @@ function init() {
         requestState(state);
         return false;
     });
+
+    setupFacets(true);
 }
 
 // function createVariableRecallSlider() {
@@ -705,5 +799,6 @@ function init() {
 
 $(() => {
     init();
+
   //  defer(createVariableRecallSlider);
 });
