@@ -48,11 +48,14 @@ $(function() {
             for(let i=0; i<data.length; i++) {
                 let item = data[i];
                 let imageDimensions = "";
+                let thumbnailURL = item.thumbnailURL;
                 if(item.thumbnailOrientation==="portrait") {
                     imageDimensions = " style='height:100%' ";
+                    thumbnailURL = thumbnailURL+".jp2/full/,180/0/default.jpg' style='height:180px";
                 }
                 else if(item.thumbnailOrientation==="landscape") {
                     imageDimensions = " style='width:100%' ";
+                    thumbnailURL = thumbnailURL+".jp2/full/180,/0/default.jpg' style='width:180px";
                 }
                 let shelfLocator = "";
                 if(item.shelfLocator !== "") {
@@ -61,14 +64,6 @@ $(function() {
 
                 const itemDiv = document.createElement('div');
                 itemDiv.setAttribute("class", "collections_carousel_item");
-
-                // Setup thumbnail url
-                let thumbnailURL = context.iiifImageServer + item.IIIFImageURL;
-                if (item.pages[0].thumbnailImageOrientation === "portrait") {
-                    thumbnailURL = thumbnailURL.concat("/full/,150/0/default.jpg' style='height:150px");
-                } else {
-                    thumbnailURL = thumbnailURL.concat("/full/150,/0/default.jpg' style='width:150px");
-                }
 
                 itemDiv.innerHTML = "<div class='collections_carousel_image_box'>" +
                     "<div class='collections_carousel_image'>" +
