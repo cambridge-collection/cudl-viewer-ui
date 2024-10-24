@@ -44,6 +44,7 @@
     box-sizing: border-box;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-weight: normal;
+    margin-top: 8px;
 }
 .advancedsearchform input[type=text]:focus {
     border-color: rgba(82, 168, 236, 0.8);
@@ -56,6 +57,7 @@
 .advancedsearchform select,
 .advancedsearchform select option {
     width: 100%;
+    margin-top: 8px;
 }
 
 .excludetext {
