@@ -51,11 +51,11 @@ $(function() {
                 let thumbnailURL = item.thumbnailURL;
                 if(item.thumbnailOrientation==="portrait") {
                     imageDimensions = " style='height:100%' ";
-                    thumbnailURL = thumbnailURL+".jp2/full/,180/0/default.jpg' style='height:180px";
+                    thumbnailURL = thumbnailURL+"' style='height:180px";
                 }
                 else if(item.thumbnailOrientation==="landscape") {
                     imageDimensions = " style='width:100%' ";
-                    thumbnailURL = thumbnailURL+".jp2/full/180,/0/default.jpg' style='width:180px";
+                    thumbnailURL = thumbnailURL+"' style='width:180px";
                 }
                 let shelfLocator = "";
                 if(item.shelfLocator !== "") {
