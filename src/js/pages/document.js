@@ -100,11 +100,19 @@ function loadPage(pagenumber, isReload = false) {
     }
 
     function openIIIF(iiifPath) {
-        viewer.open(context.iiifImageServer + iiifPath + "/info.json");
+        viewer.open(iiifPath + "/info.json");
     }
 
     // open Image
-    if (imageavailable) { openIIIF(data.pages[pagenumber - 1].IIIFImageURL); }
+    if (imageavailable) {
+        let iiifURL =  data.pages[pagenumber - 1].IIIFImageURL;
+        console.log("iiifURL: "+iiifURL);
+        // override default iiif image server if specified
+        if (!iiifURL.startsWith("http")) {
+            iiifURL = context.iiifImageServer+iiifURL;
+        }
+        openIIIF(iiifURL);
+    }
 
     // update current page
     viewerModel.setPageNumber(pagenumber);
@@ -535,8 +543,15 @@ function downloadPregeneratedImage() {
         data = viewerModel.getMetadata();
 
     var downloadImageURL = data.pages[pageNum-1].downloadImageURL;
+    var iiifImageURL = data.pages[pageNum-1].IIIFImageURL;
     if (typeof downloadImageURL != "undefined") {
-        window.open(context.imageServer+downloadImageURL);
+        if (!downloadImageURL.startsWith("http")) {
+            downloadImageURL = context.imageServer+"/content/images/"+downloadImageURL+".jpg";
+        } else {
+            // If starts with http, build IIIF URL.
+            downloadImageURL = iiifImageURL+"/full/full/0/default.jpg";
+        }
+        window.open(downloadImageURL);
     } else {
         alert ("No image available to download.");
     }
@@ -554,7 +569,10 @@ function downloadImage(size) {
         let downloadImagePath = data.pages[pageNum-1].IIIFImageURL;
 
         if (typeof downloadImagePath != "undefined") {
-            let downloadImageUrl = iiifImageServer+downloadImagePath+'/full/!'+size+','+size+'/0/default.jpg';
+            if (!downloadImagePath.startsWith("http")) {
+                downloadImagePath = iiifImageServer+downloadImagePath;
+            }
+            let downloadImageUrl = downloadImagePath+'/full/!'+size+','+size+'/0/default.jpg';
 
             window.open(downloadImageUrl);
         } else {
@@ -646,7 +664,10 @@ function showThumbnailPage(pagenum) {
             }
 
             // Setup orientation
-            let thumbnailURL = context.iiifImageServer + data.pages[i].IIIFImageURL;
+            let thumbnailURL = data.pages[i].IIIFImageURL;
+            if (!thumbnailURL.startsWith("http")){
+                thumbnailURL = context.iiifImageServer+thumbnailURL;
+            }
             if (data.pages[i].thumbnailImageOrientation === "portrait") {
                 thumbnailURL = thumbnailURL.concat("/full/,150/0/default.jpg' style='height:150px");
             } else {
