@@ -159,7 +159,7 @@ repository.
 
 NOTE: There are also automatic steps to add and remove the 'built' directory before
 and after these commands, this is because without this step the resources are not
-included in the release jar created.  See Makefile for more details.
+included in the release jar created.  See Makefile for more details. 
 
 
 ## Step 2
