@@ -1,38 +1,38 @@
 {
   "page-standard": {
-    "css": "css/page-standard-e39cbf72442d98015cfd.css",
-    "js": "./js/page-standard-e39cbf72442d98015cfd.js"
+    "css": "css/page-standard-bb26a16a8125d3a6731e.css",
+    "js": "./js/page-standard-bb26a16a8125d3a6731e.js"
   },
   "page-document": {
-    "css": "css/page-document-37044109d3d259b6fad1.css",
-    "js": "./js/page-document-37044109d3d259b6fad1.js"
+    "css": "css/page-document-27a1f946f153afb78065.css",
+    "js": "./js/page-document-27a1f946f153afb78065.js"
   },
   "page-advancedsearch": {
-    "css": "css/page-advancedsearch-b2c5278953e6e9027ab6.css",
-    "js": "./js/page-advancedsearch-b2c5278953e6e9027ab6.js"
+    "css": "css/page-advancedsearch-df2f0e89610f0ef46103.css",
+    "js": "./js/page-advancedsearch-df2f0e89610f0ef46103.js"
   },
   "page-transcription": {
-    "css": "css/page-transcription-70e80de02eec1fe2b5a6.css",
-    "js": "./js/page-transcription-70e80de02eec1fe2b5a6.js"
+    "css": "css/page-transcription-5e717b53a882a9157c16.css",
+    "js": "./js/page-transcription-5e717b53a882a9157c16.js"
   },
   "page-collection-organisation": {
-    "css": "css/page-collection-organisation-481a30f781e0f5573d69.css",
-    "js": "./js/page-collection-organisation-481a30f781e0f5573d69.js"
+    "css": "css/page-collection-organisation-9a2743c1df0697c7577e.css",
+    "js": "./js/page-collection-organisation-9a2743c1df0697c7577e.js"
   },
   "page-advanced-search-results": {
-    "css": "css/page-advanced-search-results-c2e9aed077de4ff33deb.css",
-    "js": "./js/page-advanced-search-results-c2e9aed077de4ff33deb.js"
+    "css": "css/page-advanced-search-results-24a7e0d7f0ce136dca9a.css",
+    "js": "./js/page-advanced-search-results-24a7e0d7f0ce136dca9a.js"
   },
   "page-error-500": {
-    "css": "css/page-error-500-bf13a53a36c3ed7fd3fe.css",
-    "js": "./js/page-error-500-bf13a53a36c3ed7fd3fe.js"
+    "css": "css/page-error-500-e67c3f3293a754d8ea6f.css",
+    "js": "./js/page-error-500-e67c3f3293a754d8ea6f.js"
   },
   "page-feedback": {
-    "css": "css/page-feedback-38c4d32f316ea37691cd.css",
-    "js": "./js/page-feedback-38c4d32f316ea37691cd.js"
+    "css": "css/page-feedback-ef590bd8263a07bcd000.css",
+    "js": "./js/page-feedback-ef590bd8263a07bcd000.js"
   },
   "common": {
-    "css": "css/common-59d8308a2baf3a2f56f6.css",
-    "js": "./js/common-59d8308a2baf3a2f56f6.js"
+    "css": "css/common-5cd6c6d01bbdaeeb9be5.css",
+    "js": "./js/common-5cd6c6d01bbdaeeb9be5.js"
   }
 }
