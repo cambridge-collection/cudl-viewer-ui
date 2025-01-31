@@ -8,6 +8,7 @@ import '../../css/style-document.css';
 import 'jquery-ui/themes/base/slider.css';
 import 'jquery-ui/dist/themes/base/jquery-ui.min.css';
 import 'jquery-ui/dist/themes/base/theme.css';
+import '@fortawesome/fontawesome-free/css/fontawesome.min.css'
 import 'font-awesome/css/font-awesome.min.css';
 
 import $ from 'jquery';
@@ -970,7 +971,7 @@ function writeBlankPage(pagenum, message = "") {
     return '<!DOCTYPE html><html>'
         + '<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'
         + '<title>Image #'+pagenum+'</title>'
-        + '<link href="https://services.prod.env.cudl.link/v1/transcription/tei/resources/cudl-resources/stylesheets/texts.css" rel="stylesheet" type="text/css">'
+        + '<link href="https://services.cudl.lib.cam.ac.uk/v1/transcription/tei/resources/html/cudl-resources/stylesheets/texts.css" rel="stylesheet" type="text/css">'
         + '</head>'
         + '<body class="junicode"><div class="transcription">'
         + message

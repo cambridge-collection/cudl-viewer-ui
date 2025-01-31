@@ -8,6 +8,7 @@
     "cookieconsent": "^3.1.1",
     "d3": "^7.8.5",
     "es6-error": "^4.1.1",
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "font-awesome": "^4.7.0",
     "fs": "^0.0.1-security",
     "hint.css": "^2.7.0",

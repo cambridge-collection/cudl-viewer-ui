@@ -1,6 +1,7 @@
 @import "cudl-editor.css";
 /* @import "recall-slider.css"; */
 @import "column-layouts.css";
+@import '@fortawesome/fontawesome-free/css/all.min.css';
 @import "font-awesome/css/font-awesome.min.css";
 @import 'paginationjs/dist/pagination.css';
 @import "cookieconsent/build/cookieconsent.min.css";
