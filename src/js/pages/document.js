@@ -803,7 +803,7 @@ function setupMetadata(data) {
                 var singleMetadataItem = metadataItem[i].displayForm;
                 var searchLink = (metadataItem[i].linktype == "keyword search");
                 if (searchLink) {
-                    metadataArray[i] = addSearchLink(singleMetadataItem);
+                    metadataArray[i] = addSearchLink(singleMetadataItem, title);
                 } else {
                     metadataArray[i] = singleMetadataItem;
                 }
@@ -817,7 +817,7 @@ function setupMetadata(data) {
         } else {
             var searchLink = (metadataItem.linktype == "keyword search");
             if (searchLink) {
-                item = addSearchLink(metadataItem);
+                item = addSearchLink(metadataItem, title);
             } else {
                 item = metadataItem;
             }
@@ -832,6 +832,10 @@ function setupMetadata(data) {
     }
 
     function addSearchLink (text) {
+        return addSearchLink(text, null);
+    }
+
+    function addSearchLink (text, title) {
 
         var linkText = text;
 
@@ -845,8 +849,15 @@ function setupMetadata(data) {
 
         linkText = encodeURIComponent(linkText);
 
-        return "<a class=\"cudlLink\" href='/search?keyword=" + linkText
+        // Check for Subject links
+        if (title && title.toString().toLowerCase().includes("subject")) {
+            return "<a class=\"cudlLink\" href='/search?facets=Subject%3A%3A"+linkText
                 + "'>" + text + "</a>";
+        }
+
+        // Default to keyword search
+        return "<a class=\"cudlLink\" href='/search?keyword=" + linkText
+            + "'>" + text + "</a>";
     }
 
 
