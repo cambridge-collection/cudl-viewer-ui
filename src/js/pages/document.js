@@ -860,6 +860,11 @@ function setupMetadata(data) {
             + "'>" + text + "</a>";
     }
 
+    function copyARK() {
+        const text = document.getElementById("ark-text").innerText;
+        navigator.clipboard.writeText(text);
+        alert("Citation copied to clipboard.");
+    }
 
     /**
      * Used to go through each element in a single descriptiveMetadata item and look for
