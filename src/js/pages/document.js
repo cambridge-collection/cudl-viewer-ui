@@ -712,6 +712,18 @@ function setupMetadata(data) {
     // set content of more info tab.
     $('#metadatacontent').html("<ul>"+ getHTMLForLogicalStructure(data.logicalStructures, 0, Number.MAX_VALUE)+"</ul>");
 
+    function setupCopyArks() {
+        let index = 0;
+        while ($(`#ark-button-${index}`).length) {
+            (function (currentIndex) {
+                $(`#ark-button-${currentIndex}`).on("click", function () {
+                    copyARK(currentIndex);
+                });
+            })(index);
+            index++;
+        }
+    }
+    setupCopyArks();
 
     function getHTMLForLogicalStructure(array, level, maxlevel) {
 
@@ -860,12 +872,6 @@ function setupMetadata(data) {
             + "'>" + text + "</a>";
     }
 
-    function copyARK() {
-        const text = document.getElementById("ark-text").innerText;
-        navigator.clipboard.writeText(text);
-        alert("Citation copied to clipboard.");
-    }
-
     /**
      * Used to go through each element in a single descriptiveMetadata item and look for
      * suitable candidates to display.  These are put into an array for sorting.
@@ -897,6 +903,12 @@ function setupMetadata(data) {
         }
         return metadataArray;
     }
+}
+
+function copyARK(index) {
+    const text = document.getElementById("ark-text-"+index).innerHTML;
+    navigator.clipboard.writeText(text);
+    alert("Citation copied to clipboard.");
 }
 
 /**
