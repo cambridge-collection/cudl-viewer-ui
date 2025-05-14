@@ -561,26 +561,25 @@ function downloadPregeneratedImage() {
 function downloadImage(size) {
     let pageNum = viewerModel.getPageNumber(),
         data = viewerModel.getMetadata(),
-        iiifImageServer = context.iiifImageServer;
+        servicesURL = context.services;
 
-    if(!context.iiifEnabled==true)
-        alert ("No IIIF image available to download.");
-
-    else {
-        let downloadImagePath = data.pages[pageNum-1].IIIFImageURL;
-
-        if (typeof downloadImagePath != "undefined") {
-            if (!downloadImagePath.startsWith("http")) {
-                downloadImagePath = iiifImageServer+downloadImagePath;
-            }
-            let downloadImageUrl = downloadImagePath+'/full/!'+size+','+size+'/0/default.jpg';
-
-            window.open(downloadImageUrl);
-        } else {
-            alert ("No image available to download.");
-        }
+    if (isNaN(size)) {
+        throw new Error("Invalid Input");
     }
 
+    // If full download link in metadata (e.g. external IIIF) use this.
+    let downloadImagePath = data.pages[pageNum-1].IIIFImageURL;
+
+    if (typeof downloadImagePath != "undefined" && downloadImagePath.startsWith("http")) {
+        // If starts with http, build IIIF URL.
+        let downloadImageLink = downloadImagePath+'/full/!'+size+','+size+'/0/default.jpg';
+        window.open(downloadImageLink);
+    } else {
+        // Use internal image download (through services)
+        let servicesDownloadPath = servicesURL + "v1/images/download/";
+        let downloadImageLink = servicesDownloadPath + context.docId + "/" + pageNum;
+        window.open(downloadImageLink);
+    }
 }
 
 
@@ -1058,9 +1057,9 @@ function setupDownloadConfirmation() {
     confirmation.find('button.btn-success').on('click', () => {
         confirmation.hide();
         // TODO switch back to sized download for images when watermarking/rights sorted.
-        //let imageSize = confirmation.find('#downloadSizes option:selected' ).val();
-        //downloadImage(imageSize);
-        downloadPregeneratedImage();
+        let imageSize = confirmation.find('#downloadSizes option:selected' ).val();
+        downloadImage(imageSize);
+        //downloadPregeneratedImage();
         return false;
     });
 }
