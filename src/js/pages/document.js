@@ -558,6 +558,21 @@ function downloadPregeneratedImage() {
     }
 }
 
+function forceDownloadBlob(url, filename) {
+    fetch(url, { mode: 'cors' })
+        .then(response => response.blob())
+        .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename || 'download';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+        });
+}
+
 function downloadImage(size) {
     let pageNum = viewerModel.getPageNumber(),
         data = viewerModel.getMetadata(),
@@ -572,13 +587,13 @@ function downloadImage(size) {
 
     if (typeof downloadImagePath != "undefined" && downloadImagePath.startsWith("http")) {
         // If starts with http, build IIIF URL.
-        let downloadImageLink = downloadImagePath+'/full/!'+size+','+size+'/0/default.jpg';
-        window.open(downloadImageLink);
+        let downloadImageLink = downloadImagePath + '/full/!' + size + ',' + size + '/0/default.jpg';
+        forceDownloadBlob(downloadImageLink, `${context.docId}-page-${pageNum}.jpg`);
     } else {
         // Use internal image download (through services)
-        let servicesDownloadPath = servicesURL + "v1/images/download/";
+        let servicesDownloadPath = servicesURL + "/v1/images/download/";
         let downloadImageLink = servicesDownloadPath + context.docId + "/" + pageNum;
-        window.open(downloadImageLink);
+        forceDownloadBlob(downloadImageLink, `${context.docId}-page-${pageNum}.jpg`);
     }
 }
 
