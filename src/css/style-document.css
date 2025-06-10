@@ -2,10 +2,10 @@
 @import "font-awesome/css/font-awesome.min.css";
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "cookieconsent/build/cookieconsent.min.css";
-
+@import "special-fonts.css";
 
 body {
-    font-family: verdana, arial, sans-serif;
+    font-family: 'NewAthenaUnicode',verdana, arial, sans-serif;
     font-size: 12px;
     overflow: hidden;
     background: none repeat scroll 0% 0% #000;

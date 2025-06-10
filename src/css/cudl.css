@@ -253,7 +253,7 @@ body {
 }
 
 body, h1, h2, h3, h4, h5, h6 {
-    font-family: 'Lato', sans-serif;
+    font-family: 'NewAthenaUnicode','Lato', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -857,7 +857,7 @@ img {
   padding: 8px 12px;
   position: absolute;
   bottom: 100px;
-  font-family: 'Lato', sans-serif;
+  font-family: 'NewAthenaUnicode','Lato', sans-serif;
   text-align: left;
 }
 
@@ -873,7 +873,7 @@ img {
     padding: 8px 12px;
     position: absolute;
     bottom: 40px;
-    font-family: 'Lato', sans-serif;
+    font-family: 'NewAthenaUnicode','Lato', sans-serif;
     text-align: left;
   }
 
