@@ -3,28 +3,28 @@
 */
 
 @font-face{
-    font-family:'NAU5_008woff/';
+    font-family:'NewAthenaUnicode';
     src:url("/src/css/NAU5_008/woff/newathu5_8.woff") format("woff"),url("/src/css/NAU5_008/ttf/newathu5_8.ttf") format('truetype');
     font-style:normal;
     font-weight:400;
     unicode-range:U+2C80-2CFF
 }
 @font-face{
-    font-family:'NAU5_008woff/';
+    font-family:'NewAthenaUnicode';
     src:url("/src/css/NAU5_008/woff/newathuBold5_8.woff") format("woff"),url("/src/css/NAU5_008/ttf/newathuBold5_8.ttf") format('truetype');
     font-style:normal;
     font-weight:700;
     unicode-range:U+2C80-2CFF
 }
 @font-face{
-    font-family:'NAU5_008woff/';
+    font-family:'NewAthenaUnicode';
     src:url("/src/css/NAU5_008/woff/newathuBoldItalic5_8.woff") format("woff"),url("/src/css/NAU5_008/ttf/newathuBoldItalic5_8.ttf") format('truetype');
     font-style:italic;
     font-weight:700;
     unicode-range:U+2C80-2CFF
 }
 @font-face{
-    font-family:'NAU5_008woff/';
+    font-family:'NewAthenaUnicode';
     src:url("/src/css/NAU5_008/woff/newathuItalic5_8.woff") format("woff"),url("/src/css/NAU5_008/ttf/newathuItalic5_8.ttf") format('truetype');
     font-style:italic;
     font-weight:400;
