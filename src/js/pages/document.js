@@ -584,16 +584,17 @@ function downloadImage(size) {
 
     // If full download link in metadata (e.g. external IIIF) use this.
     let downloadImagePath = data.pages[pageNum-1].IIIFImageURL;
+    let filename = data.pages[pageNum-1].downloadImageURL;
 
     if (typeof downloadImagePath != "undefined" && downloadImagePath.startsWith("http")) {
         // If starts with http, build IIIF URL.
         let downloadImageLink = downloadImagePath + '/full/!' + size + ',' + size + '/0/default.jpg';
-        forceDownloadBlob(downloadImageLink, `${context.docId}-page-${pageNum}.jpg`);
+        forceDownloadBlob(downloadImageLink, `${filename}.jpg`);
     } else {
         // Use internal image download (through services)
         let servicesDownloadPath = servicesURL + "/v1/images/download/";
         let downloadImageLink = servicesDownloadPath + context.docId + "/" + pageNum;
-        forceDownloadBlob(downloadImageLink, `${context.docId}-page-${pageNum}.jpg`);
+        forceDownloadBlob(downloadImageLink, `${filename}.jpg`);
     }
 }
 
