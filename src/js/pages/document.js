@@ -101,13 +101,39 @@ function loadPage(pagenumber, isReload = false) {
     }
 
     function openIIIF(iiifPath) {
+        // hide rti
+        document.getElementById("rti").style.display = "none";
+        document.getElementById("seadragon").style.display = "";
         viewer.open(iiifPath + "/info.json");
     }
+    function openRTI(rtiPath) {
+        document.getElementById("seadragon").style.display = "none";
+        document.getElementById("rti").style.display = "";
+        document.getElementById("rti").innerHTML = `
+            <iframe
+        src="/document-views/rti/?url=${rtiPath}"
+        width="100%"
+        height="100%"
+        style="border:none;">
+            </iframe>
+                `;
+    }
 
-    // open Image
-    if (imageavailable) {
+    // open Main Image
+    let mainDisplay = "iiif"
+    if (typeof(data.pages[pagenumber-1].mainDisplay) != "undefined" ) {
+        mainDisplay = data.pages[pagenumber-1].mainDisplay;
+    }
+
+    if (imageavailable && mainDisplay === "rti") {
+        let rtiURL =  data.pages[pagenumber - 1].RTIImageURL;
+        if (!rtiURL.startsWith("http")) {
+            rtiURL = context.iiifImageServer+rtiURL;
+        }
+
+        openRTI(rtiURL);
+    } else {
         let iiifURL =  data.pages[pagenumber - 1].IIIFImageURL;
-        console.log("iiifURL: "+iiifURL);
         // override default iiif image server if specified
         if (!iiifURL.startsWith("http")) {
             iiifURL = context.iiifImageServer+iiifURL;
@@ -217,11 +243,26 @@ function showViewportNavigator() {
     return !!context.viewportNavigatorEnabled;
 }
 
+function setupRTI(data, pageNum) {
+    const container = document.getElementById("rti");
+    if (container) {
+        container.innerHTML = `
+      <iframe        
+        src="/document-views/rti/?url=${data.pages[pageNum-1].RTIImageURL}"
+        width="100%"
+        height="100%"
+        style="border:none;">
+      </iframe>
+    `;
+    } else {
+        console.warn("Element with id='doc' not found.");
+    }
+}
 function setupSeaDragon(data) {
     OpenSeadragon.setString("Tooltips.Home", "Reset zoom");
     let showNav = showViewportNavigator();
     viewer = new OpenSeadragon.Viewer({
-        id : "doc",
+        id : "seadragon",
         debugMode : false,
         prefixUrl : "/img/",
         showRotationControl : true,
@@ -1216,6 +1257,21 @@ function showPolygon(points) {
     });
 }
 
+function hasRTIDisplay(data) {
+    if (!data || !Array.isArray(data.pages)) {
+        console.warn("Invalid JSON input.");
+        return false;
+    }
+    return data.pages.some(page => page.mainDisplay === "rti");
+}
+
+function setupMainDisplay(data, pageNum) {
+    if (hasRTIDisplay(data)) {
+        setupRTI(data, pageNum);
+    }
+    setupSeaDragon(data);
+}
+
 $(document).ready(function() {
     //registerCsrfPrefilter();
 
@@ -1236,27 +1292,12 @@ $(document).ready(function() {
             taggingEnabled: context.taggingEnabled
         });
 
-        setupSeaDragon(data);
+        setupMainDisplay(data, pageNum);
         setupInfoPanel(data);
         setupThumbnails(data);
         setupMetadata(data);
         setupViewMoreOptions();
         setupKnowMoreLinks();
-
-        // // FIXME: load on demand when similarity tab is first opened
-        // setupSimilarityTab({
-        //     viewerModel: viewerModel,
-        //     docId: context.docId,
-        //     servicesBaseUrl: context.services,
-        //     imageServerBaseUrl: context.imageServer
-        // });
-
-        // // FIXME: load on demand if tagging is enabled.
-        // setupTaggingTab({
-        //     docId: context.docId,
-        //     viewer: viewer,
-        //     viewerModel: viewerModel
-        // });
 
         loadPage(pageNum);
         showThumbnailPage(currentThumbnailPage);

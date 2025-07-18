@@ -79,27 +79,35 @@ body {
 
 /************ Seadragon Image ******************/
 
-#seadragonImage {
+#mainViewContainer {
     width: 100%;
     height: 100%;
     top: 0px;
     bottom: 0px;
 }
 
-.panel-closed #doc {
+.panel-closed #mainView {
     width: 100%;
 }
 
-.panel-open #doc {
+.panel-open #mainView {
     width: 50%;
 }
 
-#doc {
+#mainView {
     position: absolute;
     top: 68px;
     bottom: 0px;
     background-color: black;
     transition: width 0.5s ease;
+}
+#seadragon {
+    width: 100%;
+    height: 100%;
+}
+#rti {
+    width: 100%;
+    height: 100%;
 }
 
 .openseadragon-canvas:focus {
@@ -461,6 +469,18 @@ body {
     margin: auto;
     width: 100px;
 } */
+
+#openlime {
+    position:relative;
+    height: 100%
+}
+
+#openlime>canvas {
+    width: 100%;
+    height: 100%;
+    /* this is important, it would cause firefox flickering! */
+    overflow: hidden;
+}
 
 /* pop up confirmations */
 #bookmarkConfirmation,
