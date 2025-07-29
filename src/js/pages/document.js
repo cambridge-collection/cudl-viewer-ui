@@ -35,6 +35,7 @@ const bootstrap = require('bootstrap/dist/js/bootstrap.bundle.min.js');
     docId
     docURL - not used
     imageServer
+    rtiImageServer
     iiifImageServer
     services
 
@@ -111,7 +112,7 @@ function loadPage(pagenumber, isReload = false) {
         document.getElementById("rti").style.display = "";
         document.getElementById("rti").innerHTML = `
             <iframe
-        src="/document-views/rti/?url=${rtiPath}"
+        src="/document-views/rti/?url=${rtiPath}/HSH27/info.json"
         width="100%"
         height="100%"
         style="border:none;">
@@ -128,7 +129,7 @@ function loadPage(pagenumber, isReload = false) {
     if (imageavailable && mainDisplay === "rti") {
         let rtiURL =  data.pages[pagenumber - 1].RTIImageURL;
         if (!rtiURL.startsWith("http")) {
-            rtiURL = context.iiifImageServer+rtiURL;
+            rtiURL = context.rtiImageServer+rtiURL;
         }
 
         openRTI(rtiURL);
