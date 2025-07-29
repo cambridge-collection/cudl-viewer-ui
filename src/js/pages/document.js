@@ -230,13 +230,6 @@ function updateCanonicalUrl(url = getCanonicalUrl()) {
 
     $('head link[rel=canonical]').attr('href', url);
 
-    updateAddThisShareUrl();
-}
-
-function updateAddThisShareUrl(url = getCanonicalUrl()) {
-    if(typeof addthis !== 'undefined') {
-        addthis.update('share', 'url', url);
-    }
 }
 
 // Viewport navigator is a mini viewer that appears inside the main OpenSeadragon viewer
