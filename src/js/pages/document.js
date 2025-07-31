@@ -107,12 +107,12 @@ function loadPage(pagenumber, isReload = false) {
         document.getElementById("seadragon").style.display = "";
         viewer.open(iiifPath + "/info.json");
     }
-    function openRTI(rtiPath) {
+    function openRTI(docId, pageNum) {
         document.getElementById("seadragon").style.display = "none";
         document.getElementById("rti").style.display = "";
         document.getElementById("rti").innerHTML = `
             <iframe
-        src="/document-views/rti/?url=${rtiPath}/HSH27/info.json"
+        src="/view/rti/${docId}/${pageNum}"
         width="100%"
         height="100%"
         style="border:none;">
@@ -127,12 +127,8 @@ function loadPage(pagenumber, isReload = false) {
     }
 
     if (imageavailable && mainDisplay === "rti") {
-        let rtiURL =  data.pages[pagenumber - 1].RTIImageURL;
-        if (!rtiURL.startsWith("http")) {
-            rtiURL = context.rtiImageServer+rtiURL;
-        }
 
-        openRTI(rtiURL);
+        openRTI(context.docId, pagenumber);
     } else {
         let iiifURL =  data.pages[pagenumber - 1].IIIFImageURL;
         // override default iiif image server if specified
@@ -242,7 +238,7 @@ function setupRTI(data, pageNum) {
     if (container) {
         container.innerHTML = `
       <iframe        
-        src="/document-views/rti/?url=${data.pages[pageNum-1].RTIImageURL}"
+        src=""
         width="100%"
         height="100%"
         style="border:none;">
