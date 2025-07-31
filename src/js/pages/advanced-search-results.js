@@ -179,15 +179,25 @@ function noBreak(text) {
 function renderResult(result) {
     var item = result.item;
     var imageStyle = {};
-    if (item.thumbnailOrientation === "portrait") {
-        imageStyle["height"] = "100%";
-    } else if (item.thumbnailOrientation === "landscape") {
-        imageStyle["width"] = "100%";
-    }
     var title = item.title;
     if (result.itemType === "essay") {
         title = "Essay: "
                 + title;
+    }
+
+    var mainDisplayIcon =  "";
+
+    if ("rti"===item.mainDisplay) {
+        mainDisplayIcon = $("<span>")
+            .addClass("search_collections_carousel-lightbulb-icon")
+            .append(
+                $("<img>")
+                    .attr({
+                        src: "/document-views/rti/rti-light-bulb.png",
+                        alt: "RTI Item",
+                        height: "30px"
+                    })
+            );
     }
 
     var itemDiv = $("<div>")
@@ -209,7 +219,8 @@ function renderResult(result) {
                                         }).css(imageStyle)
                                 )
                         )
-                ),
+                )
+                .append(mainDisplayIcon),
             $("<div>")
                 .addClass("collections_carousel_text col-md-8")
                 .append(
