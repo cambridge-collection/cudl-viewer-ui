@@ -1008,8 +1008,10 @@ img {
       float: left;
   }
 
-  .watch-feature iframe {
+  .watch-feature iframe, .watch-feature media-embed {
       width: 100%;
+      min-width:100%;
+      max-width:100%;
       border: none;
   }
 
