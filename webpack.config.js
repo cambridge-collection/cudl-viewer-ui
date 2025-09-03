@@ -44,7 +44,8 @@ const commonConfig = {
         'page-collection-organisation': './src/js/pages/collection-organisation.js',
         'page-advanced-search-results': './src/js/pages/advanced-search-results.js',
         'page-error-500': './src/js/pages/error-500.js',
-        'page-feedback': './src/js/pages/embedded/feedback.js'
+        'page-feedback': './src/js/pages/embedded/feedback.js',
+        'media-embed': './src/js/pages/media-embed.js',
     },
     optimization: {
         // Every page apart from document and transcription share a fair
@@ -58,7 +59,13 @@ const commonConfig = {
 
          splitChunks: {
             chunks (chunk) {
-                if ((chunk.name !== 'page-document') && (chunk.name !== 'page-transcription')) {
+                // Exclude page-document, page-transcription, and media-embed from splitting
+                // so media-embed remains a self-contained entry.
+                if (
+                    (chunk.name !== 'page-document') &&
+                    (chunk.name !== 'page-transcription') &&
+                    (chunk.name !== 'media-embed')
+                ) {
                     return true;
                 }
             },
