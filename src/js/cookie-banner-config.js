@@ -37,4 +37,5 @@ function site_cookies() {
     }
     gtag('js', new Date());
     gtag('config', process.env.GA4);
+    window.dispatchEvent(new CustomEvent('media-embed-consent-granted'));
 }

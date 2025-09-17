@@ -1,10 +1,11 @@
 {
-    "common": [],
+    "common": ["media-embed"],
     "page-standard": ["common"],
     "page-advancedsearch": ["common"],
     "page-collection-organisation": ["common"],
     "page-advanced-search-results": ["common"],
     "page-error-500": ["common"],
     "page-feedback": ["common"],
-    "page-document": []
+    "page-document": ["media-embed"],
+    "media-embed": []
 }

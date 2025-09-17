@@ -31,6 +31,10 @@
     "css": "css/page-feedback.css",
     "js": "./js/page-feedback.js"
   },
+  "media-embed": {
+    "css": "css/media-embed.css",
+    "js": "./js/media-embed.js"
+  },
   "common": {
     "css": "css/common.css",
     "js": "./js/common.js"
