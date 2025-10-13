@@ -745,7 +745,21 @@ function setupMetadata(data) {
             }
             //html = html.concat("</a>");
             html = html.concat("</h4></div><div id=\"collapse"+array[i].descriptiveMetadataID+"\" class=\"panel-collapse collapse in\"><div class=\"panel-body\">");
-            html = html.concat("<ul>"+getHTMLForDescriptiveMetadata(meta)+"</ul>");
+            html = html.concat("<ul>"+getHTMLForDescriptiveMetadata(meta));
+            const collectionObjs = data.collection.filter(o => !!o['name-short']?.trim()).sort((a, b) =>
+    a['name-short'].trim().localeCompare(b['name-short'].trim(), undefined, { sensitivity: "base" }));
+            if (level == 0  ) {
+                html = html.concat('<li><b>');
+                html = html.concat('Collection' + ((collectionObjs.length > 1) ? 's' : ''));
+                html = html.concat(':</b> ');
+                html = html.concat('<ul class="collections">');
+                for (const c of collectionObjs) {
+                    html = html.concat('<li><a href="/collections/' +encodeURI(c['url-slug'].trim()) +'/1">' + c['name-short'].trim() + '</a></li>');
+                }
+                html = html.concat('</ul>');
+                html = html.concat('</li>');
+            }
+            html = html.concat("</ul>");
             html = html.concat("</div></div></div></div>");
 
             if (array[i].children && level<maxlevel) {

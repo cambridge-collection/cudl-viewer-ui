@@ -756,6 +756,15 @@ button, select {
     white-space: nowrap;
 }
 
+#about-metadata ul.collections {
+    padding-left:0;
+    list-style-type: disc;
+}
+
+#about-metadata ul.collections > li { 
+    margin-left:20px
+}
+
 /* Link styling in document page */
 
 .nav-link, a {
