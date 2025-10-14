@@ -1267,6 +1267,38 @@ img {
     margin-top: 2.5rem;
 }
 
+.collections_carousel_image {
+    position: relative; /* Needed for absolute positioning inside */
+}
+
+.collections_carousel-lightbulb-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(255, 255, 255, 0.8); /* optional background */
+    border-radius: 50%;
+    padding: 2px;
+}
+
+.search_collections_carousel-lightbulb-icon {
+    position: absolute;
+    bottom: 15px;
+    right: 5px;
+    background: rgba(255, 255, 255, 0.8); /* optional background */
+    border-radius: 50%;
+    padding: 2px;
+}
+
+.virtual_collections_carousel-lightbulb-icon {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background: rgba(255, 255, 255, 0.8); /* optional background */
+    border-radius: 50%;
+    padding: 2px;
+}
+
+
 .collection_abstract {
     font-size: 0.85rem;
 }

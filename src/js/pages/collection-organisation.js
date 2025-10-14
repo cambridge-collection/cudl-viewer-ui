@@ -62,17 +62,32 @@ $(function() {
                     shelfLocator = " (" +item.shelfLocator+ ") ";
                 }
 
+                let mainDisplayIndicator = ""
+                if ("rti" === item.mainDisplay) {
+                    mainDisplayIndicator = "<span class='collections_carousel-lightbulb-icon'>" +
+                        "<img alt='RTI Item' height=\"30px\" src=\"/document-views/rti/rti-light-bulb.png\"/>" +
+                        "</span>";
+                }
+
                 const itemDiv = document.createElement('div');
                 itemDiv.setAttribute("class", "collections_carousel_item");
-
-                itemDiv.innerHTML = "<div class='collections_carousel_image_box'>" +
+                itemDiv.innerHTML =
+                    "<div class='collections_carousel_image_box'>" +
                     "<div class='collections_carousel_image'>" +
-                    "<a href='/view/" + item.id + "'><img src='" + thumbnailURL + "' alt='" + item.id + "' " +
-                    imageDimensions + " > </a></div></div> " +
-                    "<div class=\"collections_carousel_text word-wrap-200\"><h4>" + item.title + shelfLocator + "</h4> <div class=\"collection_abstract\">" + item.abstractShort +
-                    " ... <a href=\"/view/" + item.id + "\">more</a></div><div class=\"clear\"></div></div>";
+                    "<a href='/view/" + item.id + "'>" +
+                    "<img src='" + thumbnailURL + "' alt='" + item.id + "' " + imageDimensions + ">" +
+                    "</a>" + mainDisplayIndicator +
+                    "</div>" +
+                    "</div>" +
+                    "<div class='collections_carousel_text word-wrap-200'>" +
+                    "<h4>" + item.title + shelfLocator + "</h4>" +
+                    "<div class='collection_abstract'>" + item.abstractShort +
+                    " ... <a href='/view/" + item.id + "'>more</a>" +
+                    "</div>" +
+                    "<div class='clear'></div>" +
+                    "</div>";
                 container.appendChild(itemDiv);
-                }
+            }
 
             pageNumber = pagination.pageNumber;
             updatePageHistory(pageNumber);
