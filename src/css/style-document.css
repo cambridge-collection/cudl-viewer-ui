@@ -77,6 +77,10 @@ body {
     color: #ccc;
 }
 
+.breadcrumb.notBreadcrumb .breadcrumb-item+.breadcrumb-item::before {
+    content: var(--bs-breadcrumb-divider, "|");
+}
+
 /************ Seadragon Image ******************/
 
 #seadragonImage {

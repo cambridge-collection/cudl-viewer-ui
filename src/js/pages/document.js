@@ -379,25 +379,27 @@ function setupSeaDragon(data) {
 
 function setupInfoPanel(data) {
 
-    let breadcrumbHTML = "<ol class=\"breadcrumb\">"
+    let breadcrumbHTML = "<ol class=\"breadcrumb notBreadcrumb\">"
             + "<li class=\"breadcrumb-item\"><a href='/'>Home</a></li>"
             + "<li class=\"breadcrumb-item\"><a href=\"/collections/\">Browse</a></li>"
-            + "<li class=\"breadcrumb-item\"><a href=\""
+            /*+ "<li class=\"breadcrumb-item\"><a href=\""
             + context.collectionURL
             + "\">"
             + context.collectionTitle
-            + "</a></li><li class='breadcrumb-item active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
+            + "</a></li>" */
+            + "<li class='breadcrumb-item active'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
     if (context.parentCollectionTitle) {
-        breadcrumbHTML = "<ol class=\"breadcrumb\"><li class=\"breadcrumb-item\"><a href='/'>Home</a></li>"
+        breadcrumbHTML = "<ol class=\"breadcrumb notBreadcrumb\"><li class=\"breadcrumb-item\"><a href='/'>Home</a></li>"
                 + "<li class=\"breadcrumb-item\"><a href=\"/collections/\">Browse</a></li>"
-                + "<li class=\"breadcrumb-item\"><a href=\""
+                /*+ "<li class=\"breadcrumb-item\"><a href=\""
                 + context.parentCollectionURL
                 + "\">"
                 + context.parentCollectionTitle
                 + "</a></li><li class=\"breadcrumb-item\"><a href=\""
                 + context.collectionURL
                 + "\">"
-                + context.collectionTitle + "</a></li><li class='active breadcrumb-item'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
+                + context.collectionTitle + "</a></li>" */
+                + "<li class='active breadcrumb-item'>"+data.descriptiveMetadata[0].shelfLocator.displayForm+"</li></ol>";
     }
     $('#doc-breadcrumb').html(breadcrumbHTML);
 
