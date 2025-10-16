@@ -779,9 +779,9 @@ function setupMetadata(data) {
             //html = html.concat("</a>");
             html = html.concat("</h4></div><div id=\"collapse"+array[i].descriptiveMetadataID+"\" class=\"panel-collapse collapse in\"><div class=\"panel-body\">");
             html = html.concat("<ul>"+getHTMLForDescriptiveMetadata(meta));
-            const collectionObjs = data.collection.filter(o => !!o['name-short']?.trim()).sort((a, b) =>
+            const collectionObjs = data.collection?.filter(o => !!o['name-short']?.trim()).sort((a, b) =>
     a['name-short'].trim().localeCompare(b['name-short'].trim(), undefined, { sensitivity: "base" }));
-            if (level == 0  ) {
+            if (level == 0 && collectionObjs?.length > 0 ) {
                 html = html.concat('<li><b>');
                 html = html.concat('Collection' + ((collectionObjs.length > 1) ? 's' : ''));
                 html = html.concat(':</b> ');
