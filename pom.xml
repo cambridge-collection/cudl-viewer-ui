@@ -3,7 +3,7 @@
 
     <groupId>ulcambridge.foundations.viewer</groupId>
     <artifactId>viewer-ui</artifactId>
-    <version>4.2.9</version>
+    <version>4.2.10-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>CUDL Viewer UI</name>
@@ -24,7 +24,7 @@
         <connection>scm:git:ssh://git@github.com/cambridge-collection/cudl-viewer-ui.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/cambridge-collection/cudl-viewer-ui.git</developerConnection>
         <url>https://github.com/cambridge-collection/cudl-viewer-ui</url>
-        <tag>4.2.9</tag>
+        <tag>4.0.0</tag>
     </scm>
 
     <build>
