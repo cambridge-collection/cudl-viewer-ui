@@ -1243,27 +1243,28 @@ function setupConfirmation(confirmation) {
         confirmation.hide();
     });
 
-    const existingNamespace = confirmation.data('outsideClickNamespace');
-    if (existingNamespace) {
-        $(document).off(existingNamespace);
+    const existingOutsideClickHandler = confirmation.data('outsideClickHandler');
+    if (existingOutsideClickHandler) {
+        document.removeEventListener('click', existingOutsideClickHandler, true);
     }
-
-    const namespaceSuffix = confirmation.attr('id') || `confirmation-${Date.now()}`;
-    const eventNamespace = `click.confirmationOutside-${namespaceSuffix}`;
 
     const outsideClickHandler = event => {
         if (!confirmation.is(':visible')) {
             return;
         }
 
-        const target = $(event.target);
-        if (!target.closest(confirmation).length) {
+        const confirmationNode = confirmation.get(0);
+        if (!confirmationNode) {
+            return;
+        }
+
+        if (!confirmationNode.contains(event.target)) {
             confirmation.hide();
         }
     };
 
-    confirmation.data('outsideClickNamespace', eventNamespace);
-    $(document).on(eventNamespace, outsideClickHandler);
+    confirmation.data('outsideClickHandler', outsideClickHandler);
+    document.addEventListener('click', outsideClickHandler, true);
 }
 
 function setupDownloadConfirmation() {
