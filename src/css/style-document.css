@@ -81,6 +81,16 @@ body {
     content: var(--bs-breadcrumb-divider, "|");
 }
 
+iframe, media-embed, img {
+    max-width:100% !important;
+    height: auto !important;
+}
+
+iframe, media-embed {
+    aspect-ratio: 16 / 9;
+}
+
+
 /************ Seadragon Image ******************/
 
 #mainViewContainer {
