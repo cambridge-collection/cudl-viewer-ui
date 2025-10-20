@@ -1011,9 +1011,18 @@ img {
   .watch-feature iframe, .watch-feature media-embed {
       width: 100%;
       min-width:100%;
-      max-width:100%;
       border: none;
   }
+
+iframe, media-embed, img {
+    max-width:100% !important;
+    height: auto !important;
+}
+
+iframe, media-embed {
+    aspect-ratio: 16 / 9;
+}
+
 
   .watch-list{
       flex: 30%;
