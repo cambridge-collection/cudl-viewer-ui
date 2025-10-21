@@ -74,6 +74,9 @@ let thumbnailProps = {
     MAX_THUMBNAIL_ITEMS_ON_ROW: 3
 };
 
+const IIIF_COPY_SIZE = 2000;
+let copyIiifUrlButton;
+
 $(window).on("popstate", function (event) {
     if ((history.state !== null && history.state.hasOwnProperty('pagenumber')) && Number(history.state.pagenumber).toString() === history.state.pagenumber.toString()) {
         loadPage(history.state.pagenumber, true);
@@ -631,6 +634,134 @@ function downloadImage(size) {
     }
 }
 
+function buildIiifImageUrlForCopy(size = IIIF_COPY_SIZE) {
+    let iiifUrl = null;
+    const hasViewer = !!viewerModel;
+
+    if (hasViewer) {
+        const metadata = viewerModel.getMetadata();
+        const pages = metadata?.pages;
+        const hasPages = Array.isArray(pages) && pages.length > 0;
+
+        if (hasPages) {
+            const pageIndex = viewerModel.getPageNumber() - 1;
+            const withinBounds = pageIndex >= 0 && pageIndex < pages.length;
+
+            if (withinBounds) {
+                const page = pages[pageIndex] || {};
+                let iiifBase = page.IIIFImageURL || null;
+
+                if (iiifBase) {
+                    iiifBase = iiifBase.replace(/\/$/, '').replace(/\/info\.json$/i, '');
+
+                    if (!iiifBase.startsWith('http')) {
+                        const hasServer = !!context?.iiifImageServer;
+
+                        if (hasServer) {
+                            const server = context.iiifImageServer.replace(/\/$/, '');
+                            const identifier = iiifBase.replace(/^\//, '');
+                            iiifBase = `${server}/${identifier}`;
+                        } else {
+                            iiifBase = null;
+                        }
+                    }
+
+                    if (iiifBase) {
+                        if (!/\.jp2(?:$|\/)/i.test(iiifBase)) {
+                            iiifBase = `${iiifBase}.jp2`;
+                        }
+
+                        if (iiifBase) {
+                            iiifUrl = `${iiifBase}/full/,${size}/0/default.jpg`;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return iiifUrl;
+}
+
+function copyIiifUrlToClipboard(text) {
+    let resultPromise;
+    const clipboardApiAvailable = !!navigator?.clipboard?.writeText;
+
+    if (clipboardApiAvailable) {
+        resultPromise = navigator.clipboard.writeText(text);
+    } else {
+        resultPromise = new Promise((resolve, reject) => {
+            const textarea = document.createElement('textarea');
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                if (successful) {
+                    resolve();
+                } else {
+                    reject(new Error('Copy command unsuccessful'));
+                }
+            } catch (error) {
+                document.body.removeChild(textarea);
+                reject(error);
+            }
+        });
+    }
+
+    return resultPromise;
+}
+
+function updateCopyIiifButtonState(button = copyIiifUrlButton) {
+    const buttonRef = button && button.length ? button : null;
+
+    if (buttonRef) {
+        const queuedReset = buttonRef.data('resetTimeout');
+        if (queuedReset) {
+            return;
+        }
+
+        buttonRef.removeClass('btn-secondary').addClass('btn-secondary-outline');
+        buttonRef.data('originalClassList', buttonRef.attr('class'));
+
+        const url = buildIiifImageUrlForCopy();
+        const hasUrl = !!url;
+        buttonRef.prop('disabled', !hasUrl);
+        buttonRef.data('iiifUrl', url || '');
+        buttonRef.toggle(hasUrl);
+    }
+}
+
+function showCopyIiifButtonFeedback(button, delay = 200) {
+    const buttonRef = button && button.length ? button : null;
+
+    if (buttonRef) {
+        const originalClasses = buttonRef.data('originalClassList') || buttonRef.attr('class');
+        buttonRef.data('originalClassList', originalClasses);
+
+        buttonRef.removeClass('btn-secondary-outline').addClass('btn-secondary');
+
+        const previousTimeout = buttonRef.data('resetTimeout');
+        if (previousTimeout) {
+            clearTimeout(previousTimeout);
+        }
+
+        const timeoutId = setTimeout(() => {
+            const original = buttonRef.data('originalClassList');
+            if (original) {
+                buttonRef.attr('class', original);
+            }
+            buttonRef.removeData('resetTimeout');
+        }, delay);
+
+        buttonRef.data('resetTimeout', timeoutId);
+    }
+}
+
 
 function downloadMetadata() {
     let downloadMetadataURL = viewerModel.getMetadata().sourceData;
@@ -1053,6 +1184,7 @@ function writeBlankPage(pagenum, message = "") {
 
 function setupViewMoreOptions() {
     $('#downloadOption a').on('click', e => {
+        updateCopyIiifButtonState(copyIiifUrlButton);
         $('#downloadConfirmation').show();
         return false;
     });
@@ -1106,10 +1238,33 @@ function setupViewMoreOptions() {
 }
 
 function setupConfirmation(confirmation) {
-    confirmation.find('.close,button:not(.btn-success)').on('click', () => {
+    confirmation.find('.close,button:not(.btn-success):not(.js-copy-iiif-url)').on('click', event => {
+        event.preventDefault();
         confirmation.hide();
-        return false;
     });
+
+    const existingOutsideClickHandler = confirmation.data('outsideClickHandler');
+    if (existingOutsideClickHandler) {
+        document.removeEventListener('click', existingOutsideClickHandler, true);
+    }
+
+    const outsideClickHandler = event => {
+        if (!confirmation.is(':visible')) {
+            return;
+        }
+
+        const confirmationNode = confirmation.get(0);
+        if (!confirmationNode) {
+            return;
+        }
+
+        if (!confirmationNode.contains(event.target)) {
+            confirmation.hide();
+        }
+    };
+
+    confirmation.data('outsideClickHandler', outsideClickHandler);
+    document.addEventListener('click', outsideClickHandler, true);
 }
 
 function setupDownloadConfirmation() {
@@ -1117,13 +1272,51 @@ function setupDownloadConfirmation() {
 
     setupConfirmation(confirmation);
 
-    confirmation.find('button.btn-success').on('click', () => {
+    if (!copyIiifUrlButton || !copyIiifUrlButton.length) {
+        copyIiifUrlButton = $(`<button type="button" class="btn btn-secondary-outline js-copy-iiif-url" aria-label="Copy IIIF URL" title="Copy IIIF URL"><i class="fa fa-copy" aria-hidden="true"></i></button>`);
+    }
+
+    let successButton = confirmation.find('button.btn-success');
+    if (successButton.length) {
+        let buttonContainer = successButton.parent();
+        if (buttonContainer.length) {
+            copyIiifUrlButton.appendTo(buttonContainer);
+        } else {
+            successButton.after(copyIiifUrlButton);
+        }
+    } else {
+        confirmation.append(copyIiifUrlButton);
+    }
+
+    copyIiifUrlButton.off('click').on('click', event => {
+        event.preventDefault();
+        const url = copyIiifUrlButton.data('iiifUrl');
+
+        if (!url) {
+            showCopyIiifButtonFeedback(copyIiifUrlButton);
+        } else {
+            copyIiifUrlToClipboard(url)
+                .then(() => {
+                    showCopyIiifButtonFeedback(copyIiifUrlButton);
+                })
+                .catch(() => {
+                    showCopyIiifButtonFeedback(copyIiifUrlButton);
+                })
+                .then(() => {
+                    updateCopyIiifButtonState(copyIiifUrlButton);
+                });
+        }
+    });
+
+    updateCopyIiifButtonState(copyIiifUrlButton);
+
+    confirmation.find('button.btn-success').on('click', event => {
+        event.preventDefault();
         confirmation.hide();
         // TODO switch back to sized download for images when watermarking/rights sorted.
         let imageSize = confirmation.find('#downloadSizes option:selected' ).val();
         downloadImage(imageSize);
         //downloadPregeneratedImage();
-        return false;
     });
 }
 

@@ -81,6 +81,16 @@ body {
     content: var(--bs-breadcrumb-divider, "|");
 }
 
+iframe, media-embed, img {
+    max-width:100% !important;
+    height: auto !important;
+}
+
+iframe, media-embed {
+    aspect-ratio: 16 / 9;
+}
+
+
 /************ Seadragon Image ******************/
 
 #mainViewContainer {
@@ -487,7 +497,7 @@ body {
 #fullDocumentPdfConfirmation,
 #singlePagePdfConfirmation,
 #downloadMetadataConfirmation {
-    width: 350px;
+    width: 365px;
     position: absolute;
     margin-left: auto;
     margin-right: auto;
@@ -586,6 +596,10 @@ body {
 
 button, select {
     text-transform: none;
+}
+
+button.btn.js-copy-iiif-url {
+    border: none;
 }
 
 /** Responsive Design Stuff **/
