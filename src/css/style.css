@@ -1053,9 +1053,9 @@ div.pagination {
 
 .card img {
     height: 150px; /*fits the height of the card container */
+    max-height: 150px;
     width: auto; /*intrinsic width */
     object-fit: cover; /* maintains the aspect-ratio but clips the image to fit */
-
 }
 
 .card:link, .card:hover {

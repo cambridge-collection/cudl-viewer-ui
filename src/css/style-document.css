@@ -81,12 +81,12 @@ body {
     content: var(--bs-breadcrumb-divider, "|");
 }
 
-iframe, media-embed, img {
+#right-panel iframe, #right-panel media-embed, #right-panel img {
     max-width:100% !important;
     height: auto !important;
 }
 
-iframe, media-embed {
+#right-panel iframe, #right-panel media-embed {
     aspect-ratio: 16 / 9;
 }
 
