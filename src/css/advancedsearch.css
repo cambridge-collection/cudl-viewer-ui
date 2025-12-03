@@ -136,14 +136,25 @@ div.collections_carousel_item ul.snippets li.snippet {
     line-height: 1.25em;
     text-indent: -0.5em;
 }
+
 div.collections_carousel_item ul.snippets li.snippet span {
     display: inline
 }
+
 div.collections_carousel_item ul.snippets li.snippet span * {
     display: inline;
 }
 
-div.collections_carousel_item ul.snippets li.snippet span br { display:none;}
+div.collections_carousel_item ul.snippets li.snippet span br,
+div.collections_carousel_item ul.snippets li.snippet span img {
+    display: none;
+}
+
+div.collections_carousel_item ul.snippets li.snippet span h1,
+div.collections_carousel_item ul.snippets li.snippet span h2,
+div.collections_carousel_item ul.snippets li.snippet span h3,
+div.collections_carousel_item ul.snippets li.snippet span h4,
+div.collections_carousel_item ul.snippets li.snippet span h5,
 div.collections_carousel_item ul.snippets li.snippet span p,
 div.collections_carousel_item ul.snippets li.snippet span div,
 div.collections_carousel_item ul.snippets li.snippet span ul,
@@ -153,7 +164,64 @@ div.collections_carousel_item ul.snippets li.snippet span table,
 div.collections_carousel_item ul.snippets li.snippet span tr,
 div.collections_carousel_item ul.snippets li.snippet span th,
 div.collections_carousel_item ul.snippets li.snippet span td {
-    margin-right: 0.2em
+    margin-right: 0.2em;
+    font-size: 1rem;
+}
+
+div.collections_carousel_item ul.snippets li.snippet strong {
+    font-weight: normal;
+}
+
+div.collections_carousel_item ul.snippets li.snippet .overline {
+    text-decoration: overline;
+}
+
+div.collections_carousel_item ul.snippets li.snippet .cancel-n,
+div.collections_carousel_item ul.snippets li.snippet .delover-n,
+div.collections_carousel_item ul.snippets li.snippet .erased-n {
+    text-decoration: inherit;
+    background: #DADADA;
+}
+
+div.collections_carousel_item ul.snippets li.snippet .wordstrike-n,
+div.collections_carousel_item ul.snippets li.snippet .strikethrough,
+div.collections_carousel_item ul.snippets li.snippet .blockstrike-n {
+    text-decoration: line-through;
+    background: transparent;
+}
+
+div.collections_carousel_item ul.snippets li.snippet .supra-n,
+div.collections_carousel_item ul.snippets li.snippet .supralinear {
+    vertical-align: 0.35ex;
+    font-size: .89rem;
+}
+
+div.collections_carousel_item ul.snippets li.snippet .infra-n,
+div.collections_carousel_item ul.snippets li.snippet .infralinear {
+    vertical-align: -.15ex;
+    font-size: .89rem;
+}
+
+div.collections_carousel_item ul.snippets li.snippet .italic {
+    font-style: italic
+}
+
+div.collections_carousel_item ul.snippets li.snippet .doubleUnderline {
+    text-decoration: double;
+    text-decoration-line: underline;
+}
+
+div.collections_carousel_item ul.snippets li.snippet .underlineDashed {
+    text-decoration: dashed;
+    text-decoration-line: underline;
+}
+
+div.collections_carousel_item ul.snippets li.snippet .smallCaps {
+    font-variant: small-caps;
+}
+
+div.collections_carousel_item ul.snippets li.snippet .allCaps {
+    text-transform: uppercase
 }
 
 div.collections_carousel_item ul.snippets li.snippet em.match {
