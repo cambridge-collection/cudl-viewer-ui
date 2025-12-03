@@ -67,7 +67,45 @@ form.campl-search-input input.campl-search-submit {
 div.campl-site-search {
     display: none;
 }
+
 @media screen and (max-width: 767px) {
+
+    /* Collections results */
+
+    #virtual_collections_carousel {
+        padding-left:0;
+    }
+
+    .virtual-collections-items .virtual_collections_carousel_item,
+    .collections_carousel .collections_carousel_item {
+        height: inherit;
+        float: none;
+        margin-bottom: 30px;
+        line-height: 1.35
+    }
+
+    .virtual-collections-items .virtual_collections_carousel_text,
+    .collections_carousel .collections_carousel_text {
+        float: none;
+        margin-left: 0px;
+    }
+
+    .virtual-collections-items .virtual_collections_carousel_text {
+        float: none;
+        margin-left: 0px;
+        font-size:0.85rem;
+    }
+
+    .virtual-collections-items .virtual_collections_carousel_text h5 {
+        font-size: 1rem
+    }
+
+    .virtual-collections-items .virtual_collections_carousel_image_box,
+    .collections_carousel .collections_carousel_image_box {
+        float: none;
+        margin: 0 0 10px 0;
+    }
+
     div.campl-site-search {
         display: block;
     }
