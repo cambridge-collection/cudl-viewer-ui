@@ -32,12 +32,15 @@
         text-align: left;
         display: inline-block;
     }
+
     .carousel-panel a {
         text-decoration: underline;
     }
+
     .campl-carousel-pagination {
         right: 108px;
     }
+
     .campl-slide-caption {
         right: 0px;
     }
@@ -46,34 +49,79 @@
 #header-search input[type="text"] {
     height: 32px;
 }
+
 .cudl-header-search {
     position: absolute;
     right: -20px;
     bottom: 0;
     width: 40%;
 }
+
 .campl-search-input {
     height: 32px;
     min-height: 32px;
 }
+
 .cudl-header-search input[type=text] {
     height: 32px;
     width: calc(100% - 31px);
 }
+
 form.campl-search-input input.campl-search-submit {
     height: 32px;
     width: 32px;
 }
+
 div.campl-site-search {
     display: none;
 }
+
 @media screen and (max-width: 767px) {
+
+    /* Collections results */
+
+    #virtual_collections_carousel {
+        padding-left:0;
+    }
+
+    .virtual-collections-items .virtual_collections_carousel_item,
+    .collections_carousel .collections_carousel_item {
+        height: inherit;
+        float: none;
+        margin-bottom: 30px;
+        line-height: 1.35
+    }
+
+    .virtual-collections-items .virtual_collections_carousel_text,
+    .collections_carousel .collections_carousel_text {
+        float: none;
+        margin-left: 0px;
+    }
+
+    .virtual-collections-items .virtual_collections_carousel_text {
+        float: none;
+        margin-left: 0px;
+        font-size:0.85rem;
+    }
+
+    .virtual-collections-items .virtual_collections_carousel_text h5 {
+        font-size: 1rem
+    }
+
+    .virtual-collections-items .virtual_collections_carousel_image_box,
+    .collections_carousel .collections_carousel_image_box {
+        float: none;
+        margin: 0 0 10px 0;
+    }
+
     div.campl-site-search {
         display: block;
     }
+
     .cudl-header-search {
         display: none;
     }
+
     #site-search-container input[type=text] {
         margin: 0;
         padding: 0;
@@ -148,7 +196,9 @@ div.campl-site-search {
     background-color: #ffeeee;
 }
 
-.footer a:link, .footer a:visited, .footer a:active {
+.footer a:link,
+.footer a:visited,
+.footer a:active {
     color: #FFFFFF;
     text-decoration: underline;
 }
@@ -239,7 +289,8 @@ div.campl-site-search {
     border-color: #333;
 }
 
-.foundations-link-faith, .foundations-link-faith a {
+.foundations-link-faith,
+.foundations-link-faith a {
     color: #8f7722;
     position: absolute;
     right: 4px;
@@ -249,7 +300,8 @@ div.campl-site-search {
     text-decoration: none;
 }
 
-.foundations-link-science, .foundations-link-science a {
+.foundations-link-science,
+.foundations-link-science a {
     color: #324088;
     position: absolute;
     right: 4px;
@@ -372,7 +424,8 @@ blockquote {
 
 .grid_carousel ol li {
     float: left;
-    width: 550px;;
+    width: 550px;
+    ;
 }
 
 .matrix_carousel ol {
@@ -383,7 +436,8 @@ blockquote {
 
 .matrix_carousel ol li {
     float: left;
-    width: 180px;;
+    width: 180px;
+    ;
 }
 
 .collections_carousel_item {
@@ -460,8 +514,9 @@ ol#virtual_collections_carousel li {
     position: relative;
     height: 190px;
     max-width: 500px;
-    float:left;
-    margin: 5px; /*space needed for perimetral hover pink highlighting */
+    float: left;
+    margin: 5px;
+    /*space needed for perimetral hover pink highlighting */
 }
 
 .virtual_collections_carousel_image_box {
@@ -472,88 +527,96 @@ ol#virtual_collections_carousel li {
     border-style: solid;
     border-width: 1px;
     border-color: #333;
-   float:left;
-   margin-right:20px;
+    float: left;
+    margin-right: 20px;
 }
 
-.virtual_collections_carousel_image_box:hover, .virtual_collections_carousel_image_box:focus, .virtual_collections_carousel_image_box:active{
+.virtual_collections_carousel_image_box:hover,
+.virtual_collections_carousel_image_box:focus,
+.virtual_collections_carousel_image_box:active {
     outline: 5px solid #E5007D;
 }
 
 .virtual_collections_carousel_image {
-   display: table-cell;
-   vertical-align: middle;
-   width: 180px;
-   height: 180px;
-   text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    width: 180px;
+    height: 180px;
+    text-align: center;
 }
 
-.virtual_collections_carousel_image a, .virtual_collections_carousel_image a:link, .virtual_collections_carousel_image a:visited, .virtual_collections_carousel_image a:hover, .virtual_collections_carousel_image a:focus, .virtual_collections_carousel_image a:active {
-    outline:none;
+.virtual_collections_carousel_image a,
+.virtual_collections_carousel_image a:link,
+.virtual_collections_carousel_image a:visited,
+.virtual_collections_carousel_image a:hover,
+.virtual_collections_carousel_image a:focus,
+.virtual_collections_carousel_image a:active {
+    outline: none;
 }
 
 .virtual_collections_carousel_image img {
-   margin: auto;
-   text-decoration: none;
-   border: none;
-   outline: none;
-   max-height: 180px;
-   max-width: 180px;
+    margin: auto;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    max-height: 180px;
+    max-width: 180px;
 }
 
 .virtual-collections-items {
-   float:left;
-   padding-top:18px;
+    float: left;
+    padding-top: 18px;
 }
 
 .virtual_collections_carousel_text {
-   float:left;
-   margin-left: 10px;
-   margin-left: 10px;
-   margin-right:10px;
-   margin-bottom:10px;
+    float: left;
+    margin-left: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 .virtual_collection_summary_images {
-   width:460px;
-   height:500px;
-   float:none;
+    width: 460px;
+    height: 500px;
+    float: none;
 }
 
 @media screen and (max-width: 767px) {
-   .virtual_collection_summary_images {
-       display:none;
+    .virtual_collection_summary_images {
+        display: none;
     }
+
     .virtual_collection_summary_image {
-       display:none;
+        display: none;
     }
 }
 
 .virtual_collection_summary_image {
-   position: relative;
-   float: left;
-   height: 250px;
-   width: 230px;
+    position: relative;
+    float: left;
+    height: 250px;
+    width: 230px;
 }
 
 .virtual_collection_summary {
-   position: relative;
-   margin-bottom: 18px;
-   float:none;
-   background-color:#fff;
+    position: relative;
+    margin-bottom: 18px;
+    float: none;
+    background-color: #fff;
 }
 
 .virtual_collection_sponsor {
-   float:left;
+    float: left;
 }
 
 .virtual_collection_items {
-   position: relative;
-   float:left;
+    position: relative;
+    float: left;
 }
 
 .virtual_collection_textgroup {
-   padding-right: 20px;
+    padding-right: 20px;
 }
 
 /* Note the max height and width are set in jsp also */
@@ -567,7 +630,7 @@ ol#virtual_collections_carousel li {
 }
 
 .collections_carousel_image_box {
-    float:right;
+    float: right;
     width: 190px;
     height: 190px;
     background: #000000;
@@ -577,7 +640,9 @@ ol#virtual_collections_carousel li {
     border-color: #333;
 }
 
-.collections_carousel_image_box:hover, .collections_carousel_image_box:focus, .collections_carousel_image_box:active {
+.collections_carousel_image_box:hover,
+.collections_carousel_image_box:focus,
+.collections_carousel_image_box:active {
     outline: 5px solid #E5007D;
 }
 
@@ -589,18 +654,24 @@ ol#virtual_collections_carousel li {
     text-align: center;
 }
 
-.collections_carousel_image a, .collections_carousel_image a:link, .collections_carousel_image a:visited, .collections_carousel_image a:hover, .collections_carousel_image a:focus, .collections_carousel_image a:active {
-    outline:none;
+.collections_carousel_image a,
+.collections_carousel_image a:link,
+.collections_carousel_image a:visited,
+.collections_carousel_image a:hover,
+.collections_carousel_image a:focus,
+.collections_carousel_image a:active {
+    outline: none;
 }
 
 @media screen and (max-width: 320px) {
     .collections_carousel_image_box {
         float: none;
     }
+
     .collections_carousel_item {
-        margin-bottom:20px;
-        margin-left:20px;
-        margin-right:20px;
+        margin-bottom: 20px;
+        margin-left: 20px;
+        margin-right: 20px;
     }
 }
 
@@ -608,17 +679,22 @@ ol#virtual_collections_carousel li {
     word-wrap: break-word;
     width: 200px;
 }
+
 @media screen and (max-width: 767px) {
     .word-wrap-200 {
         width: 80%;
     }
 }
 
-.morelink a:link, .morelink a:visited, .morelink a:active {
+.morelink a:link,
+.morelink a:visited,
+.morelink a:active {
     color: #3a6c8f;
 }
 
-.lesslink a:link, .morelink a:visited, .morelink a:active {
+.lesslink a:link,
+.morelink a:visited,
+.morelink a:active {
     color: #3a6c8f;
 }
 
@@ -641,7 +717,8 @@ ol#virtual_collections_carousel li {
 }
 
 /* credit text for images, small */
-.image-credit, .image-credit a {
+.image-credit,
+.image-credit a {
     font-size: 0.9em;
     color: #999999;
     vertical-align: top;
@@ -650,14 +727,16 @@ ol#virtual_collections_carousel li {
     padding: 0px;
 }
 
-.image-credit-darwin, .image-credit-darwin a {
+.image-credit-darwin,
+.image-credit-darwin a {
     font-size: 0.9em;
     color: #999999;
     text-decoration: none;
     margin-left: 25px;
 }
 
-.image-credit-islamic, .image-credit-islamic a {
+.image-credit-islamic,
+.image-credit-islamic a {
     font-size: 0.9em;
     color: #999999;
     text-decoration: none;
@@ -1045,20 +1124,26 @@ div.pagination {
 /* Cards. Ratio image:text 5:7 */
 
 .card {
-    border-radius: 0px; /* Overrides Bootstrap default rounded corners. Makes card square */
+    border-radius: 0px;
+    /* Overrides Bootstrap default rounded corners. Makes card square */
     box-sizing: border-box;
     background-color: #106470;
-    height: 150px; /* height: 150px prevents layout from breaking when there's no image */
+    height: 150px;
+    /* height: 150px prevents layout from breaking when there's no image */
 }
 
 .card img {
-    height: 150px; /*fits the height of the card container */
+    height: 150px;
+    /*fits the height of the card container */
     max-height: 150px;
-    width: auto; /*intrinsic width */
-    object-fit: cover; /* maintains the aspect-ratio but clips the image to fit */
+    width: auto;
+    /*intrinsic width */
+    object-fit: cover;
+    /* maintains the aspect-ratio but clips the image to fit */
 }
 
-.card:link, .card:hover {
+.card:link,
+.card:hover {
     background: #6BBBAE;
     color: #000 !important;
 }
@@ -1071,8 +1156,10 @@ div.pagination {
 /* card text : max chars to avoid text wrapping into three lines which breaks the layout */
 
 .card-title {
-    font-size: 1.1875em; /*16px equival or 1118.75% */
-    font-weight: 500; /* Medium: between "normal" (400) and "semibold" (600) */
+    font-size: 1.1875em;
+    /*16px equival or 1118.75% */
+    font-weight: 500;
+    /* Medium: between "normal" (400) and "semibold" (600) */
     line-height: 1.5;
     margin-top: auto;
 }
@@ -1099,7 +1186,8 @@ div.pagination {
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background-color: #bbb; /* using red for testing use "#bbb" on live site */
+    background-color: #bbb;
+    /* using red for testing use "#bbb" on live site */
 }
 
 /* Places carousel indicators under the carousel itself */
@@ -1110,4 +1198,5 @@ div.pagination {
 .collapse table {
     margin-bottom: 1rem;
 }
+
 /* end of TEST classes for Bootstrap 5.3 */
