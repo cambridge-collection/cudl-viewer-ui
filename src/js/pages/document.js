@@ -135,10 +135,12 @@ function loadPage(pagenumber, isReload = false) {
     } else {
         let iiifURL =  data.pages[pagenumber - 1].IIIFImageURL;
         // override default iiif image server if specified
-        if (!iiifURL.startsWith("http")) {
-            iiifURL = context.iiifImageServer+iiifURL;
+        if (iiifURL) {
+            if (!iiifURL.startsWith("http")) {
+                iiifURL = context.iiifImageServer+iiifURL;
+            }
+            openIIIF(iiifURL);
         }
-        openIIIF(iiifURL);
     }
 
     // update current page
@@ -845,28 +847,30 @@ function showThumbnailPage(pagenum) {
 
             // Setup orientation
             let thumbnailURL = data.pages[i].IIIFImageURL;
-            if (!thumbnailURL.startsWith("http")){
-                thumbnailURL = context.iiifImageServer+thumbnailURL;
-            }
-            if (data.pages[i].thumbnailImageOrientation === "portrait") {
-                thumbnailURL = thumbnailURL.concat("/full/,150/0/default.jpg' style='height:150px");
-            } else {
-                thumbnailURL = thumbnailURL.concat("/full/150,/0/default.jpg' style='width:150px");
-            }
+            if (thumbnailURL) {
+                if (thumbnailURL.startsWith("http")){
+                    thumbnailURL = context.iiifImageServer+thumbnailURL;
+                }
+                if (data.pages[i].thumbnailImageOrientation === "portrait") {
+                    thumbnailURL = thumbnailURL.concat("/full/,150/0/default.jpg' style='height:150px");
+                } else {
+                    thumbnailURL = thumbnailURL.concat("/full/150,/0/default.jpg' style='width:150px");
+                }
 
-            thumbnailhtml = thumbnailhtml
-                .concat("<div class='col-md-4'><a href='' onclick='store.loadPage("
-                    + (data.pages[i].sequence) + ");return false;' class='thumbnail'>" +
-                    "<img src='" + thumbnailURL + "'> "
-                    + "<div class='caption'>" + data.pages[i].label + "</div></a></div>");
+                thumbnailhtml = thumbnailhtml
+                    .concat("<div class='col-md-4'><a href='' onclick='store.loadPage("
+                        + (data.pages[i].sequence) + ");return false;' class='thumbnail'>" +
+                        "<img src='" + thumbnailURL + "'> "
+                        + "<div class='caption'>" + data.pages[i].label + "</div></a></div>");
 
-            // finish
-            if (i === endIndex
-                || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) === props.MAX_THUMBNAIL_ITEMS_ON_ROW - 1) {
-                thumbnailhtml = thumbnailhtml.concat("</div>");
-            }
-            if (i === endIndex) {
-                thumbnailhtml = thumbnailhtml.concat("</div>");
+                // finish
+                if (i === endIndex
+                    || ((i) % props.MAX_THUMBNAIL_ITEMS_ON_ROW) === props.MAX_THUMBNAIL_ITEMS_ON_ROW - 1) {
+                    thumbnailhtml = thumbnailhtml.concat("</div>");
+                }
+                if (i === endIndex) {
+                    thumbnailhtml = thumbnailhtml.concat("</div>");
+                }
             }
         }
 
