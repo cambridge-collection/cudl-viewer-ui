@@ -848,7 +848,7 @@ function showThumbnailPage(pagenum) {
             // Setup orientation
             let thumbnailURL = data.pages[i].IIIFImageURL;
             if (thumbnailURL) {
-                if (thumbnailURL.startsWith("http")){
+                if (!thumbnailURL.startsWith("http")){
                     thumbnailURL = context.iiifImageServer+thumbnailURL;
                 }
                 if (data.pages[i].thumbnailImageOrientation === "portrait") {
