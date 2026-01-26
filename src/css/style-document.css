@@ -463,8 +463,8 @@ body {
     margin-right:0px;
 }
 
-#transcriptiondiploframe, #translationframe {
-    height: 98%;
+iframe#transcriptiondiploframe, iframe#translationframe {
+    height: 98% !important;
     width: 100%;
     border: 0px;
     padding: 0px;
