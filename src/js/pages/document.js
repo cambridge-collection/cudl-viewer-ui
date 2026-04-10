@@ -851,11 +851,7 @@ function showThumbnailPage(pagenum) {
                 if (!thumbnailURL.startsWith("http")){
                     thumbnailURL = context.iiifImageServer+thumbnailURL;
                 }
-                if (data.pages[i].thumbnailImageOrientation === "portrait") {
-                    thumbnailURL = thumbnailURL.concat("/full/,150/0/default.jpg' style='height:150px");
-                } else {
-                    thumbnailURL = thumbnailURL.concat("/full/150,/0/default.jpg' style='width:150px");
-                }
+                thumbnailURL = thumbnailURL.concat("/full/!150,250/0/default.jpg' style='max-width:150px;max-height:250px");
 
                 thumbnailhtml = thumbnailhtml
                     .concat("<div class='col-md-4'><a href='' onclick='store.loadPage("

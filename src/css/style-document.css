@@ -81,15 +81,6 @@ body {
     content: var(--bs-breadcrumb-divider, "|");
 }
 
-#right-panel iframe, #right-panel media-embed, #right-panel img {
-    max-width:100% !important;
-    height: auto !important;
-}
-
-#right-panel iframe, #right-panel media-embed {
-    aspect-ratio: 16 / 9;
-}
-
 
 /************ Seadragon Image ******************/
 
