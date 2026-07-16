@@ -39,8 +39,8 @@
                         <id>Install Node and NPM</id>
                         <goals><goal>install-node-and-npm</goal></goals>
                         <configuration>
-                            <nodeVersion>v16.20.2</nodeVersion>
-                            <npmVersion>8.19.4</npmVersion>
+                            <nodeVersion>v24.18.0</nodeVersion>
+                            <npmVersion>11.16.0</npmVersion>
                         </configuration>
                     </execution>
 

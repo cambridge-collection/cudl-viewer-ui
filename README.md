@@ -12,8 +12,8 @@ files into bundles.
 ## Requirements:
 
 This project requires **Maven 3.6+**, which is available on Ubuntu 16.04 LTS and above.
-It also needs node version **v16.20+**
-and npm version **8.19+**
+It also needs node version **v24+**
+and npm version **11+**
 
 # Quickstart
 
@@ -31,14 +31,19 @@ Running a full build takes several minutes, so if you're making non-trivial
 changes you'll want to follow the [Developing](https://github.com/cambridge-collection/cudl-viewer-ui/blob/main/README.md#developing)
 instructions, below, to get real-time updates to UI assets in your viewer.
 
-In order for your local CUDL-Viewer app to depend on your local artifact of
-CUDL-Viewer-UI, you need to alter the CUDL-Viewer `pom.xml` file.
+In order for a normal (packaged) CUDL-Viewer build to depend on your local
+artifact of CUDL-Viewer-UI, you need to alter the CUDL-Viewer `pom.xml` file.
 
 First, find the *CUDL-Viewer-UI* `pom.xml` and find the project version, for example:
 `<version>4.0.9-SNAPSHOT</version>`
 
 Then, go to the *CUDL-Viewer* `pom.xml` and change the `cudl.viewer-ui-version` to match, for example:
 `<cudl-viewer-ui.version>4.0.9-SNAPSHOT</cudl-viewer-ui.version>`.
+
+This manual step is only needed for a normal build. The viewer's hot-reloading
+development workflow builds against your local UI version automatically — see the
+[`cudl-viewer` README](https://github.com/cambridge-collection/cudl-viewer#development) —
+so you don't need to edit `cudl.viewer-ui-version` by hand when developing with it.
 
 # Developing
 
@@ -54,13 +59,17 @@ instructions for the latest version.
 
 Install the compatible version of [node.js](https://nodejs.org/en/download/) which should come with
 [npm](https://www.npmjs.com/). Inspect the CUDL-Viewer-UI `pom.xml` for the correct version
-e.g. `<nodeVersion>v16.20.2</nodeVersion>`
+e.g. `<nodeVersion>v24.18.0</nodeVersion>`
 
 If you have installed `node` with `nvm`, ensure you are switched to use the correct version:
 
 ```
-$ nvm use 16.20.2
+$ nvm use 24.18.0
 ```
+
+`make dev` checks the active node and npm versions before it runs and stops with
+an error if they are older than the minimum (**node v24+**, **npm 11+**); it does
+not select or install a version for you.
 
 Install the compatible version of webpack and the other relevant dependencies globally
 so that they're available as shell commands. Inspect the `package.json` for the correct versions,
@@ -85,6 +94,10 @@ $ npm install
 [lots of output...]
 ```
 
+`make dev` also installs these dependencies for you (with `npm ci`) when
+`node_modules` is missing or the `package.json`/`package-lock.json` files have
+changed, so you don't need to run this step separately before it.
+
 ## Run Webpack Dev Server
 
 The webpack dev server will watch your files and incrementally recompile what's
@@ -94,9 +107,11 @@ serving the pre-built versions from Maven. This allows you to see changes in the
 viewer without doing a Maven build.
 
 > *See the [`cudl-viewer` README](https://github.com/cambridge-collection/cudl-viewer#development)
-> for details on enabling this mode of
-> operation, but essentially you need to set `cudl.ui.dev` property to `true`
-> in the `cudl-global.properties` file.*
+> for details. The viewer's own `make dev` development workflow enables this mode
+> automatically for the hot-reloading run, so you no longer need to set the
+> `cudl.ui.dev` property to `true` in the `cudl-global.properties` file by hand.
+> (For a normal packaged run, `cudl.ui.dev` still applies as configured in that
+> file.)*
 
 Once you've got the viewer pointed at your dev server you'll need to run the
 server as follows:
@@ -109,6 +124,16 @@ or
 ```
 $ make dev
 ```
+
+`make dev` is the recommended option: it checks the prerequisites (node/npm
+versions and that port 8080 is free), installs dependencies with `npm ci` if
+needed, builds the UI, installs the matching Maven artefact and then starts the
+dev server. Unlike the old target it does not delete `node_modules` on each run.
+
+To run the viewer against this dev server, follow the
+[`cudl-viewer` development workflow](https://github.com/cambridge-collection/cudl-viewer#development):
+start `make dev` here first, then run `make dev ENV_FILE=<path>` in the
+`cudl-viewer` repository.
 
 If this is successful, you should now see a directory structure at: http://localhost:8080/
 
