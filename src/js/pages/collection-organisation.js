@@ -69,10 +69,19 @@ $(function() {
                         "</span>";
                 }
 
+                let unreleasedBadge = "";
+                let imageBoxStyle = "";
+                if (item.unreleased) {
+                    imageBoxStyle = " style='position:relative'";
+                    unreleasedBadge = "<span class='badge bg-warning text-dark' " +
+                        "style='position:absolute;top:4px;left:4px;z-index:1'>Unreleased</span>";
+                }
+
                 const itemDiv = document.createElement('div');
                 itemDiv.setAttribute("class", "collections_carousel_item");
                 itemDiv.innerHTML =
-                    "<div class='collections_carousel_image_box'>" +
+                    "<div class='collections_carousel_image_box'" + imageBoxStyle + ">" +
+                    unreleasedBadge +
                     "<div class='collections_carousel_image'>" +
                     "<a href='/view/" + item.id + "'>" +
                     "<img src='" + thumbnailURL + "' alt='" + item.id + "' " + imageDimensions + ">" +

@@ -177,7 +177,7 @@ function noBreak(text) {
 }
 
 function renderResult(result) {
-    var item = result.item;
+    var item = result.item || {};
     var imageStyle = {};
     var title = item.title;
     if (result.itemType === "essay") {
@@ -200,11 +200,20 @@ function renderResult(result) {
             );
     }
 
+    var unreleasedBadge = "";
+    if (item.unreleased) {
+        unreleasedBadge = $("<span>")
+            .addClass("badge bg-warning text-dark")
+            .css({position: "absolute", top: "4px", left: "4px", zIndex: 1})
+            .text("Unreleased");
+    }
+
     var itemDiv = $("<div>")
         .attr("class", "collections_carousel_item")
         .append(
             $("<div>")
                 .addClass("collections_carousel_image_box col-md-4")
+                .css("position", "relative")
                 .append(
                     $("<div>")
                         .addClass("collections_carousel_image")
@@ -220,7 +229,8 @@ function renderResult(result) {
                                 )
                         )
                 )
-                .append(mainDisplayIcon),
+                .append(mainDisplayIcon)
+                .append(unreleasedBadge),
             $("<div>")
                 .addClass("collections_carousel_text col-md-8")
                 .append(
