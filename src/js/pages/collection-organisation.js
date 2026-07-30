@@ -13,15 +13,22 @@ $(function() {
     let context = getPageContext();
 
     let pageLimit = 8;
-    let numResults = context.collectionSize;
     let pageNumber = context.collectionPage || 1;
 
     const paginationConfig = {
         dataSource: context.collectionUrl + '/itemJSON',
         locator: 'items',
+        // The collection total comes back on the same response as the items, so the
+        // page doesn't have to be told the size up front — which used to cost a
+        // separate Solr count query on every collection page render.
+        totalNumberLocator: function (response) { return response.total; },
         pageNumber: pageNumber,
         pageSize: pageLimit,
-        totalNumber: numResults,
+        // Seeds the total so a deep link to /collections/x/12 isn't clamped back to
+        // page 1: paginationjs limits the first request to the pages it knows about,
+        // and it knows none until that first response lands.
+        totalNumber: pageNumber * pageLimit,
+        resetPageNumberOnInit: false,
         ajax: {
             // As our ajax function expects "start" and "end" parameters
             // we're going to do a quick conversion from the given pageSize and
@@ -69,6 +76,13 @@ $(function() {
                         "</span>";
                 }
 
+                // Most items have no abstract, so only lead into the "more" link
+                // when there is actually something to trail off from.
+                let abstractText = "";
+                if(item.abstractShort !== "") {
+                    abstractText = item.abstractShort + " ... ";
+                }
+
                 let unreleasedBadge = "";
                 let imageBoxStyle = "";
                 if (item.unreleased) {
@@ -90,8 +104,8 @@ $(function() {
                     "</div>" +
                     "<div class='collections_carousel_text word-wrap-200'>" +
                     "<h4>" + item.title + shelfLocator + "</h4>" +
-                    "<div class='collection_abstract'>" + item.abstractShort +
-                    " ... <a href='/view/" + item.id + "'>more</a>" +
+                    "<div class='collection_abstract'>" + abstractText +
+                    "<a href='/view/" + item.id + "'>more</a>" +
                     "</div>" +
                     "<div class='clear'></div>" +
                     "</div>";

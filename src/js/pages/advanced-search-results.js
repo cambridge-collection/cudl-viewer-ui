@@ -317,7 +317,10 @@ function getFacetParam(facetField) {
 }
 
 function renderFacet(state, group, facet) {
-    var facetState = Object.assign({}, state);
+    // Changing the facets is a new query, so it starts at the first page --
+    // requery rebuilds the paginator at page 1 regardless. Held explicitly
+    // rather than relying on the tree not being re-rendered after a page turn.
+    var facetState = Object.assign({}, state, {page: 1});
     facetState[getFacetParam(group.field)] = facet.value;
 
     var url = serialiseQuery(facetState);
@@ -393,7 +396,7 @@ function renderMoreFacetLink(state, facetGroup) {
 
     if (facetGroup.facets.length < facetTotal) {
 
-        let expandState = Object.assign({}, state);
+        let expandState = Object.assign({}, state, {page: 1});
         expandState.expandFacet = facetName;
         let url = serialiseQuery(expandState);
 
@@ -414,7 +417,7 @@ function renderLessFacetLink(state, facetGroup) {
 
     if (expandedFacet === facetName) {
 
-        let expandState = Object.assign({}, state);
+        let expandState = Object.assign({}, state, {page: 1});
         expandState.expandFacet = "";
         let url = serialiseQuery(expandState);
 
@@ -427,7 +430,7 @@ function renderLessFacetLink(state, facetGroup) {
 }
 
 function renderSelectedFacet(state, selectedFacet) {
-    var facetState = Object.assign({}, state);
+    var facetState = Object.assign({}, state, {page: 1});
     delete facetState[getFacetParam(selectedFacet.field)];
 
     var url = serialiseQuery(facetState);
@@ -529,7 +532,11 @@ function requery(state) {
             activeXhr = null;
     })
     .done(function(data) {
-        // Reset the pagination for the new data
+        // Reset the pagination for the new data. paginationjs invokes the
+        // callback while constructing the paginator, so clear `paging` first to
+        // make setStatePage a no-op as it is at init; otherwise it requests
+        // page 1 as a state change and fires a second, identical query.
+        paging = undefined;
         setupPagination(data.info.hits, pageLimit);
 
         // query duration
@@ -558,6 +565,9 @@ function requery(state) {
             .attr('href', renderChangeQueryUrl(state));
 
         setupFacets(false);
+
+        // Previously a side effect of the paginator callback above.
+        scrollToTopOfResults();
     });
 }
 
