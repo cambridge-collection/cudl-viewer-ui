@@ -500,6 +500,13 @@ ol#search_carousel li {
     display: block;
 }
 
+/* Contains the floated tiles so the list has real height, which puts the lazy
+   loading sentinel that follows it below the tiles rather than level with the
+   first one. flow-root rather than overflow, which would clip the hover outline. */
+ol#virtual_collections_carousel {
+    display: flow-root;
+}
+
 ol#virtual_collections_carousel li {
     list-style: none outside none;
     float: none;

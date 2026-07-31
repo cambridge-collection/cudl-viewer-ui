@@ -6,11 +6,17 @@ import '../base.js';
 
 //import * as cudl from '../cudl';
 import { getPageContext } from '../context';
+import { initVirtualCollection } from '../virtualCollections';
 import ('paginationjs');
 
 $(function() {
 
     let context = getPageContext();
+
+    // Virtual collections share this chunk but show one continuous lazily-extended
+    // list instead of paginating, so they have their own handling and none of the
+    // pagination setup below applies to them.
+    if (initVirtualCollection(context)) { return; }
 
     let pageLimit = 8;
     let pageNumber = context.collectionPage || 1;
