@@ -30,7 +30,7 @@ function escapeHtml(value) {
  * Builds one tile. This mirrors the markup collection-virtual.jsp renders for
  * the first batch: appended tiles have to be indistinguishable from those.
  */
-function buildTile(item, position) {
+function buildTile(item, position, showUnreleasedContent) {
     const imageDimensions = item.thumbnailOrientation === 'portrait'
         ? 'height: 100%' : 'width: 100%';
 
@@ -40,7 +40,7 @@ function buildTile(item, position) {
           '</span>'
         : '';
 
-    const unreleasedBadge = item.unreleased
+    const unreleasedBadge = showUnreleasedContent && item.unreleased
         ? '<span class="badge bg-warning text-dark">Unreleased</span>'
         : '';
 
@@ -55,12 +55,11 @@ function buildTile(item, position) {
         '<a href="' + itemUrl + '">' +
         '<img src="' + escapeHtml(item.thumbnailURL) + '" ' +
         'alt="' + escapeHtml(item.id) + '" style="' + imageDimensions + '">' +
-        '</a>' + mainDisplayIndicator +
+        '</a>' + mainDisplayIndicator + unreleasedBadge +
         '</div>' +
         '</div>' +
         '<div class="virtual_collections_carousel_text campl-column6">' +
         '<h5>' + escapeHtml(item.title + ' (' + item.shelfLocator + ')') + '</h5>' +
-        unreleasedBadge +
         escapeHtml(item.abstractShort) + ' … ' +
         '<a href="' + itemUrl + '">more</a>' +
         '</div>' +
@@ -128,8 +127,11 @@ export function initVirtualCollection(context) {
                 if (items.length === 0) { finish(); return; }
 
                 const fragment = document.createDocumentFragment();
+                // The endpoint reports each item's release state whatever this
+                // deployment shows; showUnreleasedContent decides whether to badge it.
                 items.forEach(function(item, index) {
-                    fragment.appendChild(buildTile(item, loaded + index + 1));
+                    fragment.appendChild(buildTile(item, loaded + index + 1,
+                        context.showUnreleasedContent));
                 });
                 list.appendChild(fragment);
                 loaded += items.length;

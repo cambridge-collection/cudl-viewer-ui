@@ -91,7 +91,7 @@ $(function() {
 
                 let unreleasedBadge = "";
                 let imageBoxStyle = "";
-                if (item.unreleased) {
+                if (context.showUnreleasedContent && item.unreleased) {
                     imageBoxStyle = " style='position:relative'";
                     unreleasedBadge = "<span class='badge bg-warning text-dark' " +
                         "style='position:absolute;top:4px;left:4px;z-index:1'>Unreleased</span>";

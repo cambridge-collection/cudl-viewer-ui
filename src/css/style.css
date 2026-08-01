@@ -536,6 +536,15 @@ ol#virtual_collections_carousel li {
     border-color: #333;
     float: left;
     margin-right: 20px;
+    position: relative;
+}
+
+/* The image itself is a table-cell, so the badge hangs off the box instead. */
+.virtual_collections_carousel_image .badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    z-index: 1;
 }
 
 .virtual_collections_carousel_image_box:hover,

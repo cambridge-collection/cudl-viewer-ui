@@ -201,7 +201,7 @@ function renderResult(result) {
     }
 
     var unreleasedBadge = "";
-    if (item.unreleased) {
+    if (getPageContext().showUnreleasedContent && item.unreleased) {
         unreleasedBadge = $("<span>")
             .addClass("badge bg-warning text-dark")
             .css({position: "absolute", top: "4px", left: "4px", zIndex: 1})
