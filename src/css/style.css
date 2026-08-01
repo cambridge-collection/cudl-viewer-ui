@@ -539,8 +539,12 @@ ol#virtual_collections_carousel li {
     position: relative;
 }
 
-/* The image itself is a table-cell, so the badge hangs off the box instead. */
-.virtual_collections_carousel_image .badge {
+.collections_listing_image {
+    position: relative;
+}
+
+.virtual_collections_carousel_image .badge,
+.collections_listing_image .badge {
     position: absolute;
     top: 4px;
     left: 4px;
