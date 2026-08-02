@@ -9,6 +9,7 @@ import 'bootstrap-slider';
 
 import '../base.js';
 import { getPageContext } from '../context';
+import { unreleasedBadge } from '../itemStatus';
 import 'paginationjs';
 import {toggleDiv} from "../cudl";
 
@@ -200,14 +201,6 @@ function renderResult(result) {
             );
     }
 
-    var unreleasedBadge = "";
-    if (getPageContext().showUnreleasedContent && item.unreleased) {
-        unreleasedBadge = $("<span>")
-            .addClass("badge bg-warning text-dark")
-            .css({position: "absolute", top: "4px", left: "4px", zIndex: 1})
-            .text("Unreleased");
-    }
-
     var itemDiv = $("<div>")
         .attr("class", "collections_carousel_item")
         .append(
@@ -230,7 +223,7 @@ function renderResult(result) {
                         )
                 )
                 .append(mainDisplayIcon)
-                .append(unreleasedBadge),
+                .append(unreleasedBadge(item, {overlay: true})),
             $("<div>")
                 .addClass("collections_carousel_text col-md-8")
                 .append(

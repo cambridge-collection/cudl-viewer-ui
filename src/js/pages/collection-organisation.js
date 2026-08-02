@@ -6,6 +6,7 @@ import '../base.js';
 
 //import * as cudl from '../cudl';
 import { getPageContext } from '../context';
+import { unreleasedBadge } from '../itemStatus';
 import { initVirtualCollection } from '../virtualCollections';
 import ('paginationjs');
 
@@ -89,19 +90,14 @@ $(function() {
                     abstractText = item.abstractShort + " ... ";
                 }
 
-                let unreleasedBadge = "";
-                let imageBoxStyle = "";
-                if (context.showUnreleasedContent && item.unreleased) {
-                    imageBoxStyle = " style='position:relative'";
-                    unreleasedBadge = "<span class='badge bg-warning text-dark' " +
-                        "style='position:absolute;top:4px;left:4px;z-index:1'>Unreleased</span>";
-                }
+                const badge = unreleasedBadge(item, {overlay: true});
+                const imageBoxStyle = badge === "" ? "" : " style='position:relative'";
 
                 const itemDiv = document.createElement('div');
                 itemDiv.setAttribute("class", "collections_carousel_item");
                 itemDiv.innerHTML =
                     "<div class='collections_carousel_image_box'" + imageBoxStyle + ">" +
-                    unreleasedBadge +
+                    badge +
                     "<div class='collections_carousel_image'>" +
                     "<a href='/view/" + item.id + "'>" +
                     "<img src='" + thumbnailURL + "' alt='" + item.id + "' " + imageDimensions + ">" +

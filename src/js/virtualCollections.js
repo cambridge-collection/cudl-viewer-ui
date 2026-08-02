@@ -8,6 +8,9 @@
  */
 import $ from 'jquery';
 
+import { escapeHtml } from './html';
+import { unreleasedBadge } from './itemStatus';
+
 const LIST_ID = 'virtual_collections_carousel';
 const SENTINEL_ID = 'virtual_collections_sentinel';
 
@@ -18,19 +21,10 @@ const TRIGGER_MARGIN = '400px';
 const MAX_FAILURES = 3;
 
 /**
- * Escapes text for inclusion in markup. Item titles and abstracts come from
- * catalogue data, which contains characters that would otherwise be parsed as
- * HTML.
- */
-function escapeHtml(value) {
-    return $('<div/>').text(value === undefined || value === null ? '' : value).html();
-}
-
-/**
  * Builds one tile. This mirrors the markup collection-virtual.jsp renders for
  * the first batch: appended tiles have to be indistinguishable from those.
  */
-function buildTile(item, position, showUnreleasedContent) {
+function buildTile(item, position) {
     const imageDimensions = item.thumbnailOrientation === 'portrait'
         ? 'height: 100%' : 'width: 100%';
 
@@ -38,10 +32,6 @@ function buildTile(item, position, showUnreleasedContent) {
         ? '<span class="virtual_collections_carousel-lightbulb-icon">' +
           '<img alt="RTI Item" height="30px" src="/document-views/rti/rti-light-bulb.png"/>' +
           '</span>'
-        : '';
-
-    const unreleasedBadge = showUnreleasedContent && item.unreleased
-        ? '<span class="badge bg-warning text-dark">Unreleased</span>'
         : '';
 
     const itemUrl = '/view/' + encodeURIComponent(item.id) + '/1';
@@ -55,7 +45,7 @@ function buildTile(item, position, showUnreleasedContent) {
         '<a href="' + itemUrl + '">' +
         '<img src="' + escapeHtml(item.thumbnailURL) + '" ' +
         'alt="' + escapeHtml(item.id) + '" style="' + imageDimensions + '">' +
-        '</a>' + mainDisplayIndicator + unreleasedBadge +
+        '</a>' + mainDisplayIndicator + unreleasedBadge(item) +
         '</div>' +
         '</div>' +
         '<div class="virtual_collections_carousel_text campl-column6">' +
@@ -127,11 +117,8 @@ export function initVirtualCollection(context) {
                 if (items.length === 0) { finish(); return; }
 
                 const fragment = document.createDocumentFragment();
-                // The endpoint reports each item's release state whatever this
-                // deployment shows; showUnreleasedContent decides whether to badge it.
                 items.forEach(function(item, index) {
-                    fragment.appendChild(buildTile(item, loaded + index + 1,
-                        context.showUnreleasedContent));
+                    fragment.appendChild(buildTile(item, loaded + index + 1));
                 });
                 list.appendChild(fragment);
                 loaded += items.length;
