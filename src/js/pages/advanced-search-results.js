@@ -32,14 +32,7 @@ function unionKeys(objA, objB) {
             }, {}));
 }
 
-/**
- * The advanced search form submits FacetCollection= with a capital F, so bookmarked
- * URLs carry that spelling while every other facet key is facet<Field>. Left alone it
- * reaches the search API alongside facets=, where SearchForm.setFacets replaces the
- * facet map rather than merging it, so which of the two applies is arbitrary.
- * Canonicalising collapses them into one key here instead, facets= winning by the
- * spread order below.
- */
+/** The advanced search form submits FacetCollection=, not facetCollection=. */
 function canonicaliseParamName(k) {
     return k.replace(/^Facet/, 'facet');
 }
@@ -96,8 +89,8 @@ function serialiseQueryPairs(keyValuePairs) {
         var entry = keyValuePairs[i];
         var k = entry[0];
         var v= entry[1];
-        // An empty value is not a selected facet -- the form always submits its
-        // collection dropdown, and facets=Collection:: is not parseable.
+        // The form always submits its collection dropdown, and facets=Collection::
+        // is not parseable.
         if (k.startsWith("facet") && k !== "facets") {
             k = k.substring(5); // strip out word 'facet'
             if (v) {
@@ -327,9 +320,6 @@ function getFacetParam(facetField) {
 }
 
 function renderFacet(state, group, facet) {
-    // Changing the facets is a new query, so it starts at the first page --
-    // requery rebuilds the paginator at page 1 regardless. Held explicitly
-    // rather than relying on the tree not being re-rendered after a page turn.
     var facetState = Object.assign({}, state, {page: 1});
     facetState[getFacetParam(group.field)] = facet.value;
 
@@ -478,16 +468,11 @@ function renderChangeQueryUrl(state) {
     return '/search/query' + query;
 }
 
-/** Held as one class rather than per-element toggles so the state is inspectable. */
 const RESULT_STATES = 'searching has-results no-results search-failed';
 
 const NO_RESULTS_MESSAGE = 'No items found for your query.';
 const SEARCH_ERROR_MESSAGE = 'Sorry, your search could not be completed. Please try again.';
 
-/**
- * Written here rather than served in the page: CSS hiding still leaves a message in
- * the HTML, as the only prose a crawler can read as the page's content.
- */
 function searchMessage(text) {
     return $('<p>').addClass('box h5').text(text);
 }
@@ -496,13 +481,10 @@ function setResultsState(state) {
     $('#content').removeClass(RESULT_STATES).addClass(state);
 }
 
-/** Show a visible failure rather than an empty results column. */
 function showSearchError() {
     paging = undefined;
     $('.pagination').empty();
     $('#collections_carousel').empty();
-
-    // No count at all beats a stale or false one.
     $('.resultcount').empty();
 
     $('.search-error')
@@ -513,10 +495,7 @@ function showSearchError() {
     setResultsState('search-failed');
 }
 
-/**
- * Aborts are not failures: activeXhr.abort() fires .fail() on the request it
- * replaces.
- */
+/** Replacing an in-flight query fires .fail() on the request it aborts. */
 function handleSearchFailure(textStatus) {
     if(textStatus === 'abort')
         return;
@@ -559,7 +538,6 @@ function loadPage(state) {
     return false;
 }
 
-/** Deliberately does not scroll -- see requery. */
 function renderQueryResults(state, data) {
     // An unreachable Solr answers 200 with 0 hits and an error, so it never
     // reaches .fail(); without this it would read as a genuine 0-hit query.
@@ -583,8 +561,6 @@ function renderQueryResults(state, data) {
         .empty()
         .append(renderResultInfo(data.info.hits, data.info.queryTime));
 
-    // #tree and #selected_facets carry the delegated click handler bound in
-    // init(), so refill them -- never replace them.
     $('#tree')
         .empty()
         .append(renderFacetTree(state, data.facets.available));
@@ -601,18 +577,12 @@ function renderQueryResults(state, data) {
         $('.search-no-results').append(searchMessage(NO_RESULTS_MESSAGE));
     }
 
-    // The 'Refine by:' heading lives in the same wrapper as the tree, so the
-    // wrapper's visibility has to follow the tree's contents.
     $('#content').toggleClass('has-facets', data.facets.available.length > 0);
     setResultsState(data.info.hits > 0 ? 'has-results' : 'no-results');
 
     setupFacets(false);
 }
 
-/**
- * The scroll is the caller's decision: correct after a facet click, but it would
- * jam a freshly loaded page down past the nav and query summary.
- */
 function requery(state, options) {
 
     if(typeof state.page != 'number')
@@ -639,7 +609,6 @@ function requery(state, options) {
         renderQueryResults(state, data);
 
         if(scroll) {
-            // Previously a side effect of the paginator callback above.
             scrollToTopOfResults();
         }
     })
@@ -884,10 +853,7 @@ function init() {
         return false;
     });
 
-    // The page is served with no count, facets or results, so the initial load has
-    // to query for all three. Call requery directly rather than going via
-    // requestState/showState: requestState returns early on an empty diff, and
-    // showState would route a page-only change to loadPage, which fetches items alone.
+    // Not via requestState: it returns early on an empty diff.
     requery(currentState, {noScroll: true});
 }
 
