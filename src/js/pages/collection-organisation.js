@@ -6,6 +6,7 @@ import '../base.js';
 
 //import * as cudl from '../cudl';
 import { getPageContext } from '../context';
+import { escapeHtml } from '../html';
 import { unreleasedBadge } from '../itemStatus';
 import { initVirtualCollection } from '../virtualCollections';
 import ('paginationjs');
@@ -62,18 +63,15 @@ $(function() {
             for(let i=0; i<data.length; i++) {
                 let item = data[i];
                 let imageDimensions = "";
-                let thumbnailURL = item.thumbnailURL;
                 if(item.thumbnailOrientation==="portrait") {
-                    imageDimensions = " style='height:100%' ";
-                    thumbnailURL = thumbnailURL+"' style='height:180px";
+                    imageDimensions = " style='height:180px'";
                 }
                 else if(item.thumbnailOrientation==="landscape") {
-                    imageDimensions = " style='width:100%' ";
-                    thumbnailURL = thumbnailURL+"' style='width:180px";
+                    imageDimensions = " style='width:180px'";
                 }
                 let shelfLocator = "";
                 if(item.shelfLocator !== "") {
-                    shelfLocator = " (" +item.shelfLocator+ ") ";
+                    shelfLocator = " (" +escapeHtml(item.shelfLocator)+ ") ";
                 }
 
                 let mainDisplayIndicator = ""
@@ -87,27 +85,29 @@ $(function() {
                 // when there is actually something to trail off from.
                 let abstractText = "";
                 if(item.abstractShort !== "") {
-                    abstractText = item.abstractShort + " ... ";
+                    abstractText = escapeHtml(item.abstractShort) + " ... ";
                 }
 
                 const badge = unreleasedBadge(item, {overlay: true});
                 const imageBoxStyle = badge === "" ? "" : " style='position:relative'";
 
+                const itemUrl = "/view/" + encodeURIComponent(item.id);
                 const itemDiv = document.createElement('div');
                 itemDiv.setAttribute("class", "collections_carousel_item");
                 itemDiv.innerHTML =
                     "<div class='collections_carousel_image_box'" + imageBoxStyle + ">" +
                     badge +
                     "<div class='collections_carousel_image'>" +
-                    "<a href='/view/" + item.id + "'>" +
-                    "<img src='" + thumbnailURL + "' alt='" + item.id + "' " + imageDimensions + ">" +
+                    "<a href='" + itemUrl + "'>" +
+                    "<img src='" + escapeHtml(item.thumbnailURL) + "' alt='" +
+                    escapeHtml(item.id) + "'" + imageDimensions + ">" +
                     "</a>" + mainDisplayIndicator +
                     "</div>" +
                     "</div>" +
                     "<div class='collections_carousel_text word-wrap-200'>" +
-                    "<h4>" + item.title + shelfLocator + "</h4>" +
+                    "<h4>" + escapeHtml(item.title) + shelfLocator + "</h4>" +
                     "<div class='collection_abstract'>" + abstractText +
-                    "<a href='/view/" + item.id + "'>more</a>" +
+                    "<a href='" + itemUrl + "'>more</a>" +
                     "</div>" +
                     "<div class='clear'></div>" +
                     "</div>";
