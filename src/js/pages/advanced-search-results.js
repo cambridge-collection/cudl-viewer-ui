@@ -32,14 +32,26 @@ function unionKeys(objA, objB) {
             }, {}));
 }
 
+/**
+ * The advanced search form submits FacetCollection= with a capital F, so bookmarked
+ * URLs carry that spelling while every other facet key is facet<Field>. Left alone it
+ * reaches the search API alongside facets=, where SearchForm.setFacets replaces the
+ * facet map rather than merging it, so which of the two applies is arbitrary.
+ * Canonicalising collapses them into one key here instead, facets= winning by the
+ * spread order below.
+ */
+function canonicaliseParamName(k) {
+    return k.replace(/^Facet/, 'facet');
+}
+
 function parseQuery(q) {
 
     var keyValuePairs =  q.replace(/^\?/, '')
         .split('&')
         .map(function(s) {
             var i = s.indexOf('=');
-            return i == -1 ? [_decodeURIComponent(s), '']
-                           : [_decodeURIComponent(s.substr(0, i)),
+            return i == -1 ? [canonicaliseParamName(_decodeURIComponent(s)), '']
+                           : [canonicaliseParamName(_decodeURIComponent(s.substr(0, i))),
                               _decodeURIComponent(s.substr(i + 1))];
         })
         .reduce(objAddKeyValuePair, {});
@@ -84,11 +96,17 @@ function serialiseQueryPairs(keyValuePairs) {
         var entry = keyValuePairs[i];
         var k = entry[0];
         var v= entry[1];
+        // An empty value is not a selected facet -- the form always submits its
+        // collection dropdown, and facets=Collection:: is not parseable.
         if (k.startsWith("facet") && k !== "facets") {
             k = k.substring(5); // strip out word 'facet'
-            facet_strings.push(k+"::"+v);
+            if (v) {
+                facet_strings.push(k+"::"+v);
+            }
         } else if (k=="facets") {
-            facet_strings.push(v);
+            if (v) {
+                facet_strings.push(v);
+            }
         } else {
             encodedKVP.push([k,v]);
         }
