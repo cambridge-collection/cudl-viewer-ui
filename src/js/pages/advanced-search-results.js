@@ -8,7 +8,6 @@ import {Spinner} from 'spin.js';
 import 'bootstrap-slider';
 
 import '../base.js';
-import { getPageContext } from '../context';
 import { unreleasedBadge } from '../itemStatus';
 import 'paginationjs';
 import {toggleDiv} from "../cudl";
@@ -461,6 +460,52 @@ function renderChangeQueryUrl(state) {
     return '/search/query' + query;
 }
 
+/** Held as one class rather than per-element toggles so the state is inspectable. */
+const RESULT_STATES = 'searching has-results no-results search-failed';
+
+const NO_RESULTS_MESSAGE = 'No items found for your query.';
+const SEARCH_ERROR_MESSAGE = 'Sorry, your search could not be completed. Please try again.';
+
+/**
+ * Written here rather than served in the page: CSS hiding still leaves a message in
+ * the HTML, as the only prose a crawler can read as the page's content.
+ */
+function searchMessage(text) {
+    return $('<p>').addClass('box h5').text(text);
+}
+
+function setResultsState(state) {
+    $('#content').removeClass(RESULT_STATES).addClass(state);
+}
+
+/** Show a visible failure rather than an empty results column. */
+function showSearchError() {
+    paging = undefined;
+    $('.pagination').empty();
+    $('#collections_carousel').empty();
+
+    // No count at all beats a stale or false one.
+    $('.resultcount').empty();
+
+    $('.search-error')
+        .empty()
+        .append(searchMessage(SEARCH_ERROR_MESSAGE));
+
+    $('#content').removeClass('has-facets');
+    setResultsState('search-failed');
+}
+
+/**
+ * Aborts are not failures: activeXhr.abort() fires .fail() on the request it
+ * replaces.
+ */
+function handleSearchFailure(textStatus) {
+    if(textStatus === 'abort')
+        return;
+
+    showSearchError();
+}
+
 /**
  * This function is called when no facets have been used.
  * @param state
@@ -471,8 +516,6 @@ function loadPage(state) {
 
     if(activeXhr)
         activeXhr.abort();
-
-    var startTime = Date.now();
 
     var xhr;
     activeXhr = xhr = $.ajax({
@@ -487,29 +530,79 @@ function loadPage(state) {
 
         withoutUserInteraction(() => paging.pagination(parseInt(state.page)));
 
-        // query duration
-        $("#reqtime").text((Date.now() - startTime) / 1000 + ' seconds');
-
         $('#collections_carousel')
             .empty()
             .append(renderResults(data));
+    })
+    .fail(function(jqXhr, textStatus) {
+        handleSearchFailure(textStatus);
     });
 
     return false;
 }
 
-/**
- * This function is called when a facet is used to make an ajax call with the new parameters
- * @param state
- */
+/** Deliberately does not scroll -- see requery. */
+function renderQueryResults(state, data) {
+    // An unreachable Solr answers 200 with 0 hits and an error, so it never
+    // reaches .fail(); without this it would read as a genuine 0-hit query.
+    if(data.info.error) {
+        showSearchError();
+        return;
+    }
 
-function requery(state) {
+    // Reset the pagination for the new data. paginationjs invokes the
+    // callback while constructing the paginator, so clear `paging` first to
+    // make setStatePage a no-op as it is at init; otherwise it requests
+    // page 1 as a state change and fires a second, identical query.
+    paging = undefined;
+    setupPagination(data.info.hits, pageLimit, state.page);
+
+    $('#collections_carousel')
+        .empty()
+        .append(renderResults(data.items));
+
+    $('.resultcount')
+        .empty()
+        .append(renderResultInfo(data.info.hits, data.info.queryTime));
+
+    // #tree and #selected_facets carry the delegated click handler bound in
+    // init(), so refill them -- never replace them.
+    $('#tree')
+        .empty()
+        .append(renderFacetTree(state, data.facets.available));
+
+    $('#selected_facets')
+        .empty()
+        .append(renderSelectedFacets(state, data.facets.selected))
+
+    $('.query-actions .change-query')
+        .attr('href', renderChangeQueryUrl(state));
+
+    $('.search-no-results').empty();
+    if(data.info.hits === 0) {
+        $('.search-no-results').append(searchMessage(NO_RESULTS_MESSAGE));
+    }
+
+    // The 'Refine by:' heading lives in the same wrapper as the tree, so the
+    // wrapper's visibility has to follow the tree's contents.
+    $('#content').toggleClass('has-facets', data.facets.available.length > 0);
+    setResultsState(data.info.hits > 0 ? 'has-results' : 'no-results');
+
+    setupFacets(false);
+}
+
+/**
+ * The scroll is the caller's decision: correct after a facet click, but it would
+ * jam a freshly loaded page down past the nav and query summary.
+ */
+function requery(state, options) {
 
     if(typeof state.page != 'number')
         throw new Error('state.page not a number');
 
-    var startTime = Date.now();
+    var scroll = !(options && options.noScroll);
 
+    setResultsState('searching');
     setBusy(true);
 
     if(activeXhr)
@@ -525,42 +618,15 @@ function requery(state) {
             activeXhr = null;
     })
     .done(function(data) {
-        // Reset the pagination for the new data. paginationjs invokes the
-        // callback while constructing the paginator, so clear `paging` first to
-        // make setStatePage a no-op as it is at init; otherwise it requests
-        // page 1 as a state change and fires a second, identical query.
-        paging = undefined;
-        setupPagination(data.info.hits, pageLimit);
+        renderQueryResults(state, data);
 
-        // query duration
-        var requestTime = Date.now() - startTime;
-        $("#reqtime").text(requestTime / 1000 + ' seconds');
-
-        $('#collections_carousel')
-            .empty()
-            .append(renderResults(data.items));
-
-        $('.resultcount')
-            .empty()
-            .append(renderResultInfo(data.info.hits, requestTime));
-
-        $('.searchexample').toggleClass('hidden', data.info.hits > 0);
-
-        $('#tree')
-            .empty()
-            .append(renderFacetTree(state, data.facets.available));
-
-        $('#selected_facets')
-            .empty()
-            .append(renderSelectedFacets(state, data.facets.selected))
-
-        $('.query-actions .change-query')
-            .attr('href', renderChangeQueryUrl(state));
-
-        setupFacets(false);
-
-        // Previously a side effect of the paginator callback above.
-        scrollToTopOfResults();
+        if(scroll) {
+            // Previously a side effect of the paginator callback above.
+            scrollToTopOfResults();
+        }
+    })
+    .fail(function(jqXhr, textStatus) {
+        handleSearchFailure(textStatus);
     });
 }
 
@@ -731,7 +797,7 @@ function setBusy(busy) {
 }
 
 let pageLimit = 20;
-let numResults, paging, spinner, currentState;
+let paging, spinner, currentState;
 
 let userInteracting = true;
 /**
@@ -750,11 +816,11 @@ function withoutUserInteraction(f) {
     }
 }
 
-function setupPagination (numResults, pageLimit) {
+function setupPagination (numResults, pageLimit, pageNumber) {
     const paginationConfig = {
         dataSource: new Array(numResults).fill(0), //'dummy' data as the existing code handles the ajax calls
         locator: 'items',
-        pageNumber: 1,
+        pageNumber: pageNumber,
         pageSize: pageLimit,
         totalNumber: numResults,
         hideOnlyOnePage:true,
@@ -766,24 +832,11 @@ function setupPagination (numResults, pageLimit) {
 }
 
 function init() {
-    let context = getPageContext();
-
-    numResults = context.resultCount;
-
     spinner = getSpinner();
     currentState = parseState(window.location.search);
 
-    // Setup pagination
-    withoutUserInteraction(() => setupPagination(numResults,pageLimit));
-
-    // The page is rendered w/out results, so we have to always fetch them
-    // initially. Deleting the current page means it always changes initially.
-    let initialPage = currentState.page;
-    delete currentState.page;
-
-    // Ensure we get a non-null state when returning to the first page. Also
-    // load the first page of data.
-    requestState(Object.assign({}, currentState, {page: initialPage}), 'replace');
+    // Ensure we get a non-null state when returning to the first page.
+    history.replaceState(currentState, '', serialiseQuery(currentState));
 
     // Show the stored state when browser history is accessed.
     // $(window).on('popstate', function(e) {
@@ -813,7 +866,11 @@ function init() {
         return false;
     });
 
-    setupFacets(true);
+    // The page is served with no count, facets or results, so the initial load has
+    // to query for all three. Call requery directly rather than going via
+    // requestState/showState: requestState returns early on an empty diff, and
+    // showState would route a page-only change to loadPage, which fetches items alone.
+    requery(currentState, {noScroll: true});
 }
 
 // function createVariableRecallSlider() {
