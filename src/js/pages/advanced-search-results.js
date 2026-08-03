@@ -503,6 +503,15 @@ function handleSearchFailure(textStatus) {
     showSearchError();
 }
 
+/** An unreachable Solr answers 200 with no results and an error, never .fail(). */
+function isFailedResponse(data) {
+    if(!data.info.error)
+        return false;
+
+    showSearchError();
+    return true;
+}
+
 /**
  * This function is called when no facets have been used.
  * @param state
@@ -524,12 +533,18 @@ function loadPage(state) {
             activeXhr = null;
     })
     .done(function(data) {
+        if(isFailedResponse(data))
+            return;
 
         withoutUserInteraction(() => paging.pagination(parseInt(state.page)));
 
         $('#collections_carousel')
             .empty()
-            .append(renderResults(data));
+            .append(renderResults(data.items));
+
+        $('.resultcount')
+            .empty()
+            .append(renderResultInfo(data.info.hits, data.info.queryTime));
     })
     .fail(function(jqXhr, textStatus) {
         handleSearchFailure(textStatus);
@@ -539,12 +554,8 @@ function loadPage(state) {
 }
 
 function renderQueryResults(state, data) {
-    // An unreachable Solr answers 200 with 0 hits and an error, so it never
-    // reaches .fail(); without this it would read as a genuine 0-hit query.
-    if(data.info.error) {
-        showSearchError();
+    if(isFailedResponse(data))
         return;
-    }
 
     // Reset the pagination for the new data. paginationjs invokes the
     // callback while constructing the paginator, so clear `paging` first to
