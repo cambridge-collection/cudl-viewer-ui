@@ -9,7 +9,7 @@ const DEFAULT_STATUS = 'draft';
 const OVERLAY_STYLE = 'position:absolute;top:4px;left:4px;z-index:1';
 
 export function unreleasedBadge(item, { overlay = false } = {}) {
-    if (!getPageContext().showUnreleasedContent || !item.unreleased) {
+    if (!getPageContext().showReleaseStatus || !item.unreleased) {
         return '';
     }
 
