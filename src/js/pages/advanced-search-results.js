@@ -253,12 +253,11 @@ function renderResult(result) {
                                     $("<span>")
                                         .attr("title", "Shelf locator")
                                         .text(noBreak(item.shelfLocator || '')),
-                                    String(item.shelfLocator) ? " " : "",
-                                    "Page: ", document.createTextNode(result.startPageLabel), ")"
+                                    item.shelfLocator ? " " : "",
+                                    "Page: ", document.createTextNode(result.startPageLabel || ''), ")"
                                 )
                         ),
-                    $("<div>").append(
-                    document.createTextNode(item.abstractShort)),
+                    item.abstractShort ? $("<div>").text(item.abstractShort) : "",
                     $("<ul class=\"snippets\">")
                         .append(
                             result.snippets.filter(Boolean).map(function(snippet) {

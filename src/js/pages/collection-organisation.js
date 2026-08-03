@@ -70,7 +70,7 @@ $(function() {
                     imageDimensions = " style='width:180px'";
                 }
                 let shelfLocator = "";
-                if(item.shelfLocator !== "") {
+                if(item.shelfLocator) {
                     shelfLocator = " (" +escapeHtml(item.shelfLocator)+ ") ";
                 }
 
@@ -84,7 +84,7 @@ $(function() {
                 // Most items have no abstract, so only lead into the "more" link
                 // when there is actually something to trail off from.
                 let abstractText = "";
-                if(item.abstractShort !== "") {
+                if(item.abstractShort) {
                     abstractText = escapeHtml(item.abstractShort) + " ... ";
                 }
 

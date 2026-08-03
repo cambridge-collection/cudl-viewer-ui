@@ -34,6 +34,14 @@ function buildTile(item, position) {
           '</span>'
         : '';
 
+    const shelfLocator = item.shelfLocator
+        ? ' (' + escapeHtml(item.shelfLocator) + ')' : '';
+
+    // Most items have no abstract, so only trail off when there is something to
+    // trail off from.
+    const abstract = item.abstractShort
+        ? escapeHtml(item.abstractShort) + ' … ' : '';
+
     const itemUrl = '/view/' + encodeURIComponent(item.id) + '/1';
     const li = document.createElement('li');
     li.setAttribute('class', 'campl-column5');
@@ -49,8 +57,8 @@ function buildTile(item, position) {
         '</div>' +
         '</div>' +
         '<div class="virtual_collections_carousel_text campl-column6">' +
-        '<h5>' + escapeHtml(item.title + ' (' + item.shelfLocator + ')') + '</h5>' +
-        escapeHtml(item.abstractShort) + ' … ' +
+        '<h5>' + escapeHtml(item.title) + shelfLocator + '</h5>' +
+        abstract +
         '<a href="' + itemUrl + '">more</a>' +
         '</div>' +
         '<div class="clear"></div>' +
