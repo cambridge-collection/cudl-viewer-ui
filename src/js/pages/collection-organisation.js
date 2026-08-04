@@ -71,7 +71,7 @@ $(function() {
                 }
                 let shelfLocator = "";
                 if(item.shelfLocator) {
-                    shelfLocator = " (" +escapeHtml(item.shelfLocator)+ ") ";
+                    shelfLocator = " (" +item.shelfLocator+ ") ";
                 }
 
                 let mainDisplayIndicator = ""
@@ -85,7 +85,7 @@ $(function() {
                 // when there is actually something to trail off from.
                 let abstractText = "";
                 if(item.abstractShort) {
-                    abstractText = escapeHtml(item.abstractShort) + " ... ";
+                    abstractText = item.abstractShort + " ... ";
                 }
 
                 const badge = unreleasedBadge(item, {overlay: true});
@@ -94,6 +94,8 @@ $(function() {
                 const itemUrl = "/view/" + encodeURIComponent(item.id);
                 const itemDiv = document.createElement('div');
                 itemDiv.setAttribute("class", "collections_carousel_item");
+                // Titles and abstracts carry TEI markup (<i>, <br/>) that nothing
+                // strips, so they go in as HTML.
                 itemDiv.innerHTML =
                     "<div class='collections_carousel_image_box'" + imageBoxStyle + ">" +
                     badge +
@@ -105,7 +107,7 @@ $(function() {
                     "</div>" +
                     "</div>" +
                     "<div class='collections_carousel_text word-wrap-200'>" +
-                    "<h4>" + escapeHtml(item.title) + shelfLocator + "</h4>" +
+                    "<h4>" + item.title + shelfLocator + "</h4>" +
                     "<div class='collection_abstract'>" + abstractText +
                     "<a href='" + itemUrl + "'>more</a>" +
                     "</div>" +

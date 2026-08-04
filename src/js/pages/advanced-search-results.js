@@ -250,14 +250,18 @@ function renderResult(result) {
                                 })
                                 .append(
                                     " (",
+                                    // Strings, not text nodes: jQuery HTML-parses any
+                                    // holding markup or an entity.
                                     $("<span>")
                                         .attr("title", "Shelf locator")
-                                        .text(noBreak(item.shelfLocator || '')),
+                                        .append(noBreak(item.shelfLocator || '')),
                                     item.shelfLocator ? " " : "",
-                                    "Page: ", document.createTextNode(result.startPageLabel || ''), ")"
+                                    "Page: ", result.startPageLabel || '', ")"
                                 )
                         ),
-                    item.abstractShort ? $("<div>").text(item.abstractShort) : "",
+                    // Titles, shelf locators and abstracts carry TEI markup
+                    // (<i>, <br/>) that nothing strips, so they go in as HTML.
+                    item.abstractShort ? $("<div>").html(item.abstractShort) : "",
                     $("<ul class=\"snippets\">")
                         .append(
                             result.snippets.filter(Boolean).map(function(snippet) {

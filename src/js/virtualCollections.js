@@ -34,17 +34,17 @@ function buildTile(item, position) {
           '</span>'
         : '';
 
-    const shelfLocator = item.shelfLocator
-        ? ' (' + escapeHtml(item.shelfLocator) + ')' : '';
+    const shelfLocator = item.shelfLocator ? ' (' + item.shelfLocator + ')' : '';
 
     // Most items have no abstract, so only trail off when there is something to
     // trail off from.
-    const abstract = item.abstractShort
-        ? escapeHtml(item.abstractShort) + ' … ' : '';
+    const abstract = item.abstractShort ? item.abstractShort + ' … ' : '';
 
     const itemUrl = '/view/' + encodeURIComponent(item.id) + '/1';
     const li = document.createElement('li');
     li.setAttribute('class', 'campl-column5');
+    // Titles and abstracts carry TEI markup (<i>, <br/>) that nothing strips, so
+    // they go in as HTML.
     li.innerHTML =
         '<div class="virtual_collections_carousel_item">' +
         '<div class="virtual_collections_carousel_image_box campl-column6">' +
@@ -57,7 +57,7 @@ function buildTile(item, position) {
         '</div>' +
         '</div>' +
         '<div class="virtual_collections_carousel_text campl-column6">' +
-        '<h5>' + escapeHtml(item.title) + shelfLocator + '</h5>' +
+        '<h5>' + item.title + shelfLocator + '</h5>' +
         abstract +
         '<a href="' + itemUrl + '">more</a>' +
         '</div>' +
