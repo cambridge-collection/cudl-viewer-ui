@@ -237,6 +237,9 @@ function renderResult(result) {
             $("<div>")
                 .addClass("collections_carousel_text col-md-8")
                 .append(
+                    // Titles, shelf locators and abstracts carry TEI markup (<i>,
+                    // <br/>) that nothing strips, so they go in as HTML: jQuery
+                    // parses appended strings, unlike text nodes.
                     $("<h3>")
                         .append(
                             $("<a>")
@@ -250,8 +253,6 @@ function renderResult(result) {
                                 })
                                 .append(
                                     " (",
-                                    // Strings, not text nodes: jQuery HTML-parses any
-                                    // holding markup or an entity.
                                     $("<span>")
                                         .attr("title", "Shelf locator")
                                         .append(noBreak(item.shelfLocator || '')),
@@ -259,8 +260,6 @@ function renderResult(result) {
                                     "Page: ", result.startPageLabel || '', ")"
                                 )
                         ),
-                    // Titles, shelf locators and abstracts carry TEI markup
-                    // (<i>, <br/>) that nothing strips, so they go in as HTML.
                     item.abstractShort ? $("<div>").html(item.abstractShort) : "",
                     $("<ul class=\"snippets\">")
                         .append(
