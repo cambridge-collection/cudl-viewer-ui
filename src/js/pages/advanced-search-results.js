@@ -8,7 +8,7 @@ import {Spinner} from 'spin.js';
 import 'bootstrap-slider';
 
 import '../base.js';
-import { getPageContext } from '../context';
+import { unreleasedBadge } from '../itemStatus';
 import 'paginationjs';
 import {toggleDiv} from "../cudl";
 
@@ -32,14 +32,19 @@ function unionKeys(objA, objB) {
             }, {}));
 }
 
+/** The advanced search form submits FacetCollection=, not facetCollection=. */
+function canonicaliseParamName(k) {
+    return k.replace(/^Facet/, 'facet');
+}
+
 function parseQuery(q) {
 
     var keyValuePairs =  q.replace(/^\?/, '')
         .split('&')
         .map(function(s) {
             var i = s.indexOf('=');
-            return i == -1 ? [_decodeURIComponent(s), '']
-                           : [_decodeURIComponent(s.substr(0, i)),
+            return i == -1 ? [canonicaliseParamName(_decodeURIComponent(s)), '']
+                           : [canonicaliseParamName(_decodeURIComponent(s.substr(0, i))),
                               _decodeURIComponent(s.substr(i + 1))];
         })
         .reduce(objAddKeyValuePair, {});
@@ -84,11 +89,17 @@ function serialiseQueryPairs(keyValuePairs) {
         var entry = keyValuePairs[i];
         var k = entry[0];
         var v= entry[1];
+        // The form always submits its collection dropdown, and facets=Collection::
+        // is not parseable.
         if (k.startsWith("facet") && k !== "facets") {
             k = k.substring(5); // strip out word 'facet'
-            facet_strings.push(k+"::"+v);
+            if (v) {
+                facet_strings.push(k+"::"+v);
+            }
         } else if (k=="facets") {
-            facet_strings.push(v);
+            if (v) {
+                facet_strings.push(v);
+            }
         } else {
             encodedKVP.push([k,v]);
         }
@@ -200,14 +211,6 @@ function renderResult(result) {
             );
     }
 
-    var unreleasedBadge = "";
-    if (item.unreleased) {
-        unreleasedBadge = $("<span>")
-            .addClass("badge bg-warning text-dark")
-            .css({position: "absolute", top: "4px", left: "4px", zIndex: 1})
-            .text("Unreleased");
-    }
-
     var itemDiv = $("<div>")
         .attr("class", "collections_carousel_item")
         .append(
@@ -230,10 +233,13 @@ function renderResult(result) {
                         )
                 )
                 .append(mainDisplayIcon)
-                .append(unreleasedBadge),
+                .append(unreleasedBadge(item, {overlay: true})),
             $("<div>")
                 .addClass("collections_carousel_text col-md-8")
                 .append(
+                    // Titles, shelf locators and abstracts carry TEI markup (<i>,
+                    // <br/>) that nothing strips, so they go in as HTML: jQuery
+                    // parses appended strings, unlike text nodes.
                     $("<h3>")
                         .append(
                             $("<a>")
@@ -249,13 +255,12 @@ function renderResult(result) {
                                     " (",
                                     $("<span>")
                                         .attr("title", "Shelf locator")
-                                        .text(noBreak(item.shelfLocator || '')),
-                                    String(item.shelfLocator) ? " " : "",
-                                    "Page: ", document.createTextNode(result.startPageLabel), ")"
+                                        .append(noBreak(item.shelfLocator || '')),
+                                    item.shelfLocator ? " " : "",
+                                    "Page: ", result.startPageLabel || '', ")"
                                 )
                         ),
-                    $("<div>").append(
-                    document.createTextNode(item.abstractShort)),
+                    item.abstractShort ? $("<div>").html(item.abstractShort) : "",
                     $("<ul class=\"snippets\">")
                         .append(
                             result.snippets.filter(Boolean).map(function(snippet) {
@@ -317,7 +322,7 @@ function getFacetParam(facetField) {
 }
 
 function renderFacet(state, group, facet) {
-    var facetState = Object.assign({}, state);
+    var facetState = Object.assign({}, state, {page: 1});
     facetState[getFacetParam(group.field)] = facet.value;
 
     var url = serialiseQuery(facetState);
@@ -393,7 +398,7 @@ function renderMoreFacetLink(state, facetGroup) {
 
     if (facetGroup.facets.length < facetTotal) {
 
-        let expandState = Object.assign({}, state);
+        let expandState = Object.assign({}, state, {page: 1});
         expandState.expandFacet = facetName;
         let url = serialiseQuery(expandState);
 
@@ -414,7 +419,7 @@ function renderLessFacetLink(state, facetGroup) {
 
     if (expandedFacet === facetName) {
 
-        let expandState = Object.assign({}, state);
+        let expandState = Object.assign({}, state, {page: 1});
         expandState.expandFacet = "";
         let url = serialiseQuery(expandState);
 
@@ -427,7 +432,7 @@ function renderLessFacetLink(state, facetGroup) {
 }
 
 function renderSelectedFacet(state, selectedFacet) {
-    var facetState = Object.assign({}, state);
+    var facetState = Object.assign({}, state, {page: 1});
     delete facetState[getFacetParam(selectedFacet.field)];
 
     var url = serialiseQuery(facetState);
@@ -465,6 +470,50 @@ function renderChangeQueryUrl(state) {
     return '/search/query' + query;
 }
 
+const RESULT_STATES = 'searching has-results no-results search-failed';
+
+const NO_RESULTS_MESSAGE = 'No items found for your query.';
+const SEARCH_ERROR_MESSAGE = 'Sorry, your search could not be completed. Please try again.';
+
+function searchMessage(text) {
+    return $('<p>').addClass('box h5').text(text);
+}
+
+function setResultsState(state) {
+    $('#content').removeClass(RESULT_STATES).addClass(state);
+}
+
+function showSearchError() {
+    paging = undefined;
+    $('.pagination').empty();
+    $('#collections_carousel').empty();
+    $('.resultcount').empty();
+
+    $('.search-error')
+        .empty()
+        .append(searchMessage(SEARCH_ERROR_MESSAGE));
+
+    $('#content').removeClass('has-facets');
+    setResultsState('search-failed');
+}
+
+/** Replacing an in-flight query fires .fail() on the request it aborts. */
+function handleSearchFailure(textStatus) {
+    if(textStatus === 'abort')
+        return;
+
+    showSearchError();
+}
+
+/** An unreachable Solr answers 200 with no results and an error, never .fail(). */
+function isFailedResponse(data) {
+    if(!data.info.error)
+        return false;
+
+    showSearchError();
+    return true;
+}
+
 /**
  * This function is called when no facets have been used.
  * @param state
@@ -476,8 +525,6 @@ function loadPage(state) {
     if(activeXhr)
         activeXhr.abort();
 
-    var startTime = Date.now();
-
     var xhr;
     activeXhr = xhr = $.ajax({
         "url": '/search/JSON' + getSearchQueryString(state)
@@ -488,32 +535,75 @@ function loadPage(state) {
             activeXhr = null;
     })
     .done(function(data) {
+        if(isFailedResponse(data))
+            return;
 
         withoutUserInteraction(() => paging.pagination(parseInt(state.page)));
 
-        // query duration
-        $("#reqtime").text((Date.now() - startTime) / 1000 + ' seconds');
-
         $('#collections_carousel')
             .empty()
-            .append(renderResults(data));
+            .append(renderResults(data.items));
+
+        $('.resultcount')
+            .empty()
+            .append(renderResultInfo(data.info.hits, data.info.queryTime));
+    })
+    .fail(function(jqXhr, textStatus) {
+        handleSearchFailure(textStatus);
     });
 
     return false;
 }
 
-/**
- * This function is called when a facet is used to make an ajax call with the new parameters
- * @param state
- */
+function renderQueryResults(state, data) {
+    if(isFailedResponse(data))
+        return;
 
-function requery(state) {
+    // Reset the pagination for the new data. paginationjs invokes the
+    // callback while constructing the paginator, so clear `paging` first to
+    // make setStatePage a no-op as it is at init; otherwise it requests
+    // page 1 as a state change and fires a second, identical query.
+    paging = undefined;
+    setupPagination(data.info.hits, pageLimit, state.page);
+
+    $('#collections_carousel')
+        .empty()
+        .append(renderResults(data.items));
+
+    $('.resultcount')
+        .empty()
+        .append(renderResultInfo(data.info.hits, data.info.queryTime));
+
+    $('#tree')
+        .empty()
+        .append(renderFacetTree(state, data.facets.available));
+
+    $('#selected_facets')
+        .empty()
+        .append(renderSelectedFacets(state, data.facets.selected))
+
+    $('.query-actions .change-query')
+        .attr('href', renderChangeQueryUrl(state));
+
+    $('.search-no-results').empty();
+    if(data.info.hits === 0) {
+        $('.search-no-results').append(searchMessage(NO_RESULTS_MESSAGE));
+    }
+
+    $('#content').toggleClass('has-facets', data.facets.available.length > 0);
+    setResultsState(data.info.hits > 0 ? 'has-results' : 'no-results');
+
+    setupFacets(false);
+}
+
+function requery(state, options) {
 
     if(typeof state.page != 'number')
         throw new Error('state.page not a number');
 
-    var startTime = Date.now();
+    var scroll = !(options && options.noScroll);
 
+    setResultsState('searching');
     setBusy(true);
 
     if(activeXhr)
@@ -529,35 +619,14 @@ function requery(state) {
             activeXhr = null;
     })
     .done(function(data) {
-        // Reset the pagination for the new data
-        setupPagination(data.info.hits, pageLimit);
+        renderQueryResults(state, data);
 
-        // query duration
-        var requestTime = Date.now() - startTime;
-        $("#reqtime").text(requestTime / 1000 + ' seconds');
-
-        $('#collections_carousel')
-            .empty()
-            .append(renderResults(data.items));
-
-        $('.resultcount')
-            .empty()
-            .append(renderResultInfo(data.info.hits, requestTime));
-
-        $('.searchexample').toggleClass('hidden', data.info.hits > 0);
-
-        $('#tree')
-            .empty()
-            .append(renderFacetTree(state, data.facets.available));
-
-        $('#selected_facets')
-            .empty()
-            .append(renderSelectedFacets(state, data.facets.selected))
-
-        $('.query-actions .change-query')
-            .attr('href', renderChangeQueryUrl(state));
-
-        setupFacets(false);
+        if(scroll) {
+            scrollToTopOfResults();
+        }
+    })
+    .fail(function(jqXhr, textStatus) {
+        handleSearchFailure(textStatus);
     });
 }
 
@@ -728,7 +797,7 @@ function setBusy(busy) {
 }
 
 let pageLimit = 20;
-let numResults, paging, spinner, currentState;
+let paging, spinner, currentState;
 
 let userInteracting = true;
 /**
@@ -747,11 +816,11 @@ function withoutUserInteraction(f) {
     }
 }
 
-function setupPagination (numResults, pageLimit) {
+function setupPagination (numResults, pageLimit, pageNumber) {
     const paginationConfig = {
         dataSource: new Array(numResults).fill(0), //'dummy' data as the existing code handles the ajax calls
         locator: 'items',
-        pageNumber: 1,
+        pageNumber: pageNumber,
         pageSize: pageLimit,
         totalNumber: numResults,
         hideOnlyOnePage:true,
@@ -763,24 +832,11 @@ function setupPagination (numResults, pageLimit) {
 }
 
 function init() {
-    let context = getPageContext();
-
-    numResults = context.resultCount;
-
     spinner = getSpinner();
     currentState = parseState(window.location.search);
 
-    // Setup pagination
-    withoutUserInteraction(() => setupPagination(numResults,pageLimit));
-
-    // The page is rendered w/out results, so we have to always fetch them
-    // initially. Deleting the current page means it always changes initially.
-    let initialPage = currentState.page;
-    delete currentState.page;
-
-    // Ensure we get a non-null state when returning to the first page. Also
-    // load the first page of data.
-    requestState(Object.assign({}, currentState, {page: initialPage}), 'replace');
+    // Ensure we get a non-null state when returning to the first page.
+    history.replaceState(currentState, '', serialiseQuery(currentState));
 
     // Show the stored state when browser history is accessed.
     // $(window).on('popstate', function(e) {
@@ -810,7 +866,8 @@ function init() {
         return false;
     });
 
-    setupFacets(true);
+    // Not via requestState: it returns early on an empty diff.
+    requery(currentState, {noScroll: true});
 }
 
 // function createVariableRecallSlider() {

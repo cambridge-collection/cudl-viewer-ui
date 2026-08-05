@@ -75,6 +75,23 @@
     border-top: 1px solid #ebebeb;
 }
 
+#content .searchexample,
+#content .search-error,
+#content .search-facets {
+    display: none;
+}
+
+#content.no-results .searchexample,
+#content.search-failed .search-error,
+#content.has-facets .search-facets {
+    display: block;
+}
+
+/* Reserve room so the page does not jump as tiles land. */
+#content.searching #collections_carousel {
+    min-height: 400px;
+}
+
 /* search results carousel */
 #collections_carousel {
     margin: 20px 0px;

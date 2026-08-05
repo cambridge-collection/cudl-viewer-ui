@@ -6,22 +6,37 @@ import '../base.js';
 
 //import * as cudl from '../cudl';
 import { getPageContext } from '../context';
+import { escapeHtml } from '../html';
+import { unreleasedBadge } from '../itemStatus';
+import { initVirtualCollection } from '../virtualCollections';
 import ('paginationjs');
 
 $(function() {
 
     let context = getPageContext();
 
+    // Virtual collections share this chunk but show one continuous lazily-extended
+    // list instead of paginating, so they have their own handling and none of the
+    // pagination setup below applies to them.
+    if (initVirtualCollection(context)) { return; }
+
     let pageLimit = 8;
-    let numResults = context.collectionSize;
     let pageNumber = context.collectionPage || 1;
 
     const paginationConfig = {
         dataSource: context.collectionUrl + '/itemJSON',
         locator: 'items',
+        // The collection total comes back on the same response as the items, so the
+        // page doesn't have to be told the size up front — which used to cost a
+        // separate Solr count query on every collection page render.
+        totalNumberLocator: function (response) { return response.total; },
         pageNumber: pageNumber,
         pageSize: pageLimit,
-        totalNumber: numResults,
+        // Seeds the total so a deep link to /collections/x/12 isn't clamped back to
+        // page 1: paginationjs limits the first request to the pages it knows about,
+        // and it knows none until that first response lands.
+        totalNumber: pageNumber * pageLimit,
+        resetPageNumberOnInit: false,
         ajax: {
             // As our ajax function expects "start" and "end" parameters
             // we're going to do a quick conversion from the given pageSize and
@@ -48,17 +63,14 @@ $(function() {
             for(let i=0; i<data.length; i++) {
                 let item = data[i];
                 let imageDimensions = "";
-                let thumbnailURL = item.thumbnailURL;
                 if(item.thumbnailOrientation==="portrait") {
-                    imageDimensions = " style='height:100%' ";
-                    thumbnailURL = thumbnailURL+"' style='height:180px";
+                    imageDimensions = " style='height:180px'";
                 }
                 else if(item.thumbnailOrientation==="landscape") {
-                    imageDimensions = " style='width:100%' ";
-                    thumbnailURL = thumbnailURL+"' style='width:180px";
+                    imageDimensions = " style='width:180px'";
                 }
                 let shelfLocator = "";
-                if(item.shelfLocator !== "") {
+                if(item.shelfLocator) {
                     shelfLocator = " (" +item.shelfLocator+ ") ";
                 }
 
@@ -69,29 +81,35 @@ $(function() {
                         "</span>";
                 }
 
-                let unreleasedBadge = "";
-                let imageBoxStyle = "";
-                if (item.unreleased) {
-                    imageBoxStyle = " style='position:relative'";
-                    unreleasedBadge = "<span class='badge bg-warning text-dark' " +
-                        "style='position:absolute;top:4px;left:4px;z-index:1'>Unreleased</span>";
+                // Most items have no abstract, so only lead into the "more" link
+                // when there is actually something to trail off from.
+                let abstractText = "";
+                if(item.abstractShort) {
+                    abstractText = item.abstractShort + " ... ";
                 }
 
+                const badge = unreleasedBadge(item, {overlay: true});
+                const imageBoxStyle = badge === "" ? "" : " style='position:relative'";
+
+                const itemUrl = "/view/" + encodeURIComponent(item.id);
                 const itemDiv = document.createElement('div');
                 itemDiv.setAttribute("class", "collections_carousel_item");
+                // Titles and abstracts carry TEI markup (<i>, <br/>) that nothing
+                // strips, so they go in as HTML.
                 itemDiv.innerHTML =
                     "<div class='collections_carousel_image_box'" + imageBoxStyle + ">" +
-                    unreleasedBadge +
+                    badge +
                     "<div class='collections_carousel_image'>" +
-                    "<a href='/view/" + item.id + "'>" +
-                    "<img src='" + thumbnailURL + "' alt='" + item.id + "' " + imageDimensions + ">" +
+                    "<a href='" + itemUrl + "'>" +
+                    "<img src='" + escapeHtml(item.thumbnailURL) + "' alt='" +
+                    escapeHtml(item.id) + "'" + imageDimensions + ">" +
                     "</a>" + mainDisplayIndicator +
                     "</div>" +
                     "</div>" +
                     "<div class='collections_carousel_text word-wrap-200'>" +
                     "<h4>" + item.title + shelfLocator + "</h4>" +
-                    "<div class='collection_abstract'>" + item.abstractShort +
-                    " ... <a href='/view/" + item.id + "'>more</a>" +
+                    "<div class='collection_abstract'>" + abstractText +
+                    "<a href='" + itemUrl + "'>more</a>" +
                     "</div>" +
                     "<div class='clear'></div>" +
                     "</div>";
