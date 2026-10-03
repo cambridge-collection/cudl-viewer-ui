@@ -1,0 +1,244 @@
+#search-map {
+    height: 400px;
+    margin: 0 0 20px 0;
+    border: 1px solid #ccc;
+}
+
+/* Black and white base map, so the coloured result areas stand out */
+.search-map-tiles {
+    filter: grayscale(1);
+}
+
+.search-map-controls {
+    background: #fff;
+}
+
+.search-map-controls button {
+    display: block;
+    border: 0;
+    background: #fff;
+    padding: 6px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.search-map-controls button:hover {
+    background: #f4f4f4;
+}
+
+.search-map-controls .search-map-search-area {
+    font-weight: bold;
+}
+
+.search-map-legend {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 6px 8px;
+    font-size: 13px;
+    line-height: 20px;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.search-map-legend-swatch {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 6px;
+    vertical-align: -1px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+/* Markers: a dot for one item, a badge for a shared location, and a
+   larger badge for a cluster of nearby locations */
+.search-map-dot,
+.search-map-count,
+.search-map-cluster {
+    border-radius: 50%;
+    border: 2px solid #fff;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    font-family: sans-serif;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.search-map-count {
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.search-map-cluster {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.9;
+}
+
+.search-map-represented {
+    background: #0050c8;
+}
+
+.search-map-origin {
+    background: #e66100;
+}
+
+.search-map-dot:hover,
+.search-map-count:hover,
+.search-map-cluster:hover {
+    border-color: #000;
+}
+
+.search-map-popup-list {
+    margin: 6px 0 0 0;
+    padding-left: 18px;
+}
+
+.search-map-legend-note {
+    margin-top: 2px;
+    color: #555;
+    font-style: italic;
+}
+
+/* "Show on map" highlight: a pulsing ring at the item's point. Leaflet
+   positions the marker element with a transform, so the animation runs on a
+   pseudo-element inside it and never touches the element's own transform. */
+.search-map-pulse::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    border: 3px solid #000;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    animation: search-map-pulse 0.8s ease-in-out 4;
+}
+
+@keyframes search-map-pulse {
+    50% { transform: scale(1.5); opacity: 0.6; }
+}
+
+/* Display mode switch: Points / Areas / Map only */
+.search-map-display {
+    display: flex;
+    background: #fff;
+}
+
+.search-map-display button {
+    border: 0;
+    border-right: 1px solid #ccc;
+    background: #fff;
+    color: #333;
+    padding: 4px 9px;
+    font-size: 13px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.search-map-display button:last-child {
+    border-right: 0;
+}
+
+.search-map-display button:hover {
+    background: #f4f4f4;
+}
+
+.search-map-display button.active {
+    background: #0050c8;
+    color: #fff;
+}
+
+.search-map-display button:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: -2px;
+}
+
+.search-map-display-icon {
+    margin-right: 4px;
+}
+
+.search-map-show-button {
+    margin: 4px 0 6px 0;
+    padding: 2px 10px;
+    font-size: 13px;
+    border: 1px solid #0050c8;
+    border-radius: 3px;
+    background: #fff;
+    color: #0050c8;
+    cursor: pointer;
+}
+
+.search-map-show-button:hover {
+    background: #0050c8;
+    color: #fff;
+}
+
+/* Result with no location, while the map is shown */
+.search-map-not-shown {
+    margin: 4px 0 6px 0;
+    font-size: 13px;
+    color: #767676;
+    font-style: italic;
+}
+
+/* Map icon after a collection facet whose results can be shown on the map */
+.search-map-collection-icon {
+    margin-left: 4px;
+    color: #767676;
+    vertical-align: -1px;
+    cursor: help;
+}
+
+/* Map panel header: open/close toggle and item count */
+.search-map-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.search-map-toggle {
+    border: 0;
+    background: none;
+    padding: 0;
+    font-weight: bold;
+    color: #0050c8;
+    cursor: pointer;
+}
+
+.search-map-toggle:hover {
+    text-decoration: underline;
+}
+
+.search-map-toggle-arrow::before {
+    content: '▾';
+    display: inline-block;
+    width: 1em;
+}
+
+#search-map-panel.collapsed .search-map-toggle-arrow::before {
+    content: '▸';
+}
+
+.search-map-summary {
+    color: #555;
+    font-size: 13px;
+}
+
+#search-map-panel.collapsed .search-map-summary {
+    display: none;
+}
+
+/* Note for collections where most items have no location */
+.search-map-partial-note {
+    margin: 0 0 8px 0;
+    padding: 6px 10px;
+    font-size: 13px;
+    color: #5c4400;
+    background: #fff8e1;
+    border-left: 3px solid #e6a700;
+}
+
+#search-map-panel.collapsed {
+    margin-bottom: 20px;
+}

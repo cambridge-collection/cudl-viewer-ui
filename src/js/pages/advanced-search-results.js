@@ -11,6 +11,7 @@ import '../base.js';
 import { unreleasedBadge } from '../itemStatus';
 import 'paginationjs';
 import {toggleDiv} from "../cudl";
+import {createSearchMap} from '../search-map';
 
 function styleSnippet(s) {
     s = s.replace(/(^[^<>]+>|<[^>]+$)/g, "");
@@ -260,6 +261,7 @@ function renderResult(result) {
                                     "Page: ", result.startPageLabel || '', ")"
                                 )
                         ),
+                    renderShowOnMapButton(result),
                     item.abstractShort ? $("<div>").html(item.abstractShort) : "",
                     $("<ul class=\"snippets\">")
                         .append(
@@ -275,6 +277,52 @@ function renderResult(result) {
         );
 
     return itemDiv[0];
+}
+
+/**
+ * When the map is shown: a "Show on map" button for results with a location,
+ * and a note for those without one, so their absence from the map is explained.
+ */
+function renderShowOnMapButton(result) {
+    if(!shouldShowMap(currentState))
+        return "";
+
+    if(!(result.coverage || result.origin)) {
+        return $('<div>')
+            .addClass('search-map-not-shown')
+            .attr('title', 'This item has no location recorded in its catalogue entry')
+            .text('Not on map · no location recorded');
+    }
+
+    var itemId = (result.item || {}).id;
+    return $('<button type="button">')
+        .addClass('search-map-show-button')
+        .text('Show on map')
+        .on('click', function() { showOnMap(itemId); });
+}
+
+function showOnMap(itemId) {
+    var panel = document.getElementById('search-map-panel');
+    if(!panel)
+        return;
+
+    if(isMapLoaded() && !searchMap.hasItem(itemId))
+        return;
+
+    if(mapCollapsed) {
+        mapCollapsedChoice = false;
+        setMapCollapsed(false);
+    }
+
+    var rect = panel.getBoundingClientRect();
+    if(rect.top < 0 || rect.bottom > window.innerHeight)
+        panel.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+
+    // Highlight now, or once the locations being loaded arrive
+    if(isMapLoaded())
+        searchMap.highlight(itemId);
+    else
+        pendingHighlight = itemId;
 }
 
 function renderResults(results) {
@@ -333,8 +381,25 @@ function renderFacet(state, group, facet) {
                 .attr('href', url)
                 .data('state', facetState)
                 .text(facet.value),
-            document.createTextNode(' (' + facet.occurrences + ')')
+            document.createTextNode(' (' + facet.occurrences + ')'),
+            group.field === 'Collection' && mapCollection(facet.value)
+                ? renderMapCollectionIcon(mapCollection(facet.value)) : ''
         )[0];
+}
+
+// A folded map, drawn inline so the page needs no icon font
+const MAP_ICON_SVG =
+    '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" focusable="false">' +
+    '<path d="M1 3.5 5.5 2l5 1.5L15 2v10.5L10.5 14l-5-1.5L1 14z M5.5 2v10.5 M10.5 3.5V14" ' +
+    'fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
+
+/** Marks a collection facet whose results can be shown on the map. */
+function renderMapCollectionIcon(collection) {
+    return $('<span>')
+        .addClass('search-map-collection-icon')
+        .attr('title', isPartialMapCollection(collection)
+            ? 'Some results can be shown on a map' : 'Results can be shown on a map')
+        .append(MAP_ICON_SVG, $('<span>').addClass('visually-hidden').text('(map available)'));
 }
 
 /**
@@ -496,7 +561,166 @@ function renderSelectedFacet(state, selectedFacet) {
 }
 
 function renderSelectedFacets(state, selectedFacets) {
-    return selectedFacets.map(renderSelectedFacet.bind(undefined, state));
+    var selected = selectedFacets.map(renderSelectedFacet.bind(undefined, state));
+    if(state.bbox) {
+        selected.push(renderSelectedMapArea(state));
+    }
+    return selected;
+}
+
+/** The map area restriction is shown and removed like a selected facet. */
+function renderSelectedMapArea(state) {
+    var areaState = Object.assign({}, state, {page: 1});
+    delete areaState.bbox;
+
+    return $('<div>')
+        .addClass('search-facet-selected')
+        .append(
+            $('<a>')
+                .addClass('search-close')
+                .attr('href', serialiseQuery(areaState))
+                .attr('title', 'Remove')
+                .data('state', areaState)
+                .append('within ', $('<b>').text('map area'), ' ❌')
+        )[0];
+}
+
+/** Only some collections have locations, so show the map just for them. */
+function shouldShowMap(state) {
+    return !!mapCollection(state.facetCollection) || !!state.bbox;
+}
+
+/** The map panel: a toggle and summary, a note for partial collections, and the map. */
+function ensureMapPanel() {
+    if($('#search-map-panel').length)
+        return;
+
+    var toggle = $('<button type="button">')
+        .addClass('search-map-toggle')
+        .attr({'aria-controls': 'search-map', 'aria-expanded': 'true'})
+        .append($('<span aria-hidden="true">').addClass('search-map-toggle-arrow'), 'Map')
+        .on('click', function() {
+            mapCollapsedChoice = !mapCollapsed;
+            setMapCollapsed(mapCollapsedChoice);
+        });
+
+    $('<div>').attr('id', 'search-map-panel')
+        .append(
+            $('<div>').addClass('search-map-header').append(
+                toggle, $('<span>').addClass('search-map-summary')),
+            $('<p>').addClass('search-map-partial-note'),
+            $('<div>').attr('id', 'search-map'))
+        .insertBefore('#collections_carousel');
+}
+
+/** Identifies a search for the map: the page of results makes no difference to it. */
+function mapSearchKey(state) {
+    var search = Object.assign({}, state);
+    delete search.page;
+    return serialiseQuery(search);
+}
+
+/** Whether the map shows the current search's locations, fully loaded. */
+function isMapLoaded() {
+    return mapLoadedKey === mapSearchKey(currentState) && !locationsXhr;
+}
+
+/** Open or close the map; opening loads the current search's locations if needed. */
+function setMapCollapsed(collapsed) {
+    mapCollapsed = collapsed;
+    $('.search-map-toggle').attr('aria-expanded', String(!collapsed));
+    $('#search-map-panel').toggleClass('collapsed', collapsed);
+    $('#search-map').toggle(!collapsed);
+
+    if(!collapsed && mapLoadedKey !== mapSearchKey(currentState))
+        loadMapLocations(currentState);
+}
+
+/**
+ * Show the map panel for searches that can have locations. The map shows
+ * every matching item with a location, not just the current page of results,
+ * so this runs on a new search but not on a page change.
+ */
+function updateSearchMap(state) {
+    if(locationsXhr)
+        locationsXhr.abort();
+    mapLoadedKey = null;
+
+    if(!shouldShowMap(state)) {
+        $('#search-map-panel').hide();
+        return;
+    }
+
+    ensureMapPanel();
+    $('#search-map-panel').show();
+    $('.search-map-summary').text('');
+
+    var collection = mapCollection(state.facetCollection);
+    var partial = isPartialMapCollection(collection);
+    $('.search-map-partial-note')
+        .toggle(partial)
+        .text(partial ? 'Most items in ' + state.facetCollection + ' have no recorded location (' +
+            formatNumber(collection.located) + ' of ' + formatNumber(collection.items) +
+            ' do), so most results will not appear on the map.' : '');
+
+    // Partial collections start closed, unless the user has chosen otherwise.
+    setMapCollapsed(mapCollapsedChoice !== null ? mapCollapsedChoice : partial);
+}
+
+/** Fetch and draw every matching item with a location for state. */
+function loadMapLocations(state) {
+    if(!searchMap) {
+        searchMap = createSearchMap(document.getElementById('search-map'), {
+            onSearchArea: function(bbox) {
+                requestState(Object.assign({}, currentState, {bbox: bbox, page: 1}));
+            },
+            onClearArea: function() {
+                var areaState = Object.assign({}, currentState, {page: 1});
+                delete areaState.bbox;
+                requestState(areaState);
+            }
+        });
+    }
+    if(locationsXhr)
+        locationsXhr.abort();
+    mapLoadedKey = mapSearchKey(state);
+
+    var xhr;
+    locationsXhr = xhr = $.ajax({
+        "url": '/search/locationsJSON' + getSearchQueryString(state)
+    })
+    .always(function() {
+        if(locationsXhr === xhr)
+            locationsXhr = null;
+    })
+    .done(function(data) {
+        // Same shape as a search result, which the map already draws
+        var results = data.locations.map(function(location) {
+            return {
+                item: {id: location.id, title: location.title},
+                startPage: location.startPage,
+                coverage: location.coverage,
+                origin: location.origin
+            };
+        });
+        var note = data.error ? 'Locations could not be loaded.' :
+            data.total > results.length ?
+                'Showing ' + formatNumber(results.length) + ' of ' + formatNumber(data.total) + ' items' : '';
+        searchMap.update(results, state.bbox, note);
+        $('.search-map-summary').text(data.error ? '' :
+            formatNumber(data.total) + (data.total === 1 ? ' item' : ' items') + ' on the map');
+
+        if(pendingHighlight) {
+            searchMap.highlight(pendingHighlight);
+            pendingHighlight = null;
+        }
+    })
+    .fail(function(jqXhr, textStatus) {
+        if(textStatus !== 'abort') {
+            mapLoadedKey = null;
+            searchMap.update([], state.bbox, 'Locations could not be loaded.');
+        }
+    });
 }
 
 function renderChangeQueryUrl(state) {
@@ -615,6 +839,8 @@ function renderQueryResults(state, data) {
         .empty()
         .append(renderResultInfo(data.info.hits, data.info.queryTime));
 
+    updateSearchMap(state);
+
     facetTreeVersion++;
     $('#tree')
         .empty()
@@ -638,12 +864,14 @@ function renderQueryResults(state, data) {
     setupFacets(false);
 }
 
-function requery(state, options) {
+/**
+ * Run a new search (search terms, facets or map area changed). This does not
+ * scroll: the user stays where they were, e.g. on the map or the facet list.
+ */
+function requery(state) {
 
     if(typeof state.page != 'number')
         throw new Error('state.page not a number');
-
-    var scroll = !(options && options.noScroll);
 
     setResultsState('searching');
     setBusy(true);
@@ -662,10 +890,6 @@ function requery(state, options) {
     })
     .done(function(data) {
         renderQueryResults(state, data);
-
-        if(scroll) {
-            scrollToTopOfResults();
-        }
     })
     .fail(function(jqXhr, textStatus) {
         handleSearchFailure(textStatus);
@@ -819,6 +1043,8 @@ function parseState(query, defaults) {
 
 // The active ajax request for search results (if any)
 let activeXhr = undefined;
+// The active ajax request for map locations (if any)
+let locationsXhr = undefined;
 
 // Bumped on every facet tree rebuild, so a "more" response for an old tree is ignored
 let facetTreeVersion = 0;
@@ -842,7 +1068,39 @@ function setBusy(busy) {
 }
 
 let pageLimit = 20;
-let paging, spinner, currentState;
+let paging, spinner, currentState, searchMap;
+
+// Collections with more than MIN_LOCATED_ITEMS items that have a location,
+// keyed by Collection facet value: items with a location, and all items.
+// Counts are from the data when this list was made; refresh them with it.
+const MIN_LOCATED_ITEMS = 5;
+const MAP_COLLECTIONS = {
+    'Maps':                             {located: 1053, items: 1078},
+    'Survey of India Maps':             {located: 479, items: 481},
+    'Landscape Histories from the Air': {located: 1078, items: 1411},
+    'Walking with Constable':           {located: 23, items: 65},
+};
+
+/** The map collection for this facet value, or undefined. */
+function mapCollection(name) {
+    return Object.prototype.hasOwnProperty.call(MAP_COLLECTIONS, name)
+        ? MAP_COLLECTIONS[name] : undefined;
+}
+
+/** Whether most of a map collection's items have no location. */
+function isPartialMapCollection(collection) {
+    return !!collection && collection.located * 2 < collection.items;
+}
+
+// The user's explicit open/closed choice for the map, kept across searches on
+// this page; null until they use the toggle, so collection defaults apply.
+let mapCollapsedChoice = null;
+// Whether the map is currently collapsed
+let mapCollapsed = false;
+// The search whose locations the map currently shows (see mapSearchKey)
+let mapLoadedKey = null;
+// Item to highlight once the map has loaded, from "Show on map"
+let pendingHighlight = null;
 
 let userInteracting = true;
 /**
@@ -916,7 +1174,7 @@ function init() {
     });
 
     // Not via requestState: it returns early on an empty diff.
-    requery(currentState, {noScroll: true});
+    requery(currentState);
 }
 
 // function createVariableRecallSlider() {
