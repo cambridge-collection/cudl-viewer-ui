@@ -5,9 +5,14 @@
  * server renders the first batch of tiles and this appends the rest from the
  * same /collections/{slug}/itemJSON endpoint the organisation carousel uses,
  * a batch at a time, as the end of the list comes into view.
+ *
+ * The list can be filtered (see collectionPage.js): a filter restarts it from
+ * the first item, with the filter's parameters on every batch request.
  */
 import $ from 'jquery';
 
+import { initCollectionPage } from './collectionPage';
+import { isFiltered } from './collectionFilter';
 import { escapeHtml } from './html';
 import { unreleasedBadge } from './itemStatus';
 
@@ -67,8 +72,8 @@ function buildTile(item, position) {
 }
 
 /**
- * Starts lazy loading if this is a virtual collection page with more items than
- * are already on it. Does nothing on any other page.
+ * Starts lazy loading, and filtering, if this is a virtual collection page. Does
+ * nothing on any other page.
  *
  * @return true if this is a virtual collection page, so callers know not to
  *         apply their own collection handling.
@@ -78,23 +83,26 @@ export function initVirtualCollection(context) {
     const sentinel = document.getElementById(SENTINEL_ID);
     if (!list || !sentinel) { return false; }
 
-    const total = parseInt(context.collectionTotal, 10) || 0;
     const batchSize = parseInt(context.collectionBatchSize, 10) || 20;
+    const sentinelParent = sentinel.parentNode;
+    let total = parseInt(context.collectionTotal, 10) || 0;
     let loaded = list.children.length;
-
-    // Everything is already on the page, or IntersectionObserver is unavailable —
-    // either way the server-rendered tiles stand on their own.
-    if (loaded >= total || typeof IntersectionObserver === 'undefined') {
-        sentinel.remove();
-        return true;
-    }
-
-    let observer;
+    let params = {};
+    let needFacets = false;
+    // Bumped by each filter change, so responses for an older filter are ignored
+    let generation = 0;
+    let observer = null;
     let loading = false;
     let failures = 0;
 
+    const collectionPage = initCollectionPage(context, {
+        before: list,
+        reload: reset,
+        path: function() { return context.collectionUrl; },
+    });
+
     function finish() {
-        if (observer) { observer.disconnect(); }
+        if (observer) { observer.unobserve(sentinel); }
         sentinel.remove();
     }
 
@@ -113,12 +121,18 @@ export function initVirtualCollection(context) {
     function loadNextBatch() {
         if (loading || loaded >= total) { return; }
         loading = true;
+        const batchGeneration = generation;
+        const withFacets = needFacets;
 
-        $.getJSON(context.collectionUrl + '/itemJSON',
-            { start: loaded, end: loaded + batchSize })
+        $.getJSON(context.collectionUrl + '/itemJSON', Object.assign(
+            {start: loaded, end: loaded + batchSize}, params, withFacets ? {withFacets: true} : {}))
             .done(function(data) {
+                if (batchGeneration !== generation) { return; }
                 const items = (data && data.items) || [];
                 loading = false;
+                needFacets = false;
+                total = data.total || 0;
+                collectionPage.onResults(data, withFacets);
 
                 // No items when more were expected: asking again would repeat the
                 // same empty request, so treat the list as complete.
@@ -133,9 +147,10 @@ export function initVirtualCollection(context) {
                 failures = 0;
 
                 if (loaded >= total) { finish(); return; }
-                recheck();
+                if (observer) { recheck(); }
             })
             .fail(function() {
+                if (batchGeneration !== generation) { return; }
                 // Keep what is already on the page and let a later scroll retry, but
                 // stop after repeated failures rather than retrying indefinitely.
                 loading = false;
@@ -144,10 +159,44 @@ export function initVirtualCollection(context) {
             });
     }
 
-    observer = new IntersectionObserver(function(entries) {
-        if (entries.some(entry => entry.isIntersecting)) { loadNextBatch(); }
-    }, { rootMargin: TRIGGER_MARGIN });
+    /** Start the list again from its first item, with these filter parameters. */
+    function reset(newParams, withFacets) {
+        generation += 1;
+        params = newParams;
+        needFacets = withFacets;
+        list.innerHTML = '';
+        loaded = 0;
+        total = Infinity;
+        loading = false;
+        failures = 0;
+        if (!sentinel.isConnected) {
+            sentinelParent.insertBefore(sentinel, list.nextSibling);
+        }
+        if (observer) { observer.observe(sentinel); }
+        loadNextBatch();
+    }
 
-    observer.observe(sentinel);
+    if (typeof IntersectionObserver !== 'undefined') {
+        observer = new IntersectionObserver(function(entries) {
+            if (entries.some(entry => entry.isIntersecting)) { loadNextBatch(); }
+        }, { rootMargin: TRIGGER_MARGIN });
+    }
+
+    if (isFiltered(collectionPage.state())) {
+        // The server renders the unfiltered list, so a filtered page starts
+        // again from the client.
+        reset(collectionPage.filterParams(), true);
+    } else {
+        // Keep the server-rendered tiles; just fetch the counts for the filter bar.
+        $.getJSON(context.collectionUrl + '/itemJSON', {start: 0, end: batchSize, withFacets: true})
+            .done(function(data) { collectionPage.onResults(data, true); });
+        // Everything is already on the page, or IntersectionObserver is unavailable —
+        // either way the server-rendered tiles stand on their own.
+        if (loaded >= total || !observer) {
+            sentinel.remove();
+        } else {
+            observer.observe(sentinel);
+        }
+    }
     return true;
 }

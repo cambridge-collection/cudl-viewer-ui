@@ -9,6 +9,7 @@ import { getPageContext } from '../context';
 import { escapeHtml } from '../html';
 import { unreleasedBadge } from '../itemStatus';
 import { initVirtualCollection } from '../virtualCollections';
+import { initCollectionPage } from '../collectionPage';
 import ('paginationjs');
 
 $(function() {
@@ -22,20 +23,57 @@ $(function() {
 
     let pageLimit = 8;
     let pageNumber = context.collectionPage || 1;
+    // Whether the next item request should also fetch the filter's facet counts
+    let needFacets = true;
+    // Bumped by each rebuild of the list, so responses for an older filter are ignored
+    let listGeneration = 0;
 
-    const paginationConfig = {
-        dataSource: context.collectionUrl + '/itemJSON',
+    const collectionPage = initCollectionPage(context, {
+        before: document.getElementById('topPagination'),
+        // A new filter starts the list again from its first page
+        reload: function (params, withFacets) {
+            setupPagination(1, withFacets);
+        },
+        path: function () { return context.collectionUrl + "/" + pageNumber; }
+    });
+
+    /** (Re)build the paginated list for the current filter, from startPage. */
+    function setupPagination(startPage, withFacets) {
+        needFacets = withFacets;
+        listGeneration += 1;
+        const top = $('#topPagination');
+        const existing = top.data('pagination');
+        if (existing && existing.initialized) {
+            // destroy() fails if the first page has not rendered yet; unbinding
+            // the old instance's events is what matters, and re-initialising
+            // replaces its markup.
+            try { top.pagination('destroy'); } catch (e) { top.off(); }
+        }
+        const query = $.param(collectionPage.filterParams());
+        top.pagination(paginationConfig(startPage, query, listGeneration));
+        // style pagination
+        $('.paginationjs').addClass("paginationjs-small");
+    }
+
+    function paginationConfig(startPage, query, generation) { return {
+        dataSource: context.collectionUrl + '/itemJSON' + (query ? '?' + query : ''),
         locator: 'items',
         // The collection total comes back on the same response as the items, so the
         // page doesn't have to be told the size up front — which used to cost a
         // separate Solr count query on every collection page render.
-        totalNumberLocator: function (response) { return response.total; },
-        pageNumber: pageNumber,
+        totalNumberLocator: function (response) {
+            if (generation === listGeneration) {
+                collectionPage.onResults(response, needFacets);
+                needFacets = false;
+            }
+            return response.total;
+        },
+        pageNumber: startPage,
         pageSize: pageLimit,
         // Seeds the total so a deep link to /collections/x/12 isn't clamped back to
         // page 1: paginationjs limits the first request to the pages it knows about,
         // and it knows none until that first response lands.
-        totalNumber: pageNumber * pageLimit,
+        totalNumber: startPage * pageLimit,
         resetPageNumberOnInit: false,
         ajax: {
             // As our ajax function expects "start" and "end" parameters
@@ -48,10 +86,14 @@ $(function() {
                 const start =  (pageNumber*pageSize)-pageSize;
                 const end = pageNumber*pageSize;
                 this.url += "&start="+start+"&end="+end;
+                if (needFacets) {
+                    this.url += "&withFacets=true";
+                }
             }
         },
         hideOnlyOnePage:true,
         callback: function(data, pagination) {
+            if (generation !== listGeneration) { return; }
 
             // content replace
             let container = document.getElementById("collections_carousel");
@@ -124,18 +166,13 @@ $(function() {
             const paginationLast = $('#bottomPagination');
             paginationLast.replaceWith(paginationFirst.clone(true,true).attr("id", "bottomPagination"));
         }
-    };
+    }; }
 
-    $('#topPagination').pagination(paginationConfig);
-
-    // style pagination
-    $('.paginationjs').addClass("paginationjs-small");
+    setupPagination(pageNumber, true);
 
     function updatePageHistory(page){
-        var historyStateObject = context.collectionTitle + " page: "+ page;
-        var historyTitle = context.collectionTitle + " page: "+ page;
-        var historyUrl = location.protocol + '//' + location.host + context.collectionUrl + "/" + page;
-        if(window.history.replaceState) window.history.replaceState(historyStateObject, historyTitle, historyUrl);
+        // The URL keeps the filter's query string alongside the page number
+        collectionPage.updateUrl();
         context.collectionPage = page;
         $(document.body).attr('data-context', JSON.stringify(context));
     }
