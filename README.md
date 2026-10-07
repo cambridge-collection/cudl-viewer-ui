@@ -140,6 +140,13 @@ If this is successful, you should now see a directory structure at: http://local
 You can check that it recompiles the assets on the fly by editing and saving a file in
 CUDL-Viewer-UI, and checking the output as it should show the resources being recompiled.
 
+# Search facet value limit
+
+The number of values a search results facet group shows before "more" is set
+only by cudl-viewer's `searchFacetLimit` property (default 200). The page
+shows "more" when the viewer marks a group `hasMore`, and "less" returns to the
+number of values the viewer first sent, so nothing here changes with the limit.
+
 # Package CUDL-Viewer-UI for use in CUDL-Viewer
 
 Use Maven to build the UI for use in CUDL-Viewer. `$ mvn package` will run

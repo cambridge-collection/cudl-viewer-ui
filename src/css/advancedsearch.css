@@ -298,15 +298,6 @@ ol#tree>li:not(:first-child) {
     margin-top: 10px;
 }
 
-ol#tree>li>ul {
-    margin-top: 5px;
-    padding-left: 10px;
-}
-
-ol#tree>li>ul.hide {
-    display: none;
-}
-
 ol#tree>li>strong {
     cursor: pointer;
 }
@@ -351,13 +342,29 @@ ol#tree>li>strong {
     margin-bottom: -2px;
 }
 
-.search-facet-expansion a {
-    padding-left: 10px;
+.search-facet-expansion .search-facet-more {
+    margin-left: 10px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: rgb(0, 114, 207);
     font-style: italic;
+    cursor: pointer;
 }
 
-.search-facet-expansion a:visited {
-    color: rgb(0, 114, 207);
+.search-facet-expansion .search-facet-more:hover {
+    text-decoration: underline;
+}
+
+.search-facet-expansion .search-facet-more:active,
+.search-facet-expansion .search-facet-more:focus-visible {
+    outline: 6px solid rgb(0, 114, 207);
+    outline-offset: 0;
+}
+
+/* "more" moves focus here; after a mouse click that shouldn't draw a box */
+.search-facet-revealed:focus:not(:focus-visible) {
+    outline: none;
 }
 
 /* search examples */
