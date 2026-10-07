@@ -347,6 +347,14 @@ function renderFacetName(facetName) {
     return displayFacetName.charAt(0).toUpperCase() + displayFacetName.slice(1);
 }
 
+function renderFacetList(state, facetGroup) {
+    return $('<ul>')
+        .addClass('campl-unstyled-list')
+        .append(
+            facetGroup.facets.map(renderFacet.bind(undefined, state, facetGroup))
+        );
+}
+
 function renderFacetTree(state, facets) {
     const tree =  $(facets.map(function(facetGroup) {
         return $('<li>')
@@ -362,25 +370,11 @@ function renderFacetTree(state, facets) {
                             ),
                     ),
                 $('<div>')
-                    .addClass('search-facet-expansion')
-                    .append(
-                        renderLessFacetLink(state, facetGroup)
-                    ),
-                $('<div>')
                     .attr("id", "divfacetToggle"+facetGroup.label)
                     .addClass("collapse")
                     .append(
-                    $('<ul>')
-                        .addClass('campl-unstyled-list')
-                        .append(
-                            facetGroup.facets.map(renderFacet.bind(undefined, state, facetGroup))
-                        ),
-                    ),
-                $('<div>')
-                    .addClass('search-facet-expansion')
-                    .append(
-                        renderMoreFacetLink(state, facetGroup),
-                        renderLessFacetLink(state, facetGroup)
+                        renderFacetList(state, facetGroup),
+                        facetGroup.hasMore ? renderMoreFacetButton(state, facetGroup) : undefined
                     ),
             )[0];
     }));
@@ -388,47 +382,94 @@ function renderFacetTree(state, facets) {
     return tree;
 }
 
-/**
- * Display a "more" link for the facet group that will expand to
- * display all the facets if some of them are hidden.
- */
-function renderMoreFacetLink(state, facetGroup) {
-    let facetName = facetGroup.field;
-    let facetTotal = facetGroup.totalFacets;
+function renderMoreFacetButton(state, facetGroup) {
+    return $('<div>')
+        .addClass('search-facet-expansion')
+        .append(
+            $('<button>')
+                .attr('type', 'button')
+                .addClass('search-facet-more')
+                .attr('aria-expanded', 'false')
+                .data({state: state, field: facetGroup.field, shown: facetGroup.facets.length})
+                .text('more')
+        );
+}
 
-    if (facetGroup.facets.length < facetTotal) {
+function setFacetButtonExpanded(button, expanded) {
+    button.attr('aria-expanded', String(expanded)).text(expanded ? 'less' : 'more');
+}
 
-        let expandState = Object.assign({}, state, {page: 1});
-        expandState.expandFacet = facetName;
-        let url = serialiseQuery(expandState);
+function keepInPlace(el, viewportTop) {
+    window.scrollBy({top: el.getBoundingClientRect().top - viewportTop, behavior: 'instant'});
+}
 
-        return $('<a>')
-            .attr('href', url)
-            .text('more')
-            .prop('title', 'More ' + facetName + ' facets')
-    }
+function focusFirstRevealedFacet(list, shown, buttonTop) {
+    const link = list.children('li').eq(shown).children('a')[0];
+    if (!link)
+        return;
+
+    link.classList.add('search-facet-revealed');
+    link.focus({preventScroll: true});
+    keepInPlace(link, buttonTop);
 }
 
 /**
- * Display a "less" link for the facet group that will hide facets.
- * The number of facets to display is configured in XTF.
+ * The first "more" fetches the group's full list. After that, "less" and
+ * "more" only hide and show the values after those first shown.
  */
-function renderLessFacetLink(state, facetGroup) {
-    let expandedFacet = state.expandFacet;
-    let facetName = facetGroup.field;
+function toggleMoreFacets(button) {
+    const list = button.closest('.collapse').children('ul');
+    const values = list.children('li');
+    const shown = button.data('shown');
+    const buttonTop = button[0].getBoundingClientRect().top;
 
-    if (expandedFacet === facetName) {
-
-        let expandState = Object.assign({}, state, {page: 1});
-        expandState.expandFacet = "";
-        let url = serialiseQuery(expandState);
-
-        return $('<a>')
-            .attr('href', url)
-            .text('less')
-            .prop('title', 'Fewer ' + facetName + ' facets')
-
+    if (button.attr('aria-expanded') === 'true') {
+        values.slice(shown).prop('hidden', true);
+        setFacetButtonExpanded(button, false);
+        button[0].focus({preventScroll: true});
+        keepInPlace(button[0], buttonTop);
     }
+    else if (values.length > shown) {
+        values.prop('hidden', false);
+        setFacetButtonExpanded(button, true);
+        focusFirstRevealedFacet(list, shown, buttonTop);
+    }
+    else {
+        loadAllFacetValues(button, list);
+    }
+}
+
+function loadAllFacetValues(button, list) {
+    const state = button.data('state');
+    const field = button.data('field');
+    const treeVersion = facetTreeVersion;
+
+    button.prop('disabled', true);
+
+    $.ajax({
+        "url": '/search/JSONFacets' +
+            getSearchQueryString(Object.assign({}, state, {expandFacet: field}))
+    })
+    .done(function(data) {
+        if (treeVersion !== facetTreeVersion)
+            return;
+
+        // Not isFailedResponse(): showSearchError() would empty the results
+        const group = !data.info.error &&
+            data.facets.available.find(function(g) { return g.field === field; });
+        button.prop('disabled', false);
+        if (!group)
+            return;
+
+        const fullList = renderFacetList(state, group);
+        const buttonTop = button[0].getBoundingClientRect().top;
+        list.replaceWith(fullList);
+        setFacetButtonExpanded(button, true);
+        focusFirstRevealedFacet(fullList, button.data('shown'), buttonTop);
+    })
+    .fail(function() {
+        button.prop('disabled', false);
+    });
 }
 
 function renderSelectedFacet(state, selectedFacet) {
@@ -574,6 +615,7 @@ function renderQueryResults(state, data) {
         .empty()
         .append(renderResultInfo(data.info.hits, data.info.queryTime));
 
+    facetTreeVersion++;
     $('#tree')
         .empty()
         .append(renderFacetTree(state, data.facets.available));
@@ -778,6 +820,9 @@ function parseState(query, defaults) {
 // The active ajax request for search results (if any)
 let activeXhr = undefined;
 
+// Bumped on every facet tree rebuild, so a "more" response for an old tree is ignored
+let facetTreeVersion = 0;
+
 let busyCount = 0;
 
 function setBusy(busy) {
@@ -864,6 +909,10 @@ function init() {
 
         requestState(state);
         return false;
+    });
+
+    $('#tree').on('click', 'button.search-facet-more', function(e) {
+        toggleMoreFacets($(e.currentTarget));
     });
 
     // Not via requestState: it returns early on an empty diff.
