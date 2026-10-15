@@ -337,6 +337,41 @@ ol#tree>li>strong {
     font-style: italic;
 }
 
+#tree ul ul {
+    padding-left: 1.2em;
+}
+
+.search-facet-node {
+    position: relative;
+}
+
+/* The selected name isn't a link, so it's given the link colour from cudl.css */
+.search-facet-node-in-selection > .search-facet-name {
+    font-weight: bold;
+    color: #E5007D;
+}
+
+/* Hangs left of the label like a bullet, so labels line up with or without one */
+.search-facet-marker {
+    position: absolute;
+    right: 100%;
+    padding: 0 .3em 0 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+    cursor: pointer;
+}
+
+.search-facet-marker:disabled {
+    cursor: progress;
+}
+
+.search-facet-remove {
+    text-decoration: none;
+}
+
 .search-facet-expansion {
     margin-top: 3px;
     margin-bottom: -2px;

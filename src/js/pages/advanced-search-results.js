@@ -355,8 +355,165 @@ function renderFacetList(state, facetGroup) {
         );
 }
 
-function renderFacetTree(state, facets) {
+const FACET_PATH_SEPARATOR = '::';
+
+function parentFacetPath(value) {
+    const i = value.lastIndexOf(FACET_PATH_SEPARATOR);
+    return i < 0 ? undefined : value.substring(0, i);
+}
+
+function facetNodes(nodes) {
+    return nodes.flatMap(function(node) { return [node].concat(facetNodes(node.children)); });
+}
+
+/**
+ * The tree node a selection refers to. A legacy URL can name a subcollection by its
+ * title alone; that marks the node only when exactly one has that title.
+ */
+function selectedFacetPath(value, nodes) {
+    if (!value || value.includes(FACET_PATH_SEPARATOR))
+        return value;
+    const matches = facetNodes(nodes).filter(function(node) { return node.label === value; });
+    return matches.length === 1 ? matches[0].value : undefined;
+}
+
+function facetStateSelecting(state, param, value) {
+    const facetState = Object.assign({}, state, {page: 1});
+    if (value === undefined)
+        delete facetState[param];
+    else
+        facetState[param] = value;
+    return facetState;
+}
+
+function renderFacetLink(facetState) {
+    return $('<a>')
+        .attr('href', serialiseQuery(facetState))
+        .data('state', facetState);
+}
+
+function setFacetNodeExpanded(button, expanded) {
+    button.attr('aria-expanded', String(expanded)).text(expanded ? '▾' : '▸');
+}
+
+/** The triangle only shows or hides a node's children; selecting is the name's job. */
+function renderFacetNodeToggle(state, field, node, selected, expanded) {
+    return $('<button>')
+        .attr({type: 'button', 'aria-label': 'Subcollections of ' + node.label})
+        .addClass('search-facet-marker')
+        .data({state: state, field: field, value: node.value, selected: selected})
+        .each(function() { setFacetNodeExpanded($(this), expanded); });
+}
+
+function renderFacetNode(state, field, node, selected) {
+    const param = getFacetParam(field);
+    const isSelected = node.value === selected;
+    const onPath = !!selected && selected.startsWith(node.value + FACET_PATH_SEPARATOR);
+    const inSelection = isSelected || onPath;
+    // Only the selected path arrives with its children; other nodes fetch theirs on opening
+    const expanded = inSelection && node.children.length > 0;
+
+    return $('<li>')
+        .addClass('search-facet-node')
+        .toggleClass('search-facet-node-in-selection', inSelection)
+        .append(
+            node.hasChildren ? renderFacetNodeToggle(state, field, node, selected, expanded) : undefined,
+            (isSelected
+                ? $('<span>').attr('aria-current', 'true')
+                : renderFacetLink(facetStateSelecting(state, param, node.value)))
+                .addClass('search-facet-name')
+                .text(node.label),
+            // Removing a level of the selection takes the levels below it too
+            inSelection
+                ? [document.createTextNode(' '),
+                   renderFacetLink(facetStateSelecting(state, param, parentFacetPath(node.value)))
+                       .addClass('search-facet-remove')
+                       .attr({title: 'Remove', 'aria-label': 'Remove ' + node.label})
+                       .text('❌')[0]]
+                : document.createTextNode(' (' + node.occurrences + ')'),
+            expanded ? renderFacetNodes(state, field, node.children, selected) : undefined
+        )[0];
+}
+
+function renderFacetNodes(state, field, nodes, selected) {
+    return $('<ul>')
+        .addClass('campl-unstyled-list')
+        .append(nodes.map(function(node) {
+            return renderFacetNode(state, field, node, selected);
+        }));
+}
+
+/**
+ * Values are paths ("Parent::Child"). The selected path's children come with the
+ * results; hasChildren marks the other nodes whose children can be fetched on opening.
+ */
+function renderHierarchicalFacetList(state, facetGroup) {
+    const selected = selectedFacetPath(state[getFacetParam(facetGroup.field)], facetGroup.facets);
+    return renderFacetNodes(state, facetGroup.field, facetGroup.facets, selected);
+}
+
+function toggleFacetNode(button) {
+    const children = button.closest('li').children('ul');
+
+    if (button.attr('aria-expanded') === 'true') {
+        children.prop('hidden', true);
+        setFacetNodeExpanded(button, false);
+    }
+    else if (children.length) {
+        children.prop('hidden', false);
+        setFacetNodeExpanded(button, true);
+    }
+    else {
+        loadFacetNodeChildren(button);
+    }
+}
+
+/** Fetches a node's children within the current results, without selecting it. */
+function loadFacetNodeChildren(button) {
+    const state = button.data('state');
+    const field = button.data('field');
+    const value = button.data('value');
+    const treeVersion = facetTreeVersion;
+
+    button.prop('disabled', true);
+
+    $.ajax({
+        "url": '/search/JSONFacets' +
+            getSearchQueryString(Object.assign({}, state, {expandCollection: value}))
+    })
+    .done(function(data) {
+        if (treeVersion !== facetTreeVersion)
+            return;
+
+        button.prop('disabled', false);
+        const group = !data.info.error &&
+            data.facets.available.find(function(g) { return g.field === field; });
+        const node = group &&
+            facetNodes(group.facets).find(function(n) { return n.value === value; });
+        if (!node || !node.children.length)
+            return;
+
+        button.closest('li').append(
+            renderFacetNodes(state, field, node.children, button.data('selected')));
+        setFacetNodeExpanded(button, true);
+    })
+    .fail(function() {
+        button.prop('disabled', false);
+    });
+}
+
+function renderGroupFacetList(state, facetGroup) {
+    return facetGroup.hierarchical
+        ? renderHierarchicalFacetList(state, facetGroup)
+        : renderFacetList(state, facetGroup);
+}
+
+function renderFacetTree(state, facets, openGroupIds) {
     const tree =  $(facets.map(function(facetGroup) {
+        // A panel left open stays open as the results change. A tree group also opens
+        // where its selection is shown.
+        const open = (openGroupIds || []).includes("divfacetToggle"+facetGroup.label) ||
+            (!!facetGroup.hierarchical && !!state[getFacetParam(facetGroup.field)]);
         return $('<li>')
             .append(
                 $('<strong>')
@@ -365,15 +522,16 @@ function renderFacetTree(state, facets) {
                             .attr("id", "facetToggle"+facetGroup.label)
                             .attr("data-toggle", "collapse")
                             .append(
-                                $('<span>').html('▸ '),
+                                $('<span>').html(open ? '▾ ' : '▸ '),
                                 document.createTextNode(renderFacetName(facetGroup.label))
                             ),
                     ),
                 $('<div>')
                     .attr("id", "divfacetToggle"+facetGroup.label)
                     .addClass("collapse")
+                    .toggleClass("show", open)
                     .append(
-                        renderFacetList(state, facetGroup),
+                        renderGroupFacetList(state, facetGroup),
                         facetGroup.hasMore ? renderMoreFacetButton(state, facetGroup) : undefined
                     ),
             )[0];
@@ -461,7 +619,7 @@ function loadAllFacetValues(button, list) {
         if (!group)
             return;
 
-        const fullList = renderFacetList(state, group);
+        const fullList = renderGroupFacetList(state, group);
         const buttonTop = button[0].getBoundingClientRect().top;
         list.replaceWith(fullList);
         setFacetButtonExpanded(button, true);
@@ -472,9 +630,8 @@ function loadAllFacetValues(button, list) {
     });
 }
 
-function renderSelectedFacet(state, selectedFacet) {
-    var facetState = Object.assign({}, state, {page: 1});
-    delete facetState[getFacetParam(selectedFacet.field)];
+function renderSelectedFacetLevel(state, field, label, remainingValue) {
+    var facetState = facetStateSelecting(state, getFacetParam(field), remainingValue);
 
     var url = serialiseQuery(facetState);
 
@@ -489,14 +646,26 @@ function renderSelectedFacet(state, selectedFacet) {
                 .append(
                     'in ',
                     $('<b>')
-                        .append($('<span>').text(selectedFacet.value)[0]),
-                    ' (', document.createTextNode(renderFacetName(selectedFacet.field)), ') ❌'
+                        .append($('<span>').text(label)[0]),
+                    ' (', document.createTextNode(renderFacetName(field)), ') ❌'
                 )
         )[0];
 }
 
+/**
+ * A path is shown as one selection per level. Removing a level keeps only the
+ * levels above it.
+ */
+function renderSelectedFacet(state, selectedFacet) {
+    const segments = selectedFacet.value.split(FACET_PATH_SEPARATOR);
+    return segments.map(function(segment, i) {
+        return renderSelectedFacetLevel(state, selectedFacet.field, segment,
+            i === 0 ? undefined : segments.slice(0, i).join(FACET_PATH_SEPARATOR));
+    });
+}
+
 function renderSelectedFacets(state, selectedFacets) {
-    return selectedFacets.map(renderSelectedFacet.bind(undefined, state));
+    return selectedFacets.flatMap(renderSelectedFacet.bind(undefined, state));
 }
 
 function renderChangeQueryUrl(state) {
@@ -596,9 +765,33 @@ function loadPage(state) {
     return false;
 }
 
+/**
+ * An older link can name a subcollection by its title alone. Once the server has placed
+ * it in the collection tree, the state and URL switch to its full path, so every link
+ * built from here on carries it. The results are the same either way, so this needs no
+ * new query.
+ */
+function repairCollectionState(state, data) {
+    const group = data.facets.available.find(function(g) { return g.hierarchical && g.path; });
+    if (!group)
+        return state;
+    const param = getFacetParam(group.field);
+    // Only a selection that named the collection differently, in the search on screen
+    if (!state[param] || state[param] === group.path || currentState[param] !== state[param])
+        return state;
+
+    const repaired = Object.assign({}, state);
+    repaired[param] = group.path;
+    history.replaceState(repaired, '', serialiseQuery(repaired));
+    currentState = repaired;
+    return repaired;
+}
+
 function renderQueryResults(state, data) {
     if(isFailedResponse(data))
         return;
+
+    state = repairCollectionState(state, data);
 
     // Reset the pagination for the new data. paginationjs invokes the
     // callback while constructing the paginator, so clear `paging` first to
@@ -615,10 +808,11 @@ function renderQueryResults(state, data) {
         .empty()
         .append(renderResultInfo(data.info.hits, data.info.queryTime));
 
+    const openGroupIds = $('#tree .collapse.show').map(function() { return this.id; }).get();
     facetTreeVersion++;
     $('#tree')
         .empty()
-        .append(renderFacetTree(state, data.facets.available));
+        .append(renderFacetTree(state, data.facets.available, openGroupIds));
 
     $('#selected_facets')
         .empty()
@@ -913,6 +1107,10 @@ function init() {
 
     $('#tree').on('click', 'button.search-facet-more', function(e) {
         toggleMoreFacets($(e.currentTarget));
+    });
+
+    $('#tree').on('click', 'button.search-facet-marker', function(e) {
+        toggleFacetNode($(e.currentTarget));
     });
 
     // Not via requestState: it returns early on an empty diff.
