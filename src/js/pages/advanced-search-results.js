@@ -8,6 +8,7 @@ import {Spinner} from 'spin.js';
 import 'bootstrap-slider';
 
 import '../base.js';
+import { getPageContext } from '../context';
 import { unreleasedBadge } from '../itemStatus';
 import 'paginationjs';
 import {toggleDiv} from "../cudl";
@@ -659,9 +660,8 @@ function updateSearchMap(state) {
     var partial = isPartialMapCollection(collection);
     $('.search-map-partial-note')
         .toggle(partial)
-        .text(partial ? 'Most items in ' + state.facetCollection + ' have no recorded location (' +
-            formatNumber(collection.located) + ' of ' + formatNumber(collection.items) +
-            ' do), so most results will not appear on the map.' : '');
+        .text(partial ? 'Many items in ' + state.facetCollection + ' have no recorded location, ' +
+            'so many results will not appear on the map.' : '');
 
     // Partial collections start closed, unless the user has chosen otherwise.
     setMapCollapsed(mapCollapsedChoice !== null ? mapCollapsedChoice : partial);
@@ -1070,26 +1070,23 @@ function setBusy(busy) {
 let pageLimit = 20;
 let paging, spinner, currentState, searchMap;
 
-// Collections with more than MIN_LOCATED_ITEMS items that have a location,
-// keyed by Collection facet value: items with a location, and all items.
-// Counts are from the data when this list was made; refresh them with it.
-const MIN_LOCATED_ITEMS = 5;
-const MAP_COLLECTIONS = {
-    'Maps':                             {located: 1053, items: 1078},
-    'Survey of India Maps':             {located: 479, items: 481},
-    'Landscape Histories from the Air': {located: 1078, items: 1411},
-    'Walking with Constable':           {located: 23, items: 65},
-};
+// Collections whose results can be shown on a map, keyed by Collection facet
+// value (the collection title): {collapsed}. They come from "map" in the
+// viewer's cudl.ui.json5, via the page context; set in init().
+let mapCollections = {};
 
 /** The map collection for this facet value, or undefined. */
 function mapCollection(name) {
-    return Object.prototype.hasOwnProperty.call(MAP_COLLECTIONS, name)
-        ? MAP_COLLECTIONS[name] : undefined;
+    return Object.prototype.hasOwnProperty.call(mapCollections, name)
+        ? mapCollections[name] : undefined;
 }
 
-/** Whether most of a map collection's items have no location. */
+/**
+ * Whether a map collection's map starts closed, because many of its items have
+ * no location.
+ */
 function isPartialMapCollection(collection) {
-    return !!collection && collection.located * 2 < collection.items;
+    return !!collection && !!collection.collapsed;
 }
 
 // The user's explicit open/closed choice for the map, kept across searches on
@@ -1135,6 +1132,7 @@ function setupPagination (numResults, pageLimit, pageNumber) {
 }
 
 function init() {
+    mapCollections = getPageContext().mapCollections || {};
     spinner = getSpinner();
     currentState = parseState(window.location.search);
 
