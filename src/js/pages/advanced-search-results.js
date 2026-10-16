@@ -8,11 +8,11 @@ import {Spinner} from 'spin.js';
 import 'bootstrap-slider';
 
 import '../base.js';
-import { getPageContext } from '../context';
 import { unreleasedBadge } from '../itemStatus';
 import 'paginationjs';
 import {toggleDiv} from "../cudl";
 import {createSearchMap} from '../search-map';
+import {mapCollection, isPartialMapCollection} from '../map-collections';
 
 function styleSnippet(s) {
     s = s.replace(/(^[^<>]+>|<[^>]+$)/g, "");
@@ -1070,25 +1070,6 @@ function setBusy(busy) {
 let pageLimit = 20;
 let paging, spinner, currentState, searchMap;
 
-// Collections whose results can be shown on a map, keyed by Collection facet
-// value (the collection title): {collapsed}. They come from "map" in the
-// viewer's cudl.ui.json5, via the page context; set in init().
-let mapCollections = {};
-
-/** The map collection for this facet value, or undefined. */
-function mapCollection(name) {
-    return Object.prototype.hasOwnProperty.call(mapCollections, name)
-        ? mapCollections[name] : undefined;
-}
-
-/**
- * Whether a map collection's map starts closed, because many of its items have
- * no location.
- */
-function isPartialMapCollection(collection) {
-    return !!collection && !!collection.collapsed;
-}
-
 // The user's explicit open/closed choice for the map, kept across searches on
 // this page; null until they use the toggle, so collection defaults apply.
 let mapCollapsedChoice = null;
@@ -1132,7 +1113,6 @@ function setupPagination (numResults, pageLimit, pageNumber) {
 }
 
 function init() {
-    mapCollections = getPageContext().mapCollections || {};
     spinner = getSpinner();
     currentState = parseState(window.location.search);
 

@@ -152,9 +152,15 @@ export function parseBbox(bbox) {
  * Create the map inside `container`.
  *
  * onSearchArea(bbox) is called when the user asks to search the visible area,
- * and onClearArea() when they remove the area restriction.
+ * and onClearArea() when they remove the area restriction. searchAreaLabel and
+ * clearAreaLabel change the wording of those two buttons.
  */
-export function createSearchMap(container, {onSearchArea, onClearArea}) {
+export function createSearchMap(container, {
+    onSearchArea,
+    onClearArea,
+    searchAreaLabel = 'Search this area',
+    clearAreaLabel = 'Clear map area',
+}) {
     const map = L.map(container, {worldCopyJump: true, minZoom: 1})
         .setView([30, 0], 1);
     L.tileLayer(TILE_URL, {
@@ -185,7 +191,7 @@ export function createSearchMap(container, {onSearchArea, onClearArea}) {
     const controls = $('<div>').addClass('search-map-controls leaflet-bar');
     const searchButton = $('<button type="button">')
         .addClass('search-map-search-area')
-        .text('Search this area')
+        .text(searchAreaLabel)
         .hide()
         .on('click', () => {
             searchButton.hide();
@@ -193,7 +199,7 @@ export function createSearchMap(container, {onSearchArea, onClearArea}) {
         });
     const clearButton = $('<button type="button">')
         .addClass('search-map-clear-area')
-        .text('Clear map area')
+        .text(clearAreaLabel)
         .hide()
         .on('click', () => onClearArea());
     controls.append(searchButton, clearButton);
