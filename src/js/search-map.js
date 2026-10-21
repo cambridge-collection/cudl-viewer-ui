@@ -1,10 +1,11 @@
 // Map panel for search results that carry a location.
 //
-// A result's place shown (result.coverage, [west, south, east, north])
-// is drawn as a rectangle, and its place of origin (result.origin, [lat, lon])
-// as a dot, in different colours. The user chooses how results are shown:
+// A result's places shown (result.coverage, a list of
+// [west, south, east, north]) and places of origin (result.origin, a list of
+// [lat, lon]) are drawn in different colours. The user chooses how results
+// are shown:
 //   Points    every location as a point; nearby points cluster into counts
-//   Areas     places represented as their full rectangles; origins as points
+//   Areas     places shown as their full rectangles; origins as points
 //   Map only  no results, just the background map
 // The user can restrict the search to the visible area; bbox strings are
 // west,south,east,north in decimal degrees.
@@ -105,34 +106,43 @@ function areaToLatLngBounds(area) {
     return L.latLngBounds([south, west], [north, east]);
 }
 
+export function hasLocation(result) {
+    return (result.coverage || []).length > 0 || (result.origin || []).length > 0;
+}
+
 /**
- * Group results whose `field` (coverage or origin) is the same location, so a
- * shared location is drawn once. Each item appears once per group, even when
- * several of its pages matched.
+ * Group results by each location in their `field` (coverage or origin), so a
+ * shared location is drawn once. In each group, `field` holds just that one
+ * location. Each item appears once per group, even when several of its pages
+ * matched.
  */
 export function groupByLocation(results, field) {
     const groups = new Map();
-    results.filter((r) => r[field]).forEach((r) => {
-        const key = r[field].map((n) => n.toFixed(5)).join(',');
+    results.forEach((r) => (r[field] || []).forEach((location) => {
+        const key = location.map((n) => n.toFixed(5)).join(',');
         const group = groups.get(key) || [];
         const id = (r.item || {}).id;
         if (!group.some((other) => (other.item || {}).id === id)) {
-            group.push(r);
+            group.push({...r, [field]: location});
         }
         groups.set(key, group);
-    });
+    }));
     return Array.from(groups.values());
 }
 
-/** Cluster group whose badges add up the items in each location marker. */
+/**
+ * Cluster group whose badges count distinct items, since an item with several
+ * locations has a marker at each.
+ */
 function clusterGroup(kindClass) {
     return L.markerClusterGroup({
         maxClusterRadius: CLUSTER_RADIUS,
         showCoverageOnHover: false,
         spiderfyOnMaxZoom: true,
         iconCreateFunction: (cluster) => {
-            const count = cluster.getAllChildMarkers()
-                .reduce((sum, marker) => sum + (marker.itemCount || 1), 0);
+            const ids = new Set();
+            cluster.getAllChildMarkers().forEach((marker) => marker.itemIds.forEach((id) => ids.add(id)));
+            const count = ids.size;
             const size = count < 100 ? 30 : count < 1000 ? 36 : 44;
             return L.divIcon({
                 className: 'search-map-cluster ' + kindClass,
@@ -353,7 +363,8 @@ export function createSearchMap(container, {
      * Marker for one location: a dot for a single item, or a badge with the
      * number of items that share it.
      */
-    function locationMarker(latLng, count, kindClass) {
+    function locationMarker(latLng, group, kindClass) {
+        const count = group.length;
         const single = count === 1;
         const marker = L.marker(latLng, {
             icon: L.divIcon({
@@ -363,8 +374,7 @@ export function createSearchMap(container, {
             }),
             riseOnHover: true
         });
-        // Clusters add these up, so a cluster shows items rather than locations
-        marker.itemCount = count;
+        marker.itemIds = group.map((r) => (r.item || {}).id);
         return marker;
     }
 
@@ -383,7 +393,7 @@ export function createSearchMap(container, {
         const bounds = areaToLatLngBounds(group[0].coverage);
         const centre = bounds.getCenter();
         representedClusters.addLayer(bindGroup(
-            locationMarker(centre, group.length, 'search-map-represented'),
+            locationMarker(centre, group, 'search-map-represented'),
             group, 'place shown', centre));
         const rect = bindGroup(L.rectangle(bounds, REPRESENTED_STYLE), group, 'place shown', centre)
             .on('mouseover', () => rect.setStyle(HOVER_STYLE))
@@ -397,7 +407,7 @@ export function createSearchMap(container, {
     function addOrigin(group) {
         const latLng = L.latLng(group[0].origin);
         originClusters.addLayer(bindGroup(
-            locationMarker(latLng, group.length, 'search-map-origin'),
+            locationMarker(latLng, group, 'search-map-origin'),
             group, 'place of origin', latLng));
         indexGroup(group, {bounds: null, latLng});
         return latLng;
@@ -455,8 +465,9 @@ export function createSearchMap(container, {
 
     /**
      * Show the given results. Each result may have result.coverage and/or
-     * result.origin. bbox is the current search area string, or empty when the
-     * search is unrestricted. note is optional text shown under the legend.
+     * result.origin, each a list of locations. bbox is the current search area
+     * string, or empty when the search is unrestricted. note is optional text
+     * shown under the legend.
      */
     function update(results, bbox, note) {
         currentBbox = bbox || null;

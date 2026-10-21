@@ -11,7 +11,7 @@ import '../base.js';
 import { unreleasedBadge } from '../itemStatus';
 import 'paginationjs';
 import {toggleDiv} from "../cudl";
-import {createSearchMap} from '../search-map';
+import {createSearchMap, hasLocation} from '../search-map';
 import {mapCollection, isPartialMapCollection} from '../map-collections';
 
 function styleSnippet(s) {
@@ -288,7 +288,7 @@ function renderShowOnMapButton(result) {
     if(!shouldShowMap(currentState))
         return "";
 
-    if(!(result.coverage || result.origin)) {
+    if(!hasLocation(result)) {
         return $('<div>')
             .addClass('search-map-not-shown')
             .attr('title', 'This item has no location recorded in its catalogue entry')

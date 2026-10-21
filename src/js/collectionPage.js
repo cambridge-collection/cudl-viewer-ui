@@ -11,6 +11,7 @@ import {
 import { createCollectionMap } from './collectionMap';
 import { escapeHtml } from './html';
 import { mapCollection } from './map-collections';
+import { hasLocation } from './search-map';
 
 /**
  * HTML for an item tile's map control on a map collection: a "Show on map"
@@ -19,7 +20,7 @@ import { mapCollection } from './map-collections';
  */
 export function mapControlHtml(item, collectionTitle) {
     if (!mapCollection(collectionTitle)) { return ''; }
-    if (item.coverage || item.origin) {
+    if (hasLocation(item)) {
         return '<button type="button" class="collection-show-on-map" data-item-id="' +
             escapeHtml(item.id) + '">Show on map</button>';
     }
