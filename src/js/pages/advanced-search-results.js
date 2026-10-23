@@ -12,7 +12,7 @@ import { unreleasedBadge } from '../itemStatus';
 import 'paginationjs';
 import {toggleDiv} from "../cudl";
 import {createSearchMap, hasLocation} from '../search-map';
-import {mapCollection, isPartialMapCollection} from '../map-collections';
+import {mapCollection, isPartialMapCollection, FACET_PATH_SEPARATOR} from '../map-collections';
 
 function styleSnippet(s) {
     s = s.replace(/(^[^<>]+>|<[^>]+$)/g, "");
@@ -421,8 +421,6 @@ function renderFacetList(state, facetGroup) {
         );
 }
 
-const FACET_PATH_SEPARATOR = '::';
-
 function parentFacetPath(value) {
     const i = value.lastIndexOf(FACET_PATH_SEPARATOR);
     return i < 0 ? undefined : value.substring(0, i);
@@ -497,6 +495,8 @@ function renderFacetNode(state, field, node, selected) {
                        .attr({title: 'Remove', 'aria-label': 'Remove ' + node.label})
                        .text('❌')[0]]
                 : document.createTextNode(' (' + node.occurrences + ')'),
+            field === 'Collection' && mapCollection(node.value)
+                ? renderMapCollectionIcon(mapCollection(node.value)) : undefined,
             expanded ? renderFacetNodes(state, field, node.children, selected) : undefined
         )[0];
 }
@@ -829,8 +829,8 @@ function updateSearchMap(state) {
     var partial = isPartialMapCollection(collection);
     $('.search-map-partial-note')
         .toggle(partial)
-        .text(partial ? 'Many items in ' + state.facetCollection + ' have no recorded location, ' +
-            'so many results will not appear on the map.' : '');
+        .text(partial ? 'Many items in ' + state.facetCollection.split(FACET_PATH_SEPARATOR).pop() +
+            ' have no recorded location, so many results will not appear on the map.' : '');
 
     // Partial collections start closed, unless the user has chosen otherwise.
     setMapCollapsed(mapCollapsedChoice !== null ? mapCollapsedChoice : partial);
