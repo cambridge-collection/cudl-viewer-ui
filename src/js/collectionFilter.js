@@ -1,8 +1,9 @@
 /**
  * Filter bar for a collection page's item list: free text, facet dropdowns
- * (only for facets that can narrow this collection) and a count of matching items.
+ * (only for facets that can narrow this collection), a count of matching items,
+ * and a List | Map switch for collections with a map.
  *
- * Filter state lives in the page URL (?q=…&facets=Name::value||…)
+ * Filter state lives in the page URL (?q=…&facets=Name::value||…&bbox=…&view=map)
  * so a filtered view can be bookmarked and shared.
  */
 import $ from 'jquery';
@@ -42,15 +43,18 @@ export function readFilterState(search) {
     return {
         q: params.get('q') || '',
         facets,
+        bbox: params.get('bbox') || '',
+        view: params.get('view') === 'map' ? 'map' : 'list',
     };
 }
 
-/** The item-list request parameters for a filter state. */
+/** The item-list request parameters for a filter state (no view). */
 export function filterParams(state) {
     const params = {};
     if (state.q) { params.q = state.q; }
     const facets = facetsToString(state.facets);
     if (facets) { params.facets = facets; }
+    if (state.bbox) { params.bbox = state.bbox; }
     return params;
 }
 
@@ -58,9 +62,11 @@ export function isFiltered(state) {
     return Object.keys(filterParams(state)).length > 0;
 }
 
-/** The URL query string for a filter state, or ''. */
+/** The URL query string for a filter state, including the view, or ''. */
 export function filterQueryString(state) {
-    const query = new URLSearchParams(filterParams(state)).toString();
+    const params = new URLSearchParams(filterParams(state));
+    if (state.view === 'map') { params.set('view', 'map'); }
+    const query = params.toString();
     return query ? '?' + query : '';
 }
 
@@ -71,9 +77,10 @@ function copyState(state) {
 /**
  * Render the filter bar into container.
  *
- * onChange(state) is called after any change.
+ * onChange(state, {viewOnly}) is called after any change; viewOnly is true when
+ * only the List | Map choice changed, so the list need not be reloaded.
  */
-export function createCollectionFilter(container, {initial, onChange}) {
+export function createCollectionFilter(container, {initial, mapAvailable, onChange}) {
     let state = copyState(initial);
     let textTimer = null;
     let lastFacets = [];
@@ -101,13 +108,22 @@ export function createCollectionFilter(container, {initial, onChange}) {
     const facetsBox = $('<div>').addClass('collection-filter-facets');
     const status = $('<div>').addClass('collection-filter-status').attr({role: 'status', 'aria-live': 'polite'});
 
+    const viewSwitch = $('<div>')
+        .addClass('collection-filter-views')
+        .attr({role: 'group', 'aria-label': 'Show items as'});
+    const viewButtons = ['list', 'map'].map((view) => $('<button type="button">')
+        .attr('data-view', view)
+        .text(view === 'list' ? 'List' : 'Map')
+        .on('click', () => setView(view)));
+    viewSwitch.append(viewButtons);
+
     $(container)
         .addClass('collection-filter')
         .empty()
-        .append(form, facetsBox, status);
+        .append(form, facetsBox, mapAvailable ? viewSwitch : '', status);
 
-    function changed() {
-        onChange(copyState(state));
+    function changed(viewOnly) {
+        onChange(copyState(state), {viewOnly});
     }
 
     function setText(text) {
@@ -115,14 +131,28 @@ export function createCollectionFilter(container, {initial, onChange}) {
         const q = (text || '').trim();
         if (q === state.q) { return; }
         state.q = q;
-        changed();
+        changed(false);
     }
 
     function clearFilters() {
         clearTimeout(textTimer);
         input.val('');
-        state = {q: '', facets: {}};
-        changed();
+        state = Object.assign(copyState(state), {q: '', facets: {}, bbox: ''});
+        changed(false);
+    }
+
+    function setView(view) {
+        if (view === state.view) { return; }
+        state.view = view;
+        renderViewSwitch();
+        changed(true);
+    }
+
+    function renderViewSwitch() {
+        viewButtons.forEach((button) => {
+            const active = button.attr('data-view') === state.view;
+            button.attr('aria-pressed', String(active)).toggleClass('active', active);
+        });
     }
 
     function renderFacets() {
@@ -146,7 +176,7 @@ export function createCollectionFilter(container, {initial, onChange}) {
                 } else {
                     delete state.facets[def.name];
                 }
-                changed();
+                changed(false);
             });
             facetsBox.append($('<div>').addClass('collection-filter-facet').append(
                 $('<label>').attr('for', id).text(def.label), select));
@@ -165,13 +195,28 @@ export function createCollectionFilter(container, {initial, onChange}) {
             unfilteredTotal != null
                 ? 'Showing ' + formatCount(total) + ' of ' + formatCount(unfilteredTotal) + ' items'
                 : formatCount(total) + (total === 1 ? ' item matches' : ' items match'),
+            state.bbox ? $('<span>').addClass('collection-filter-area').append(
+                ' within map area ',
+                $('<button type="button">').addClass('collection-filter-remove')
+                    .attr('aria-label', 'Remove map area').text('✕')
+                    .on('click', () => setBbox(''))) : '',
             ' · ',
             $('<button type="button">').addClass('collection-filter-clear').text('Clear filters')
                 .on('click', clearFilters));
     }
 
+    function setBbox(bbox) {
+        if ((bbox || '') === state.bbox) { return; }
+        state.bbox = bbox || '';
+        changed(false);
+    }
+
+    renderViewSwitch();
+
     return {
         getState: () => copyState(state),
+        setView,
+        setBbox,
         /** Show the result count, and the facet choices from a response that has them. */
         showResults({total, unfilteredTotal, facets}) {
             if (facets) {

@@ -9,7 +9,7 @@ import { getPageContext } from '../context';
 import { escapeHtml } from '../html';
 import { unreleasedBadge } from '../itemStatus';
 import { initVirtualCollection } from '../virtualCollections';
-import { initCollectionPage } from '../collectionPage';
+import { initCollectionPage, mapControlHtml } from '../collectionPage';
 import ('paginationjs');
 
 $(function() {
@@ -30,6 +30,7 @@ $(function() {
 
     const collectionPage = initCollectionPage(context, {
         before: document.getElementById('topPagination'),
+        listView: '#topPagination, #collections_carousel, #bottomPagination',
         // A new filter starts the list again from its first page
         reload: function (params, withFacets) {
             setupPagination(1, withFacets);
@@ -153,6 +154,7 @@ $(function() {
                     "<div class='collection_abstract'>" + abstractText +
                     "<a href='" + itemUrl + "'>more</a>" +
                     "</div>" +
+                    mapControlHtml(item, context.collectionTitle) +
                     "<div class='clear'></div>" +
                     "</div>";
                 container.appendChild(itemDiv);
