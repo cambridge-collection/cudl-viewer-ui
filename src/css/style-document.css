@@ -485,8 +485,6 @@ body {
 /* pop up confirmations */
 #bookmarkConfirmation,
 #downloadConfirmation,
-#fullDocumentPdfConfirmation,
-#singlePagePdfConfirmation,
 #downloadMetadataConfirmation {
     width: 365px;
     position: absolute;
@@ -540,8 +538,6 @@ body {
 
 #bookmarkConfirmation.close,
 #downloadConfirmation .close,
-#fullDocumentPdfConfirmation .close,
-#singlePagePdfConfirmation .close,
 #downloadMetadataConfirmation .close {
     margin-top: -15px;
     margin-right: -10px;
