@@ -11,9 +11,10 @@
  */
 import $ from 'jquery';
 
-import { initCollectionPage } from './collectionPage';
+import { initCollectionPage, mapControlHtml } from './collectionPage';
 import { isFiltered } from './collectionFilter';
 import { escapeHtml } from './html';
+import { mapCollection } from './map-collections';
 import { unreleasedBadge } from './itemStatus';
 
 const LIST_ID = 'virtual_collections_carousel';
@@ -29,7 +30,7 @@ const MAX_FAILURES = 3;
  * Builds one tile. This mirrors the markup collection-virtual.jsp renders for
  * the first batch: appended tiles have to be indistinguishable from those.
  */
-function buildTile(item, position) {
+function buildTile(item, position, collectionTitle) {
     const imageDimensions = item.thumbnailOrientation === 'portrait'
         ? 'height: 100%' : 'width: 100%';
 
@@ -65,6 +66,7 @@ function buildTile(item, position) {
         '<h5>' + item.title + shelfLocator + '</h5>' +
         abstract +
         '<a href="' + itemUrl + '">more</a>' +
+        mapControlHtml(item, collectionTitle) +
         '</div>' +
         '<div class="clear"></div>' +
         '</div>';
@@ -97,6 +99,7 @@ export function initVirtualCollection(context) {
 
     const collectionPage = initCollectionPage(context, {
         before: list,
+        listView: '#' + LIST_ID + ', #' + SENTINEL_ID,
         reload: reset,
         path: function() { return context.collectionUrl; },
     });
@@ -140,7 +143,7 @@ export function initVirtualCollection(context) {
 
                 const fragment = document.createDocumentFragment();
                 items.forEach(function(item, index) {
-                    fragment.appendChild(buildTile(item, loaded + index + 1));
+                    fragment.appendChild(buildTile(item, loaded + index + 1, context.collectionTitle));
                 });
                 list.appendChild(fragment);
                 loaded += items.length;
@@ -182,9 +185,9 @@ export function initVirtualCollection(context) {
         }, { rootMargin: TRIGGER_MARGIN });
     }
 
-    if (isFiltered(collectionPage.state())) {
-        // The server renders the unfiltered list, so a filtered page starts
-        // again from the client.
+    if (isFiltered(collectionPage.state()) || mapCollection(context.collectionTitle)) {
+        // The server renders the unfiltered list without map controls, so a
+        // filtered page, or a map collection's, starts again from the client.
         reset(collectionPage.filterParams(), true);
     } else {
         // Keep the server-rendered tiles; just fetch the counts for the filter bar.

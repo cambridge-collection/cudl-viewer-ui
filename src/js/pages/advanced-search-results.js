@@ -11,6 +11,8 @@ import '../base.js';
 import { unreleasedBadge } from '../itemStatus';
 import 'paginationjs';
 import {toggleDiv} from "../cudl";
+import {createSearchMap, hasLocation} from '../search-map';
+import {mapCollection, isPartialMapCollection, FACET_PATH_SEPARATOR} from '../map-collections';
 
 function styleSnippet(s) {
     s = s.replace(/(^[^<>]+>|<[^>]+$)/g, "");
@@ -260,6 +262,7 @@ function renderResult(result) {
                                     "Page: ", result.startPageLabel || '', ")"
                                 )
                         ),
+                    renderShowOnMapButton(result),
                     item.abstractShort ? $("<div>").html(item.abstractShort) : "",
                     $("<ul class=\"snippets\">")
                         .append(
@@ -275,6 +278,52 @@ function renderResult(result) {
         );
 
     return itemDiv[0];
+}
+
+/**
+ * When the map is shown: a "Show on map" button for results with a location,
+ * and a note for those without one, so their absence from the map is explained.
+ */
+function renderShowOnMapButton(result) {
+    if(!shouldShowMap(currentState))
+        return "";
+
+    if(!hasLocation(result)) {
+        return $('<div>')
+            .addClass('search-map-not-shown')
+            .attr('title', 'This item has no location recorded in its catalogue entry')
+            .text('Not on map · no location recorded');
+    }
+
+    var itemId = (result.item || {}).id;
+    return $('<button type="button">')
+        .addClass('search-map-show-button')
+        .text('Show on map')
+        .on('click', function() { showOnMap(itemId); });
+}
+
+function showOnMap(itemId) {
+    var panel = document.getElementById('search-map-panel');
+    if(!panel)
+        return;
+
+    if(isMapLoaded() && !searchMap.hasItem(itemId))
+        return;
+
+    if(mapCollapsed) {
+        mapCollapsedChoice = false;
+        setMapCollapsed(false);
+    }
+
+    var rect = panel.getBoundingClientRect();
+    if(rect.top < 0 || rect.bottom > window.innerHeight)
+        panel.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+
+    // Highlight now, or once the locations being loaded arrive
+    if(isMapLoaded())
+        searchMap.highlight(itemId);
+    else
+        pendingHighlight = itemId;
 }
 
 function renderResults(results) {
@@ -333,8 +382,25 @@ function renderFacet(state, group, facet) {
                 .attr('href', url)
                 .data('state', facetState)
                 .text(facet.value),
-            document.createTextNode(' (' + facet.occurrences + ')')
+            document.createTextNode(' (' + facet.occurrences + ')'),
+            group.field === 'Collection' && mapCollection(facet.value)
+                ? renderMapCollectionIcon(mapCollection(facet.value)) : ''
         )[0];
+}
+
+// A folded map, drawn inline so the page needs no icon font
+const MAP_ICON_SVG =
+    '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" focusable="false">' +
+    '<path d="M1 3.5 5.5 2l5 1.5L15 2v10.5L10.5 14l-5-1.5L1 14z M5.5 2v10.5 M10.5 3.5V14" ' +
+    'fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
+
+/** Marks a collection facet whose results can be shown on the map. */
+function renderMapCollectionIcon(collection) {
+    return $('<span>')
+        .addClass('search-map-collection-icon')
+        .attr('title', isPartialMapCollection(collection)
+            ? 'Some results can be shown on a map' : 'Results can be shown on a map')
+        .append(MAP_ICON_SVG, $('<span>').addClass('visually-hidden').text('(map available)'));
 }
 
 /**
@@ -355,8 +421,165 @@ function renderFacetList(state, facetGroup) {
         );
 }
 
-function renderFacetTree(state, facets) {
+function parentFacetPath(value) {
+    const i = value.lastIndexOf(FACET_PATH_SEPARATOR);
+    return i < 0 ? undefined : value.substring(0, i);
+}
+
+function facetNodes(nodes) {
+    return nodes.flatMap(function(node) { return [node].concat(facetNodes(node.children)); });
+}
+
+/**
+ * The tree node a selection refers to. A legacy URL can name a subcollection by its
+ * title alone; that marks the node only when exactly one has that title.
+ */
+function selectedFacetPath(value, nodes) {
+    if (!value || value.includes(FACET_PATH_SEPARATOR))
+        return value;
+    const matches = facetNodes(nodes).filter(function(node) { return node.label === value; });
+    return matches.length === 1 ? matches[0].value : undefined;
+}
+
+function facetStateSelecting(state, param, value) {
+    const facetState = Object.assign({}, state, {page: 1});
+    if (value === undefined)
+        delete facetState[param];
+    else
+        facetState[param] = value;
+    return facetState;
+}
+
+function renderFacetLink(facetState) {
+    return $('<a>')
+        .attr('href', serialiseQuery(facetState))
+        .data('state', facetState);
+}
+
+function setFacetNodeExpanded(button, expanded) {
+    button.attr('aria-expanded', String(expanded)).text(expanded ? '▾' : '▸');
+}
+
+/** The triangle only shows or hides a node's children; selecting is the name's job. */
+function renderFacetNodeToggle(state, field, node, selected, expanded) {
+    return $('<button>')
+        .attr({type: 'button', 'aria-label': 'Subcollections of ' + node.label})
+        .addClass('search-facet-marker')
+        .data({state: state, field: field, value: node.value, selected: selected})
+        .each(function() { setFacetNodeExpanded($(this), expanded); });
+}
+
+function renderFacetNode(state, field, node, selected) {
+    const param = getFacetParam(field);
+    const isSelected = node.value === selected;
+    const onPath = !!selected && selected.startsWith(node.value + FACET_PATH_SEPARATOR);
+    const inSelection = isSelected || onPath;
+    // Only the selected path arrives with its children; other nodes fetch theirs on opening
+    const expanded = inSelection && node.children.length > 0;
+
+    return $('<li>')
+        .addClass('search-facet-node')
+        .toggleClass('search-facet-node-in-selection', inSelection)
+        .append(
+            node.hasChildren ? renderFacetNodeToggle(state, field, node, selected, expanded) : undefined,
+            (isSelected
+                ? $('<span>').attr('aria-current', 'true')
+                : renderFacetLink(facetStateSelecting(state, param, node.value)))
+                .addClass('search-facet-name')
+                .text(node.label),
+            // Removing a level of the selection takes the levels below it too
+            inSelection
+                ? [document.createTextNode(' '),
+                   renderFacetLink(facetStateSelecting(state, param, parentFacetPath(node.value)))
+                       .addClass('search-facet-remove')
+                       .attr({title: 'Remove', 'aria-label': 'Remove ' + node.label})
+                       .text('❌')[0]]
+                : document.createTextNode(' (' + node.occurrences + ')'),
+            field === 'Collection' && mapCollection(node.value)
+                ? renderMapCollectionIcon(mapCollection(node.value)) : undefined,
+            expanded ? renderFacetNodes(state, field, node.children, selected) : undefined
+        )[0];
+}
+
+function renderFacetNodes(state, field, nodes, selected) {
+    return $('<ul>')
+        .addClass('campl-unstyled-list')
+        .append(nodes.map(function(node) {
+            return renderFacetNode(state, field, node, selected);
+        }));
+}
+
+/**
+ * Values are paths ("Parent::Child"). The selected path's children come with the
+ * results; hasChildren marks the other nodes whose children can be fetched on opening.
+ */
+function renderHierarchicalFacetList(state, facetGroup) {
+    const selected = selectedFacetPath(state[getFacetParam(facetGroup.field)], facetGroup.facets);
+    return renderFacetNodes(state, facetGroup.field, facetGroup.facets, selected);
+}
+
+function toggleFacetNode(button) {
+    const children = button.closest('li').children('ul');
+
+    if (button.attr('aria-expanded') === 'true') {
+        children.prop('hidden', true);
+        setFacetNodeExpanded(button, false);
+    }
+    else if (children.length) {
+        children.prop('hidden', false);
+        setFacetNodeExpanded(button, true);
+    }
+    else {
+        loadFacetNodeChildren(button);
+    }
+}
+
+/** Fetches a node's children within the current results, without selecting it. */
+function loadFacetNodeChildren(button) {
+    const state = button.data('state');
+    const field = button.data('field');
+    const value = button.data('value');
+    const treeVersion = facetTreeVersion;
+
+    button.prop('disabled', true);
+
+    $.ajax({
+        "url": '/search/JSONFacets' +
+            getSearchQueryString(Object.assign({}, state, {expandCollection: value}))
+    })
+    .done(function(data) {
+        if (treeVersion !== facetTreeVersion)
+            return;
+
+        button.prop('disabled', false);
+        const group = !data.info.error &&
+            data.facets.available.find(function(g) { return g.field === field; });
+        const node = group &&
+            facetNodes(group.facets).find(function(n) { return n.value === value; });
+        if (!node || !node.children.length)
+            return;
+
+        button.closest('li').append(
+            renderFacetNodes(state, field, node.children, button.data('selected')));
+        setFacetNodeExpanded(button, true);
+    })
+    .fail(function() {
+        button.prop('disabled', false);
+    });
+}
+
+function renderGroupFacetList(state, facetGroup) {
+    return facetGroup.hierarchical
+        ? renderHierarchicalFacetList(state, facetGroup)
+        : renderFacetList(state, facetGroup);
+}
+
+function renderFacetTree(state, facets, openGroupIds) {
     const tree =  $(facets.map(function(facetGroup) {
+        // A panel left open stays open as the results change. A tree group also opens
+        // where its selection is shown.
+        const open = (openGroupIds || []).includes("divfacetToggle"+facetGroup.label) ||
+            (!!facetGroup.hierarchical && !!state[getFacetParam(facetGroup.field)]);
         return $('<li>')
             .append(
                 $('<strong>')
@@ -365,15 +588,16 @@ function renderFacetTree(state, facets) {
                             .attr("id", "facetToggle"+facetGroup.label)
                             .attr("data-toggle", "collapse")
                             .append(
-                                $('<span>').html('▸ '),
+                                $('<span>').html(open ? '▾ ' : '▸ '),
                                 document.createTextNode(renderFacetName(facetGroup.label))
                             ),
                     ),
                 $('<div>')
                     .attr("id", "divfacetToggle"+facetGroup.label)
                     .addClass("collapse")
+                    .toggleClass("show", open)
                     .append(
-                        renderFacetList(state, facetGroup),
+                        renderGroupFacetList(state, facetGroup),
                         facetGroup.hasMore ? renderMoreFacetButton(state, facetGroup) : undefined
                     ),
             )[0];
@@ -461,7 +685,7 @@ function loadAllFacetValues(button, list) {
         if (!group)
             return;
 
-        const fullList = renderFacetList(state, group);
+        const fullList = renderGroupFacetList(state, group);
         const buttonTop = button[0].getBoundingClientRect().top;
         list.replaceWith(fullList);
         setFacetButtonExpanded(button, true);
@@ -472,9 +696,8 @@ function loadAllFacetValues(button, list) {
     });
 }
 
-function renderSelectedFacet(state, selectedFacet) {
-    var facetState = Object.assign({}, state, {page: 1});
-    delete facetState[getFacetParam(selectedFacet.field)];
+function renderSelectedFacetLevel(state, field, label, remainingValue) {
+    var facetState = facetStateSelecting(state, getFacetParam(field), remainingValue);
 
     var url = serialiseQuery(facetState);
 
@@ -489,14 +712,184 @@ function renderSelectedFacet(state, selectedFacet) {
                 .append(
                     'in ',
                     $('<b>')
-                        .append($('<span>').text(selectedFacet.value)[0]),
-                    ' (', document.createTextNode(renderFacetName(selectedFacet.field)), ') ❌'
+                        .append($('<span>').text(label)[0]),
+                    ' (', document.createTextNode(renderFacetName(field)), ') ❌'
                 )
         )[0];
 }
 
+/**
+ * A path is shown as one selection per level. Removing a level keeps only the
+ * levels above it.
+ */
+function renderSelectedFacet(state, selectedFacet) {
+    const segments = selectedFacet.value.split(FACET_PATH_SEPARATOR);
+    return segments.map(function(segment, i) {
+        return renderSelectedFacetLevel(state, selectedFacet.field, segment,
+            i === 0 ? undefined : segments.slice(0, i).join(FACET_PATH_SEPARATOR));
+    });
+}
+
 function renderSelectedFacets(state, selectedFacets) {
-    return selectedFacets.map(renderSelectedFacet.bind(undefined, state));
+    var selected = selectedFacets.flatMap(renderSelectedFacet.bind(undefined, state));
+    if(state.bbox) {
+        selected.push(renderSelectedMapArea(state));
+    }
+    return selected;
+}
+
+/** The map area restriction is shown and removed like a selected facet. */
+function renderSelectedMapArea(state) {
+    var areaState = Object.assign({}, state, {page: 1});
+    delete areaState.bbox;
+
+    return $('<div>')
+        .addClass('search-facet-selected')
+        .append(
+            $('<a>')
+                .addClass('search-close')
+                .attr('href', serialiseQuery(areaState))
+                .attr('title', 'Remove')
+                .data('state', areaState)
+                .append('within ', $('<b>').text('map area'), ' ❌')
+        )[0];
+}
+
+/** Only some collections have locations, so show the map just for them. */
+function shouldShowMap(state) {
+    return !!mapCollection(state.facetCollection) || !!state.bbox;
+}
+
+/** The map panel: a toggle and summary, a note for partial collections, and the map. */
+function ensureMapPanel() {
+    if($('#search-map-panel').length)
+        return;
+
+    var toggle = $('<button type="button">')
+        .addClass('search-map-toggle')
+        .attr({'aria-controls': 'search-map', 'aria-expanded': 'true'})
+        .append($('<span aria-hidden="true">').addClass('search-map-toggle-arrow'), 'Map')
+        .on('click', function() {
+            mapCollapsedChoice = !mapCollapsed;
+            setMapCollapsed(mapCollapsedChoice);
+        });
+
+    $('<div>').attr('id', 'search-map-panel')
+        .append(
+            $('<div>').addClass('search-map-header').append(
+                toggle, $('<span>').addClass('search-map-summary')),
+            $('<p>').addClass('search-map-partial-note'),
+            $('<div>').attr('id', 'search-map'))
+        .insertBefore('#collections_carousel');
+}
+
+/** Identifies a search for the map: the page of results makes no difference to it. */
+function mapSearchKey(state) {
+    var search = Object.assign({}, state);
+    delete search.page;
+    return serialiseQuery(search);
+}
+
+/** Whether the map shows the current search's locations, fully loaded. */
+function isMapLoaded() {
+    return mapLoadedKey === mapSearchKey(currentState) && !locationsXhr;
+}
+
+/** Open or close the map; opening loads the current search's locations if needed. */
+function setMapCollapsed(collapsed) {
+    mapCollapsed = collapsed;
+    $('.search-map-toggle').attr('aria-expanded', String(!collapsed));
+    $('#search-map-panel').toggleClass('collapsed', collapsed);
+    $('#search-map').toggle(!collapsed);
+
+    if(!collapsed && mapLoadedKey !== mapSearchKey(currentState))
+        loadMapLocations(currentState);
+}
+
+/**
+ * Show the map panel for searches that can have locations. The map shows
+ * every matching item with a location, not just the current page of results,
+ * so this runs on a new search but not on a page change.
+ */
+function updateSearchMap(state) {
+    if(locationsXhr)
+        locationsXhr.abort();
+    mapLoadedKey = null;
+
+    if(!shouldShowMap(state)) {
+        $('#search-map-panel').hide();
+        return;
+    }
+
+    ensureMapPanel();
+    $('#search-map-panel').show();
+    $('.search-map-summary').text('');
+
+    var collection = mapCollection(state.facetCollection);
+    var partial = isPartialMapCollection(collection);
+    $('.search-map-partial-note')
+        .toggle(partial)
+        .text(partial ? 'Many items in ' + state.facetCollection.split(FACET_PATH_SEPARATOR).pop() +
+            ' have no recorded location, so many results will not appear on the map.' : '');
+
+    // Partial collections start closed, unless the user has chosen otherwise.
+    setMapCollapsed(mapCollapsedChoice !== null ? mapCollapsedChoice : partial);
+}
+
+/** Fetch and draw every matching item with a location for state. */
+function loadMapLocations(state) {
+    if(!searchMap) {
+        searchMap = createSearchMap(document.getElementById('search-map'), {
+            onSearchArea: function(bbox) {
+                requestState(Object.assign({}, currentState, {bbox: bbox, page: 1}));
+            },
+            onClearArea: function() {
+                var areaState = Object.assign({}, currentState, {page: 1});
+                delete areaState.bbox;
+                requestState(areaState);
+            }
+        });
+    }
+    if(locationsXhr)
+        locationsXhr.abort();
+    mapLoadedKey = mapSearchKey(state);
+
+    var xhr;
+    locationsXhr = xhr = $.ajax({
+        "url": '/search/locationsJSON' + getSearchQueryString(state)
+    })
+    .always(function() {
+        if(locationsXhr === xhr)
+            locationsXhr = null;
+    })
+    .done(function(data) {
+        // Same shape as a search result, which the map already draws
+        var results = data.locations.map(function(location) {
+            return {
+                item: {id: location.id, title: location.title},
+                startPage: location.startPage,
+                coverage: location.coverage,
+                origin: location.origin
+            };
+        });
+        var note = data.error ? 'Locations could not be loaded.' :
+            data.total > results.length ?
+                'Showing ' + formatNumber(results.length) + ' of ' + formatNumber(data.total) + ' items' : '';
+        searchMap.update(results, state.bbox, note);
+        $('.search-map-summary').text(data.error ? '' :
+            formatNumber(data.total) + (data.total === 1 ? ' item' : ' items') + ' on the map');
+
+        if(pendingHighlight) {
+            searchMap.highlight(pendingHighlight);
+            pendingHighlight = null;
+        }
+    })
+    .fail(function(jqXhr, textStatus) {
+        if(textStatus !== 'abort') {
+            mapLoadedKey = null;
+            searchMap.update([], state.bbox, 'Locations could not be loaded.');
+        }
+    });
 }
 
 function renderChangeQueryUrl(state) {
@@ -596,9 +989,33 @@ function loadPage(state) {
     return false;
 }
 
+/**
+ * An older link can name a subcollection by its title alone. Once the server has placed
+ * it in the collection tree, the state and URL switch to its full path, so every link
+ * built from here on carries it. The results are the same either way, so this needs no
+ * new query.
+ */
+function repairCollectionState(state, data) {
+    const group = data.facets.available.find(function(g) { return g.hierarchical && g.path; });
+    if (!group)
+        return state;
+    const param = getFacetParam(group.field);
+    // Only a selection that named the collection differently, in the search on screen
+    if (!state[param] || state[param] === group.path || currentState[param] !== state[param])
+        return state;
+
+    const repaired = Object.assign({}, state);
+    repaired[param] = group.path;
+    history.replaceState(repaired, '', serialiseQuery(repaired));
+    currentState = repaired;
+    return repaired;
+}
+
 function renderQueryResults(state, data) {
     if(isFailedResponse(data))
         return;
+
+    state = repairCollectionState(state, data);
 
     // Reset the pagination for the new data. paginationjs invokes the
     // callback while constructing the paginator, so clear `paging` first to
@@ -615,10 +1032,12 @@ function renderQueryResults(state, data) {
         .empty()
         .append(renderResultInfo(data.info.hits, data.info.queryTime));
 
+    updateSearchMap(state);
+    const openGroupIds = $('#tree .collapse.show').map(function() { return this.id; }).get();
     facetTreeVersion++;
     $('#tree')
         .empty()
-        .append(renderFacetTree(state, data.facets.available));
+        .append(renderFacetTree(state, data.facets.available, openGroupIds));
 
     $('#selected_facets')
         .empty()
@@ -638,12 +1057,14 @@ function renderQueryResults(state, data) {
     setupFacets(false);
 }
 
-function requery(state, options) {
+/**
+ * Run a new search (search terms, facets or map area changed). This does not
+ * scroll: the user stays where they were, e.g. on the map or the facet list.
+ */
+function requery(state) {
 
     if(typeof state.page != 'number')
         throw new Error('state.page not a number');
-
-    var scroll = !(options && options.noScroll);
 
     setResultsState('searching');
     setBusy(true);
@@ -662,10 +1083,6 @@ function requery(state, options) {
     })
     .done(function(data) {
         renderQueryResults(state, data);
-
-        if(scroll) {
-            scrollToTopOfResults();
-        }
     })
     .fail(function(jqXhr, textStatus) {
         handleSearchFailure(textStatus);
@@ -819,6 +1236,8 @@ function parseState(query, defaults) {
 
 // The active ajax request for search results (if any)
 let activeXhr = undefined;
+// The active ajax request for map locations (if any)
+let locationsXhr = undefined;
 
 // Bumped on every facet tree rebuild, so a "more" response for an old tree is ignored
 let facetTreeVersion = 0;
@@ -842,7 +1261,17 @@ function setBusy(busy) {
 }
 
 let pageLimit = 20;
-let paging, spinner, currentState;
+let paging, spinner, currentState, searchMap;
+
+// The user's explicit open/closed choice for the map, kept across searches on
+// this page; null until they use the toggle, so collection defaults apply.
+let mapCollapsedChoice = null;
+// Whether the map is currently collapsed
+let mapCollapsed = false;
+// The search whose locations the map currently shows (see mapSearchKey)
+let mapLoadedKey = null;
+// Item to highlight once the map has loaded, from "Show on map"
+let pendingHighlight = null;
 
 let userInteracting = true;
 /**
@@ -915,8 +1344,12 @@ function init() {
         toggleMoreFacets($(e.currentTarget));
     });
 
+    $('#tree').on('click', 'button.search-facet-marker', function(e) {
+        toggleFacetNode($(e.currentTarget));
+    });
+
     // Not via requestState: it returns early on an empty diff.
-    requery(currentState, {noScroll: true});
+    requery(currentState);
 }
 
 // function createVariableRecallSlider() {
